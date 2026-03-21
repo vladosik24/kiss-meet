@@ -188,7 +188,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   <button class="btn-ghost" style="margin-top:8px;font-size:.75rem;padding:9px 18px;opacity:.5" onclick="showScore()">Рахунок 📊</button>
 </div>
 
-<!-- ══ RESULT OVERLAY — вибір поцілунку ══ -->
+<!-- ══ RESULT OVERLAY — голосування ══ -->
 <div class="overlay" id="oResult">
   <div class="rcard">
     <span class="r-emoji" id="rEmoji">🍾</span>
@@ -198,23 +198,29 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       <div class="r-icon">💋</div>
       <div class="r-bubble" id="rP2">—</div>
     </div>
-    <!-- Вибір (тільки для того хто крутить) -->
+
+    <!-- Статус голосів -->
+    <div id="rVoteStatus" style="font-size:.75rem;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;min-height:18px;text-align:center"></div>
+
+    <!-- Кнопки вибору (тільки для учасників) -->
     <div id="rChoice">
-      <div style="font-size:.8rem;color:var(--muted);margin-bottom:16px;letter-spacing:1px;">Поцілувати?</div>
+      <div id="rChoiceLbl" style="font-size:.85rem;color:rgba(255,255,255,.7);margin-bottom:14px;text-align:center">Поцілувати?</div>
       <div style="display:flex;gap:10px;">
         <button class="btn-main" onclick="chooseKiss(true)" style="background:linear-gradient(135deg,var(--r),var(--rg));flex:1;font-size:1.1rem;padding:14px">💋 Так!</button>
         <button class="btn-main" onclick="chooseKiss(false)" style="background:rgba(255,255,255,.08);border:1px solid var(--border);flex:1;font-size:1.1rem;padding:14px;box-shadow:none">🙈 Ні</button>
       </div>
     </div>
-    <!-- Результат після вибору -->
+
+    <!-- Очікування (для глядачів або після голосу) -->
+    <div id="rWaiting" style="display:none;color:var(--muted);font-size:.85rem;letter-spacing:1px;padding:10px 0;text-align:center">
+      ⏳ Чекаємо рішення...
+    </div>
+
+    <!-- Результат після обох голосів -->
     <div id="rVerdict" style="display:none">
       <div class="r-type" id="rType" style="margin-bottom:12px">...</div>
       <div class="r-task" id="rTask" style="margin-bottom:20px">...</div>
       <button class="btn-main" onclick="closeResult()">Далі ➡️</button>
-    </div>
-    <!-- Очікування (для глядачів) -->
-    <div id="rWaiting" style="display:none;color:var(--muted);font-size:.85rem;letter-spacing:1px;padding:16px 0">
-      ⏳ Чекаємо рішення...
     </div>
   </div>
 </div>
@@ -500,16 +506,14 @@ function handleMsg(d,conn){
   }
 
   if(d.type==='spin_result'){
-    // Хтось покрутив — показуємо всім "чекаємо рішення"
-    if(isHost) broadcast(d); // relay
-    const isSpinner = players[d.spinner] === myName;
-    showSpinResult(d, isSpinner);
+    if(isHost) broadcast(d);
+    showSpinResult(d);
     return;
   }
 
-  if(d.type==='kiss_choice'){
-    if(isHost) broadcast(d); // relay
-    applyChoice(d);
+  if(d.type==='vote'){
+    if(isHost) broadcast(d);
+    applyVote(d);
     return;
   }
 
@@ -653,7 +657,7 @@ function doSpin(){
     spinning=false;
     // Повідомляємо всіх про результат спіну (ще без вибору)
     const msg={type:'spin_result', spinner:spinnerIdx, target};
-    showSpinResult(msg, true); // true = я крутив
+    showSpinResult(msg);
     broadcastMsg(msg);
   })(t0);
 }
@@ -663,46 +667,94 @@ function broadcastMsg(msg){
   else if(hostConn) try{ hostConn.send(msg); }catch(e){}
 }
 
-function showSpinResult(d, isSpinner){
+// votes = { spinner: null/true/false, target: null/true/false }
+let currentVote = { spinner: null, target: null, spinnerIdx: 0, targetIdx: 0 };
+
+function showSpinResult(d){
+  currentVote = { spinner: null, target: null, spinnerIdx: d.spinner, targetIdx: d.target };
+
   document.getElementById('rP1').textContent = players[d.spinner];
   document.getElementById('rP2').textContent = players[d.target];
   document.getElementById('rEmoji').textContent = '🍾';
 
-  // Показуємо різний UI залежно від ролі
-  document.getElementById('rChoice').style.display  = isSpinner ? 'block' : 'none';
-  document.getElementById('rWaiting').style.display = isSpinner ? 'none'  : 'block';
+  const iAmSpinner = myName === players[d.spinner];
+  const iAmTarget  = myName === players[d.target];
+  const iAmInvolved = iAmSpinner || iAmTarget;
+
+  document.getElementById('rChoice').style.display  = iAmInvolved ? 'block' : 'none';
+  document.getElementById('rWaiting').style.display = iAmInvolved ? 'none'  : 'block';
   document.getElementById('rVerdict').style.display = 'none';
+  document.getElementById('rVoteStatus').textContent = '';
+
+  // Підпис на кнопках залежно від ролі
+  if(iAmInvolved){
+    const who = iAmSpinner ? players[d.target] : players[d.spinner];
+    document.getElementById('rChoiceLbl').textContent = `Поцілувати ${who}?`;
+  }
 
   document.getElementById('oResult').classList.add('on');
 }
 
 function chooseKiss(yes){
-  const kPool=naughty?[...KT,...KT18]:KT;
-  const mPool=naughty?[...MT,...MT18]:MT;
-  const task = yes
-    ? (challenge ? rnd(kPool) : 'Поцілунок! 💋')
-    : (challenge ? rnd(mPool) : 'Відмовився 🙈');
-
-  const msg={type:'kiss_choice', spinner:spinnerIdx, target:players.indexOf(players[spinnerIdx]), kissed:yes, task};
-  // target тут — індекс з rP2
-  const targetIdx = players.indexOf(document.getElementById('rP2').textContent);
-  msg.target = targetIdx;
-
-  applyChoice(msg);
+  const iAmSpinner = myName === players[currentVote.spinnerIdx];
+  const role = iAmSpinner ? 'spinner' : 'target';
+  const msg = { type:'vote', role, yes, spinnerIdx: currentVote.spinnerIdx, targetIdx: currentVote.targetIdx };
+  applyVote(msg);
   broadcastMsg(msg);
 }
 
-function applyChoice(d){
-  const {spinner, target, kissed, task}=d;
-  if(kissed){ totalK++; scores[players[spinner]].kisses++; scores[players[target]].kisses++; }
-  else      { totalM++; }
-  document.getElementById('gK').textContent=totalK;
-  document.getElementById('gM').textContent=totalM;
+function applyVote(d){
+  if(d.spinnerIdx !== currentVote.spinnerIdx || d.targetIdx !== currentVote.targetIdx) return;
+  currentVote[d.role] = d.yes;
 
-  document.getElementById('rEmoji').textContent = kissed ? '💋' : '🙈';
+  // Оновлюємо статус голосування
+  const spinnerName = players[currentVote.spinnerIdx];
+  const targetName  = players[currentVote.targetIdx];
+  const sv = currentVote.spinner, tv = currentVote.target;
+
+  // Ховаємо кнопки якщо я вже проголосував
+  const iAmSpinner = myName === spinnerName;
+  const iAmTarget  = myName === targetName;
+  if((iAmSpinner && d.role==='spinner') || (iAmTarget && d.role==='target')){
+    document.getElementById('rChoice').style.display = 'none';
+    document.getElementById('rWaiting').style.display = 'block';
+  }
+
+  // Статус
+  const parts = [];
+  if(sv !== null) parts.push(`${spinnerName}: ${sv?'💋':'🙈'}`);
+  else parts.push(`${spinnerName}: ⏳`);
+  if(tv !== null) parts.push(`${targetName}: ${tv?'💋':'🙈'}`);
+  else parts.push(`${targetName}: ⏳`);
+  document.getElementById('rVoteStatus').textContent = parts.join('  ·  ');
+
+  // Якщо обидва проголосували — показуємо результат
+  if(sv !== null && tv !== null){
+    resolveVote();
+  }
+}
+
+function resolveVote(){
+  const bothYes = currentVote.spinner === true && currentVote.target === true;
+  const kPool = naughty?[...KT,...KT18]:KT;
+  const mPool = naughty?[...MT,...MT18]:MT;
+  const task  = bothYes
+    ? (challenge ? rnd(kPool) : 'Поцілунок! 💋')
+    : (challenge ? rnd(mPool) : 'Не судилось... 🙈');
+
+  if(bothYes){ totalK++; scores[players[currentVote.spinnerIdx]].kisses++; scores[players[currentVote.targetIdx]].kisses++; }
+  else        { totalM++; }
+  document.getElementById('gK').textContent = totalK;
+  document.getElementById('gM').textContent = totalM;
+
+  document.getElementById('rEmoji').textContent = bothYes ? '💋' : '🙈';
   const typeEl = document.getElementById('rType');
-  typeEl.textContent   = kissed ? 'ПОЦІЛУНОК!' : 'ВІДМОВА!';
-  typeEl.className     = 'r-type '+(kissed?'kiss':'meet');
+  typeEl.textContent = bothYes ? 'ПОЦІЛУНОК!' : (
+    currentVote.spinner===false && currentVote.target===false ? 'ОБИДВА ВІДМОВИЛИ!' :
+    currentVote.spinner===false ? `${players[currentVote.spinnerIdx]} відмовив(ла)` :
+    `${players[currentVote.targetIdx]} відмовив(ла)`
+  );
+  typeEl.className = 'r-type '+(bothYes?'kiss':'meet');
   document.getElementById('rTask').textContent = task;
 
   document.getElementById('rChoice').style.display  = 'none';
