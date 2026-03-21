@@ -141,6 +141,29 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
     </div>
   </div>
   <button class="btn-main" onclick="enterGame()">Знайти кімнату 🔍</button>
+  <button class="btn-ghost" onclick="openConfig()" style="margin-top:8px;font-size:.78rem;opacity:.55">⚙️ JSONBin налаштування</button>
+</div>
+
+<!-- ══ SCREEN: JSONBIN SETUP ══ -->
+<div class="screen" id="sSetup">
+  <div class="logo" style="font-size:clamp(1.5rem,6vw,2.2rem)">⚙️ Налаштування</div>
+  <div class="sub">JSONBin — сховище кімнат</div>
+  <div class="card">
+    <div class="label">🔑 X-Master-Key</div>
+    <input class="inp" id="cfgKey" placeholder="$2a$10$..." style="font-size:.8rem;letter-spacing:.5px">
+    <div style="margin-top:10px">
+    <div class="label">📦 Bin ID</div>
+    <input class="inp" id="cfgBin" placeholder="64abc123def456..." style="font-size:.8rem">
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.2);border-radius:10px;font-size:.75rem;color:rgba(255,255,255,.55);line-height:1.6;">
+      1. Зареєструйся на <b style="color:var(--gold)">jsonbin.io</b><br>
+      2. Account → API Keys → скопіюй <b style="color:var(--gold)">X-Master-Key</b><br>
+      3. Натисни <b style="color:var(--gold)">+ New Bin</b>, вставити <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">{"rooms":[]}</code><br>
+      4. Скопіюй <b style="color:var(--gold)">BIN ID</b> з URL сторінки
+    </div>
+  </div>
+  <button class="btn-main" onclick="saveConfig()">Зберегти та продовжити ✅</button>
+  <button class="btn-ghost" onclick="ss('sName')" style="margin-top:8px;font-size:.8rem;opacity:.5">← Назад</button>
 </div>
 
 <!-- ══ SCREEN: LOADING / MATCHMAKING ══ -->
@@ -215,16 +238,11 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 
 <script>
 // ═══════════════════════════════════════════════
-// ⚠️  ЗАМІНИ НА СВІЙ КЛЮЧ jsonbin.io
-//     1. Зареєструйся на jsonbin.io
-//     2. Account → API Keys → копіюй X-Master-Key
-//     3. Створи новий bin: POST https://api.jsonbin.io/v3/b
-//        з body {"rooms":[]}  і заголовком X-Master-Key
-//     4. Скопіюй BIN ID з відповіді
+// JSONBIN CONFIG — зберігається в localStorage
 // ═══════════════════════════════════════════════
-const JSONBIN_KEY = "$2a$10$RKGaS/3FFtt.b7jI46Pkg.QFC69mAj7eqxN0Gn0AEtTQQCmn75GpC";
-const JSONBIN_BIN = "$2a$10$RKGaS/3FFtt.b7jI46Pkg.QFC69mAj7eqxN0Gn0AEtTQQCmn75GpC";
-const BIN_URL     = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
+let JSONBIN_KEY = localStorage.getItem('jb_key') || '';
+let JSONBIN_BIN = localStorage.getItem('jb_bin') || '';
+let BIN_URL     = JSONBIN_BIN ? `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}` : '';
 const MAX_PLAYERS = 10;
 const LOBBY_TIMEOUT = 90_000; // 90с без старту → кімната видаляється
 
@@ -256,6 +274,11 @@ document.getElementById('nameInp').addEventListener('keydown',e=>{ if(e.key==='E
 async function enterGame(){
   const n = document.getElementById('nameInp').value.trim();
   if(!n){ bar('Введи своє ім\'я','err'); return; }
+  if(!JSONBIN_KEY || !JSONBIN_BIN){
+    bar('Спочатку налаштуй JSONBin ⚙️','err');
+    setTimeout(()=>openConfig(), 800);
+    return;
+  }
   myName   = n;
   naughty  = document.getElementById('cbNaughty').checked;
   challenge= document.getElementById('cbChallenge').checked;
@@ -278,10 +301,36 @@ function initPeer(){
 }
 
 // ═══════════════════════════════════════════════
-// JSONBIN HELPERS
+// CONFIG
 // ═══════════════════════════════════════════════
+function openConfig(){
+  document.getElementById('cfgKey').value = JSONBIN_KEY;
+  document.getElementById('cfgBin').value = JSONBIN_BIN;
+  ss('sSetup');
+}
+
+function saveConfig(){
+  const k = document.getElementById('cfgKey').value.trim();
+  const b = document.getElementById('cfgBin').value.trim();
+  if(!k || !b){ bar('Введи обидва поля','err'); return; }
+  // Validate: only ASCII printable chars allowed in HTTP headers
+  if(!/^[\x20-\x7E]+$/.test(k)){ bar('Ключ містить недопустимі символи','err'); return; }
+  if(!/^[\x20-\x7E]+$/.test(b)){ bar('Bin ID містить недопустимі символи','err'); return; }
+  JSONBIN_KEY = k;
+  JSONBIN_BIN = b;
+  BIN_URL     = `https://api.jsonbin.io/v3/b/${b}`;
+  localStorage.setItem('jb_key', k);
+  localStorage.setItem('jb_bin', b);
+  bar('Збережено ✅','ok');
+  ss('sName');
+}
+
+
+function safeKey(){ return JSONBIN_KEY.replace(/[^\x20-\x7E]/g,''); }
+
 async function binGet(){
-  const r = await fetch(BIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});
+  const r = await fetch(BIN_URL+'/latest',{ headers:{ 'X-Master-Key': safeKey() } });
+  if(!r.ok) throw new Error('HTTP '+r.status);
   const d = await r.json();
   roomBinVersion = d.metadata?.version || 0;
   return d.record?.rooms || [];
@@ -290,7 +339,7 @@ async function binGet(){
 async function binSet(rooms){
   await fetch(BIN_URL,{
     method:'PUT',
-    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Versioning':'false'},
+    headers:{ 'Content-Type':'application/json', 'X-Master-Key': safeKey(), 'X-Bin-Versioning':'false' },
     body: JSON.stringify({rooms})
   });
 }
@@ -328,29 +377,50 @@ async function removeRoomFromBin(code){
 }
 
 // ═══════════════════════════════════════════════
-// MATCHMAKING
+// MATCHMAKING  (race-condition safe)
 // ═══════════════════════════════════════════════
+function findOpen(rooms){
+  const now = Date.now();
+  return rooms.find(r => !r.started && r.count < r.max && (now - r.ts) < 90_000);
+}
+
 async function matchmake(){
   try{
-    const rooms = await binGet();
-    const now = Date.now();
-    // Find open room: not started, has space, fresh
-    const open = rooms.find(r=>
-      !r.started &&
-      r.count < r.max &&
-      (now - r.ts) < 90_000
-    );
+    // ── Крок 1: перша перевірка ──
+    let rooms = await binGet();
+    let open  = findOpen(rooms);
 
     if(open){
+      // Кімната є — одразу приєднуємось
       setLoad('Знайдено кімнату!', `Приєднуємось до ${open.code}...`);
       await joinRoom(open.code, open.hostPeer);
-    } else {
-      setLoad('Створюємо кімнату...','Ти будеш хостом');
-      await createRoom();
+      return;
     }
+
+    // ── Крок 2: кімнати нема — чекаємо випадковий час (0–1200мс)
+    // щоб уникнути race condition між кількома пристроями
+    const delay = Math.floor(Math.random() * 1200);
+    setLoad('Шукаємо кімнату...', `Перевіряємо ще раз через ${Math.round(delay/100)/10}с`);
+    await new Promise(r => setTimeout(r, delay));
+
+    // ── Крок 3: друга перевірка після затримки ──
+    rooms = await binGet();
+    open  = findOpen(rooms);
+
+    if(open){
+      // Хтось встиг створити за цей час — приєднуємось
+      setLoad('Знайдено кімнату!', `Приєднуємось до ${open.code}...`);
+      await joinRoom(open.code, open.hostPeer);
+      return;
+    }
+
+    // ── Крок 4: точно нема — створюємо ──
+    setLoad('Створюємо кімнату...','Ти будеш хостом');
+    await createRoom();
+
   } catch(e){
     setLoad('Помилка','Спробуй ще раз');
-    bar('JSONBin недоступний: '+e.message,'err');
+    bar('JSONBin: '+e.message,'err');
     setTimeout(()=>ss('sName'),2500);
   }
 }
@@ -397,13 +467,29 @@ async function createRoom(){
 // ═══════════════════════════════════════════════
 // GUEST
 // ═══════════════════════════════════════════════
-function joinRoom(code, hostPeerId){
+async function joinRoom(code, hostPeerId){
+  try {
+    await tryConnect(code, hostPeerId);
+  } catch(e) {
+    // Хост недоступний — видаляємо стару кімнату і створюємо нову
+    bar('Хост недоступний, створюємо нову кімнату...','info');
+    setLoad('Хост не відповідає...','Створюємо нову кімнату');
+    await removeRoomFromBin(code);
+    await new Promise(r=>setTimeout(r,600));
+    await createRoom();
+  }
+}
+
+function tryConnect(code, hostPeerId){
   return new Promise((res,rej)=>{
     roomCode = code;
     isHost   = false;
     const conn = peer.connect(hostPeerId,{metadata:myName});
     hostConn = conn;
+    let done = false;
+    const timer = setTimeout(()=>{ if(!done){ done=true; rej(new Error('timeout')); } }, 7000);
     conn.on('open',()=>{
+      if(done) return; done=true; clearTimeout(timer);
       conn.send({type:'hello',name:myName,peerId:myPeerId});
       document.getElementById('roomCodeEl').textContent = code;
       document.getElementById('lobbyRole').textContent  = 'Ти гість 🎉';
@@ -414,9 +500,8 @@ function joinRoom(code, hostPeerId){
       res();
     });
     conn.on('data',d=>handleMsg(d,conn));
-    conn.on('error',e=>{ bar('Не вдалось приєднатись','err'); rej(e); });
+    conn.on('error',e=>{ if(!done){ done=true; clearTimeout(timer); rej(e); } });
     conn.on('close',()=>{ bar('Хост відключився','err'); });
-    setTimeout(()=>rej(new Error('timeout')),8000);
   });
 }
 
