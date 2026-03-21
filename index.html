@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>💋 Поцілуй або Познайся</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap');
+:root{--r:#d4003a;--rg:#ff4d7e;--gold:#f0b429;--dark:#08000f;--border:rgba(255,255,255,.1);--muted:rgba(255,255,255,.4);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--dark);color:#fff;font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 60%,rgba(212,0,58,.18) 0%,transparent 70%),radial-gradient(ellipse 50% 35% at 85% 25%,rgba(255,77,126,.12) 0%,transparent 65%);pointer-events:none;z-index:0;}
+
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;position:relative;z-index:1;animation:fadeUp .4s ease;}
+.screen.on{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.logo{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,8vw,3.6rem);font-weight:700;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.05;margin-bottom:6px;}
+.sub{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:28px;}
+
+/* LOADING */
+.spinner{width:52px;height:52px;border:3px solid rgba(255,77,126,.2);border-top-color:var(--rg);border-radius:50%;animation:rot .8s linear infinite;margin:0 auto 20px;}
+@keyframes rot{to{transform:rotate(360deg)}}
+.load-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;margin-bottom:8px;text-align:center;}
+.load-sub{color:var(--muted);font-size:.85rem;text-align:center;letter-spacing:1px;}
+
+/* NAME SCREEN */
+.card{width:100%;max-width:420px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:20px;padding:22px 20px;margin-bottom:16px;backdrop-filter:blur(8px);}
+.label{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--rg);margin-bottom:14px;font-weight:500;}
+.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .25s,background .25s;}
+.inp:focus{border-color:var(--rg);background:rgba(255,77,126,.1);}
+.inp::placeholder{color:rgba(255,255,255,.28);}
+
+.btn-main{width:100%;max-width:420px;background:linear-gradient(135deg,var(--r) 0%,#9e002b 100%);border:none;border-radius:50px;padding:17px 30px;color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;font-weight:600;cursor:pointer;letter-spacing:.5px;box-shadow:0 8px 28px rgba(212,0,58,.4);transition:transform .2s,box-shadow .2s,opacity .2s;}
+.btn-main:not(:disabled):active{transform:translateY(-2px);box-shadow:0 12px 36px rgba(212,0,58,.6);}
+.btn-main:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:13px 26px;color:rgba(255,255,255,.65);font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;letter-spacing:1px;transition:all .25s;width:100%;max-width:420px;margin-top:10px;}
+.btn-ghost:active{background:rgba(255,255,255,.1);}
+
+/* LOBBY */
+.room-badge{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);border-radius:14px;padding:16px 22px;text-align:center;margin-bottom:18px;width:100%;max-width:420px;}
+.room-code{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:700;color:var(--gold);letter-spacing:8px;line-height:1;}
+.room-hint{font-size:.7rem;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+
+.pw-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.pw-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:10px;animation:slideR .3s ease;}
+@keyframes slideR{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.pw-dot{width:8px;height:8px;border-radius:50%;background:var(--rg);flex-shrink:0;animation:blink 1.5s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.pw-dot.host{background:var(--gold);animation:none;}
+.pw-name{flex:1;font-size:.92rem;}
+.pw-badge{font-size:.62rem;color:var(--gold);background:rgba(240,180,41,.15);border-radius:20px;padding:2px 8px;}
+.pw-count{font-size:.75rem;color:var(--muted);text-align:center;margin-bottom:10px;}
+
+/* GAME */
+.turn-bar{width:100%;max-width:420px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.turn-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;}
+.turn-round{font-size:.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.counts{display:flex;gap:10px;}
+.cnt{font-size:.76rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px 12px;}
+.cnt b{color:#fff;}
+
+.bottle-wrap{position:relative;width:230px;height:230px;margin:0 auto 22px;}
+.ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.06);background:conic-gradient(rgba(212,0,58,.12),rgba(255,77,126,.1),rgba(240,180,41,.08),rgba(212,0,58,.12));animation:spin 10s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bottle-el{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:4.2rem;cursor:pointer;user-select:none;filter:drop-shadow(0 0 14px rgba(212,0,58,.45));transition:filter .3s;}
+.bottle-el.go{filter:drop-shadow(0 0 26px rgba(255,77,126,.9));}
+.p-ring{position:absolute;inset:-46px;pointer-events:none;}
+.pdot{position:absolute;transform:translate(-50%,-50%);text-align:center;width:52px;transition:all .3s;}
+.pdot-icon{font-size:1rem;line-height:1;margin-bottom:2px;}
+.pdot-name{font-size:.6rem;color:var(--muted);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52px;}
+.pdot.lit .pdot-name{color:var(--gold);text-shadow:0 0 8px rgba(240,180,41,.8);}
+.pdot.lit .pdot-icon{animation:pulse .5s ease infinite alternate;}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.5)}}
+.g-hint{color:var(--muted);font-size:.82rem;text-align:center;letter-spacing:1px;margin-bottom:10px;}
+
+/* RESULT */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;animation:fadeUp .3s ease;}
+.overlay.on{display:flex;}
+.rcard{background:linear-gradient(145deg,#160024,#250035);border:1px solid rgba(255,77,126,.25);border-radius:26px;padding:34px 24px;max-width:370px;width:100%;text-align:center;box-shadow:0 0 50px rgba(212,0,58,.25),0 24px 50px rgba(0,0,0,.5);animation:cardBoom .4s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;}
+@keyframes cardBoom{from{transform:scale(.65) rotate(-4deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.rcard::before{content:'';position:absolute;inset:-2px;border-radius:27px;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold),var(--r));z-index:-1;opacity:.32;animation:hueshift 3s linear infinite;}
+@keyframes hueshift{from{filter:hue-rotate(0)}to{filter:hue-rotate(360deg)}}
+.r-emoji{font-size:3.5rem;display:block;margin-bottom:8px;animation:bob .9s ease infinite alternate;}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.r-lbl{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.r-type{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,6vw,2.7rem);font-weight:700;margin-bottom:16px;line-height:1;}
+.r-type.kiss{background:linear-gradient(135deg,var(--r),var(--rg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.r-type.meet{background:linear-gradient(135deg,var(--gold),#e88a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.r-players{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.r-bubble{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:8px 16px;font-weight:500;font-size:.9rem;}
+.r-icon{font-size:1.3rem;}
+.r-task{background:rgba(255,255,255,.05);border-left:3px solid var(--r);border-radius:8px;padding:12px 15px;font-size:.88rem;color:rgba(255,255,255,.82);line-height:1.55;margin-bottom:22px;text-align:left;font-style:italic;}
+
+/* SCORE */
+.sc-list{width:100%;max-width:400px;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.sc-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;animation:slideR .4s ease both;}
+.sc-rank{font-size:1.2rem;width:30px;text-align:center;}
+.sc-name{flex:1;font-weight:500;}
+.sc-k{color:var(--rg);font-size:.78rem;font-weight:600;}
+.sc-m{color:var(--gold);font-size:.78rem;font-weight:600;margin-left:6px;}
+
+/* CONN BAR */
+.conn-bar{position:fixed;top:0;left:0;right:0;z-index:300;padding:8px 16px;font-size:.72rem;text-align:center;letter-spacing:1px;text-transform:uppercase;font-weight:500;transform:translateY(-100%);transition:transform .3s;}
+.conn-bar.show{transform:translateY(0);}
+.conn-bar.ok{background:rgba(0,180,80,.85);}
+.conn-bar.err{background:rgba(212,0,58,.85);}
+.conn-bar.info{background:rgba(0,120,200,.85);}
+
+/* hearts */
+.hrt{position:fixed;pointer-events:none;z-index:0;font-size:1rem;opacity:0;animation:fhrt linear infinite;}
+@keyframes fhrt{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:.3}90%{opacity:.12}100%{transform:translateY(-5vh) rotate(360deg);opacity:0}}
+
+/* joining badge */
+.auto-badge{background:rgba(0,180,80,.12);border:1px solid rgba(0,180,80,.3);border-radius:12px;padding:10px 16px;font-size:.82rem;color:rgba(150,255,180,.9);text-align:center;width:100%;max-width:420px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<div class="conn-bar" id="connBar"></div>
+
+<!-- ══ SCREEN: NAME INPUT ══ -->
+<div class="screen on" id="sName">
+  <div class="logo">💋 Поцілуй<br><em style="font-style:italic;font-size:.72em">або</em> Познайся</div>
+  <div class="sub">Мультиплеєр · Автоматичне приєднання</div>
+  <div class="card">
+    <div class="label">👤 Твоє ім'я</div>
+    <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="label">⚙️ Режим (якщо ти хост)</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.85rem;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:10px;border:1px solid var(--border);">
+        <input type="checkbox" id="cbNaughty" style="accent-color:var(--r);width:15px;height:15px;"> 🔥 Пікантний
+      </label>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.85rem;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:10px;border:1px solid var(--border);">
+        <input type="checkbox" id="cbChallenge" checked style="accent-color:var(--gold);width:15px;height:15px;"> ⚡ Завдання
+      </label>
+    </div>
+  </div>
+  <button class="btn-main" onclick="enterGame()">Знайти кімнату 🔍</button>
+</div>
+
+<!-- ══ SCREEN: LOADING / MATCHMAKING ══ -->
+<div class="screen" id="sLoad">
+  <div class="spinner"></div>
+  <div class="load-title" id="loadTitle">Шукаємо кімнату...</div>
+  <div class="load-sub" id="loadSub">Зачекай секунду</div>
+</div>
+
+<!-- ══ SCREEN: LOBBY ══ -->
+<div class="screen" id="sLobby">
+  <div class="logo" style="font-size:clamp(1.6rem,6vw,2.4rem)">Кімната знайдена!</div>
+  <div class="sub" id="lobbyRole">Ти хост</div>
+  <div class="room-badge">
+    <div class="room-code" id="roomCodeEl">----</div>
+    <div class="room-hint">Код кімнати</div>
+  </div>
+  <div class="auto-badge" id="autoBadge">🤖 Нові гравці приєднаються автоматично</div>
+  <div class="label" style="width:100%;max-width:420px;margin-bottom:8px;">📡 Гравці</div>
+  <div class="pw-count" id="pwCount">1 / 10</div>
+  <div class="pw-list" id="pwList"></div>
+  <button class="btn-main" id="btnStart" onclick="hostStartGame()" style="display:none">Почати гру ✨</button>
+  <button class="btn-ghost" id="btnWait" style="display:block;opacity:.5;cursor:default">Чекаємо гравців...</button>
+</div>
+
+<!-- ══ SCREEN: GAME ══ -->
+<div class="screen" id="sGame">
+  <div class="turn-bar">
+    <div>
+      <div class="turn-round" id="gRound">Раунд 1</div>
+      <div class="turn-name" id="gTurn">...</div>
+    </div>
+    <div class="counts">
+      <div class="cnt">💋 <b id="gK">0</b></div>
+      <div class="cnt">👋 <b id="gM">0</b></div>
+    </div>
+  </div>
+  <div class="bottle-wrap">
+    <div class="ring"></div>
+    <div class="bottle-el" id="bottleEl" onclick="onTap()">🍾</div>
+    <div class="p-ring" id="pRing"></div>
+  </div>
+  <div class="g-hint" id="gHint">Зачекай свого ходу...</div>
+  <button class="btn-main" id="btnSpin" onclick="onTap()" disabled style="max-width:260px;font-size:1.05rem;padding:13px 22px">Крутити 🔄</button>
+  <button class="btn-ghost" style="margin-top:8px;font-size:.75rem;padding:9px 18px;opacity:.5" onclick="showScore()">Рахунок 📊</button>
+</div>
+
+<!-- ══ RESULT OVERLAY ══ -->
+<div class="overlay" id="oResult">
+  <div class="rcard">
+    <span class="r-emoji" id="rEmoji">💋</span>
+    <div class="r-lbl">Пляшка вказала на...</div>
+    <div class="r-type kiss" id="rType">ПОЦІЛУЙ!</div>
+    <div class="r-players">
+      <div class="r-bubble" id="rP1">—</div>
+      <div class="r-icon" id="rIcon">💋</div>
+      <div class="r-bubble" id="rP2">—</div>
+    </div>
+    <div class="r-task" id="rTask">...</div>
+    <button class="btn-main" onclick="closeResult()">Виконано! ✅</button>
+  </div>
+</div>
+
+<!-- ══ SCORE SCREEN ══ -->
+<div class="screen" id="sScore">
+  <div class="logo" style="font-size:1.9rem">🏆 Рахунок</div>
+  <div class="sub">Хто найпопулярніший?</div>
+  <div class="sc-list" id="scList"></div>
+  <button class="btn-main" onclick="ss('sGame')">← До гри</button>
+  <button class="btn-ghost" onclick="resetAll()">Нова гра 🔄</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// ⚠️  ЗАМІНИ НА СВІЙ КЛЮЧ jsonbin.io
+//     1. Зареєструйся на jsonbin.io
+//     2. Account → API Keys → копіюй X-Master-Key
+//     3. Створи новий bin: POST https://api.jsonbin.io/v3/b
+//        з body {"rooms":[]}  і заголовком X-Master-Key
+//     4. Скопіюй BIN ID з відповіді
+// ═══════════════════════════════════════════════
+const JSONBIN_KEY = "ВСТАВ_СВІЙ_X-MASTER-KEY_ТУТ";
+const JSONBIN_BIN = "ВСТАВ_СВІЙ_BIN_ID_ТУТ";
+const BIN_URL     = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
+const MAX_PLAYERS = 10;
+const LOBBY_TIMEOUT = 90_000; // 90с без старту → кімната видаляється
+
+// ═══════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════
+const KT  = ["Поцілуй у щоку 😘","Поцілуй у руку 🤝","Три поцілунки у щоку 💋💋💋","Поцілуй у лоб 🫡","Ескімоський поцілунок 🥹","Назви хороше про цю людину ✨","Метеликовий поцілунок 🦋","Поцілунок у долоню 🤌"];
+const KT18= ["Поцілунок у губи — 3 сек! 💋","Поцілунок у шию 😏","Поцілунок на вибір 😈"];
+const MT  = ["Розкажи про найнезвичайніший сон 💭","Скажи комплімент ✨","Покажи найсмішніше фото 📱","Розкажи про найбільший страх 😨","Назви 3 речі що дратують 😤","Що робив минулої п'ятниці? 🌙","Поділись смішною таємницею 🤫","Покажи останній пошук Google 🔍","Придумайте спільний факт 🤝"];
+const MT18= ["Розкажи про таємну симпатію 👀","Хто б написав о 2 ночі? 🌛","Правда чи вигадка про себе 😏"];
+const rnd = a=>a[Math.floor(Math.random()*a.length)];
+const uid4= ()=>Math.random().toString(36).substr(2,4).toUpperCase();
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let myName='', myPeerId='', isHost=false, naughty=false, challenge=true;
+let peer=null, hostConn=null, guestConns={};
+let roomCode='', roomBinVersion=0;
+let players=[], scores={}, spinnerIdx=0, round=1, totalK=0, totalM=0;
+let spinning=false;
+let heartbeatTimer=null, cleanupTimer=null;
+
+// ═══════════════════════════════════════════════
+// ENTRY: user enters name → matchmaking
+// ═══════════════════════════════════════════════
+document.getElementById('nameInp').addEventListener('keydown',e=>{ if(e.key==='Enter') enterGame(); });
+
+async function enterGame(){
+  const n = document.getElementById('nameInp').value.trim();
+  if(!n){ bar('Введи своє ім\'я','err'); return; }
+  myName   = n;
+  naughty  = document.getElementById('cbNaughty').checked;
+  challenge= document.getElementById('cbChallenge').checked;
+  ss('sLoad');
+  setLoad('Підключаємось...','Ініціалізація PeerJS');
+  await initPeer();
+  setLoad('Шукаємо кімнату...','Перевіряємо список');
+  await matchmake();
+}
+
+// ═══════════════════════════════════════════════
+// PEER INIT
+// ═══════════════════════════════════════════════
+function initPeer(){
+  return new Promise((res,rej)=>{
+    peer = new Peer(undefined,{debug:0});
+    peer.on('open',id=>{ myPeerId=id; res(); });
+    peer.on('error',e=>{ bar('PeerJS: '+e.type,'err'); rej(e); });
+  });
+}
+
+// ═══════════════════════════════════════════════
+// JSONBIN HELPERS
+// ═══════════════════════════════════════════════
+async function binGet(){
+  const r = await fetch(BIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});
+  const d = await r.json();
+  roomBinVersion = d.metadata?.version || 0;
+  return d.record?.rooms || [];
+}
+
+async function binSet(rooms){
+  await fetch(BIN_URL,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Versioning':'false'},
+    body: JSON.stringify({rooms})
+  });
+}
+
+async function addRoomToBin(code, hostPeer, playerCount){
+  const rooms = await binGet();
+  // prune stale rooms (older than 2 min with no players or game done)
+  const now = Date.now();
+  const fresh = rooms.filter(r=> (now - r.ts) < 120_000 );
+  fresh.push({ code, hostPeer, count:playerCount, max:MAX_PLAYERS, started:false, ts:now });
+  await binSet(fresh);
+}
+
+async function updateRoomCount(code, count){
+  try{
+    const rooms = await binGet();
+    const idx = rooms.findIndex(r=>r.code===code);
+    if(idx>=0){ rooms[idx].count=count; rooms[idx].ts=Date.now(); await binSet(rooms); }
+  }catch(e){}
+}
+
+async function markRoomStarted(code){
+  try{
+    const rooms = await binGet();
+    const idx = rooms.findIndex(r=>r.code===code);
+    if(idx>=0){ rooms[idx].started=true; await binSet(rooms); }
+  }catch(e){}
+}
+
+async function removeRoomFromBin(code){
+  try{
+    const rooms = await binGet();
+    await binSet(rooms.filter(r=>r.code!==code));
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════
+// MATCHMAKING
+// ═══════════════════════════════════════════════
+async function matchmake(){
+  try{
+    const rooms = await binGet();
+    const now = Date.now();
+    // Find open room: not started, has space, fresh
+    const open = rooms.find(r=>
+      !r.started &&
+      r.count < r.max &&
+      (now - r.ts) < 90_000
+    );
+
+    if(open){
+      setLoad('Знайдено кімнату!', `Приєднуємось до ${open.code}...`);
+      await joinRoom(open.code, open.hostPeer);
+    } else {
+      setLoad('Створюємо кімнату...','Ти будеш хостом');
+      await createRoom();
+    }
+  } catch(e){
+    setLoad('Помилка','Спробуй ще раз');
+    bar('JSONBin недоступний: '+e.message,'err');
+    setTimeout(()=>ss('sName'),2500);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// HOST
+// ═══════════════════════════════════════════════
+async function createRoom(){
+  isHost   = true;
+  roomCode = uid4();
+  players  = [myName];
+  scores[myName]={kisses:0,meets:0};
+
+  // Listen for guest connections
+  peer.on('connection', conn=>{
+    conn.on('open',()=>{
+      guestConns[conn.peer]=conn;
+      conn.on('data',d=>handleMsg(d,conn));
+      conn.on('close',()=>{
+        delete guestConns[conn.peer];
+        renderPwList();
+        updateRoomCount(roomCode, players.length);
+      });
+    });
+  });
+
+  await addRoomToBin(roomCode, myPeerId, 1);
+
+  document.getElementById('roomCodeEl').textContent = roomCode;
+  document.getElementById('lobbyRole').textContent   = 'Ти хост 👑';
+  document.getElementById('btnStart').style.display  = 'block';
+  document.getElementById('btnWait').style.display   = 'none';
+  renderPwList();
+  ss('sLobby');
+  bar('Кімнату створено: '+roomCode,'ok');
+
+  // Auto-start after 90s if ≥2 players
+  cleanupTimer = setTimeout(async()=>{
+    if(players.length>=2) hostStartGame();
+    else { await removeRoomFromBin(roomCode); ss('sName'); }
+  }, LOBBY_TIMEOUT);
+}
+
+// ═══════════════════════════════════════════════
+// GUEST
+// ═══════════════════════════════════════════════
+function joinRoom(code, hostPeerId){
+  return new Promise((res,rej)=>{
+    roomCode = code;
+    isHost   = false;
+    const conn = peer.connect(hostPeerId,{metadata:myName});
+    hostConn = conn;
+    conn.on('open',()=>{
+      conn.send({type:'hello',name:myName,peerId:myPeerId});
+      document.getElementById('roomCodeEl').textContent = code;
+      document.getElementById('lobbyRole').textContent  = 'Ти гість 🎉';
+      document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnWait').style.display  = 'block';
+      ss('sLobby');
+      bar('Приєднались до '+code,'ok');
+      res();
+    });
+    conn.on('data',d=>handleMsg(d,conn));
+    conn.on('error',e=>{ bar('Не вдалось приєднатись','err'); rej(e); });
+    conn.on('close',()=>{ bar('Хост відключився','err'); });
+    setTimeout(()=>rej(new Error('timeout')),8000);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// MESSAGE BUS
+// ═══════════════════════════════════════════════
+function handleMsg(d,conn){
+  if(!d?.type) return;
+
+  if(d.type==='hello' && isHost){
+    // New guest joined
+    const name = d.name||'Гість';
+    if(!players.includes(name)) players.push(name);
+    scores[name]={kisses:0,meets:0};
+    conn.metadata=name;
+    renderPwList();
+    updateRoomCount(roomCode,players.length);
+    // Sync player list to all guests
+    broadcast({type:'sync_players',players,scores});
+    bar(name+' приєднався','ok');
+    return;
+  }
+
+  if(d.type==='sync_players'){
+    players=d.players; scores=d.scores||{};
+    players.forEach(p=>{ if(!scores[p]) scores[p]={kisses:0,meets:0}; });
+    renderPwList();
+    return;
+  }
+
+  if(d.type==='start'){
+    initGame(d); return;
+  }
+
+  if(d.type==='spin_result'){
+    applySpin(d);
+    if(isHost) broadcast(d);
+    return;
+  }
+
+  if(d.type==='next_turn'){
+    applyNextTurn(d);
+    if(isHost) broadcast(d);
+    return;
+  }
+
+  if(d.type==='join_running' && !isHost){
+    // Late join to already-running game
+    initGame(d); return;
+  }
+}
+
+function broadcast(msg){
+  Object.values(guestConns).forEach(c=>{ try{c.send(msg);}catch(e){} });
+}
+
+// ═══════════════════════════════════════════════
+// HOST START
+// ═══════════════════════════════════════════════
+function hostStartGame(){
+  clearTimeout(cleanupTimer);
+  spinnerIdx=0; round=1; totalK=0; totalM=0;
+  players.forEach(p=>scores[p]={kisses:0,meets:0});
+  const payload={type:'start',players,naughty,challenge,spinnerIdx,round};
+  broadcast(payload);
+  markRoomStarted(roomCode);
+  initGame(payload);
+  // Allow late joiners: on new peer connection, send join_running
+  peer.on('connection',conn=>{
+    conn.on('open',()=>{
+      guestConns[conn.peer]=conn;
+      conn.on('data',d=>handleMsg(d,conn));
+      conn.on('close',()=>{ delete guestConns[conn.peer]; });
+      // Late join: add player
+      conn.on('data',d=>{
+        if(d?.type==='hello'){
+          const name=d.name||'Гість';
+          if(!players.includes(name)){ players.push(name); scores[name]={kisses:0,meets:0}; }
+          conn.metadata=name;
+          buildPRing();
+          conn.send({type:'join_running',players,scores,naughty,challenge,spinnerIdx,round,totalK,totalM});
+          broadcast({type:'sync_players',players,scores});
+        }
+      });
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════
+// INIT GAME (all clients)
+// ═══════════════════════════════════════════════
+function initGame(d){
+  players=d.players; naughty=d.naughty; challenge=d.challenge;
+  spinnerIdx=d.spinnerIdx; round=d.round;
+  if(d.totalK!==undefined){ totalK=d.totalK; totalM=d.totalM; }
+  players.forEach(p=>{ if(!scores[p]) scores[p]={kisses:0,meets:0}; });
+  ss('sGame');
+  buildPRing();
+  updateTurnBar();
+  updateMyTurn();
+}
+
+// ═══════════════════════════════════════════════
+// GAME UI
+// ═══════════════════════════════════════════════
+function renderPwList(){
+  const el=document.getElementById('pwList');
+  document.getElementById('pwCount').textContent=`${players.length} / ${MAX_PLAYERS}`;
+  el.innerHTML=players.map((p,i)=>`
+    <div class="pw-item">
+      <div class="pw-dot ${i===0?'host':''}"></div>
+      <div class="pw-name">${p}${p===myName?' (ти)':''}</div>
+      ${i===0?'<div class="pw-badge">хост</div>':''}
+    </div>`).join('');
+  document.getElementById('btnStart').disabled=players.length<2;
+}
+
+function buildPRing(){
+  const ring=document.getElementById('pRing');
+  const n=players.length;
+  ring.innerHTML=players.map((p,i)=>{
+    const a=(i/n)*2*Math.PI-Math.PI/2;
+    const cx=50+42*Math.cos(a), cy=50+42*Math.sin(a);
+    return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%">
+      <div class="pdot-icon">👤</div>
+      <div class="pdot-name">${p}</div>
+    </div>`;
+  }).join('');
+  lightDot(spinnerIdx);
+}
+
+function lightDot(i){ document.querySelectorAll('.pdot').forEach((d,j)=>d.classList.toggle('lit',j===i)); }
+
+function updateTurnBar(){
+  document.getElementById('gRound').textContent=`Раунд ${round}`;
+  document.getElementById('gTurn').textContent=players[spinnerIdx]+' крутить';
+  document.getElementById('gK').textContent=totalK;
+  document.getElementById('gM').textContent=totalM;
+  lightDot(spinnerIdx);
+}
+
+function updateMyTurn(){
+  const canSpin=isHost && !spinning;
+  document.getElementById('btnSpin').disabled=!canSpin;
+  document.getElementById('gHint').textContent=canSpin
+    ? '👇 Натисни щоб крутити'
+    : `Хід: ${players[spinnerIdx]}`;
+}
+
+// ═══════════════════════════════════════════════
+// SPIN
+// ═══════════════════════════════════════════════
+function onTap(){ if(!isHost||spinning) return; doSpin(); }
+
+function doSpin(){
+  spinning=true;
+  document.getElementById('btnSpin').disabled=true;
+  document.getElementById('gHint').textContent='🌀 Крутиться...';
+  const bottle=document.getElementById('bottleEl');
+  bottle.classList.add('go');
+
+  let target;
+  do{ target=Math.floor(Math.random()*players.length); }
+  while(target===spinnerIdx && players.length>1);
+
+  const isKiss=Math.random()<.5;
+  const kPool=naughty?[...KT,...KT18]:KT;
+  const mPool=naughty?[...MT,...MT18]:MT;
+  const task=challenge?rnd(isKiss?kPool:mPool):(isKiss?'Час діяти! 😘':'Познайомтесь ближче! 👋');
+
+  const fa=(3+Math.floor(Math.random()*3))*360+(target/players.length)*360;
+  const dur=2200+Math.random()*800, t0=performance.now();
+
+  (function anim(now){
+    const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,4);
+    bottle.style.transform=`rotate(${e*fa}deg)`;
+    if(p<1){ requestAnimationFrame(anim); return; }
+    bottle.classList.remove('go');
+    spinning=false;
+    const msg={type:'spin_result',spinner:spinnerIdx,target,isKiss,task};
+    applySpin(msg);
+    broadcast(msg);
+  })(t0);
+}
+
+function applySpin(d){
+  const {spinner,target,isKiss,task}=d;
+  if(isKiss){ totalK++; scores[players[spinner]].kisses++; scores[players[target]].kisses++; }
+  else{ totalM++; scores[players[spinner]].meets++; scores[players[target]].meets++; }
+  document.getElementById('gK').textContent=totalK;
+  document.getElementById('gM').textContent=totalM;
+  document.getElementById('rEmoji').textContent=isKiss?'💋':'👋';
+  document.getElementById('rType').textContent=isKiss?'ПОЦІЛУЙ!':'ПОЗНАЙСЯ!';
+  document.getElementById('rType').className='r-type '+(isKiss?'kiss':'meet');
+  document.getElementById('rIcon').textContent=isKiss?'💋':'🤝';
+  document.getElementById('rP1').textContent=players[spinner];
+  document.getElementById('rP2').textContent=players[target];
+  document.getElementById('rTask').textContent=task;
+  document.getElementById('oResult').classList.add('on');
+}
+
+function closeResult(){
+  document.getElementById('oResult').classList.remove('on');
+  const ni=(spinnerIdx+1)%players.length;
+  const nr=ni===0?round+1:round;
+  const msg={type:'next_turn',spinnerIdx:ni,round:nr};
+  applyNextTurn(msg);
+  if(isHost) broadcast(msg);
+}
+
+function applyNextTurn(d){
+  spinnerIdx=d.spinnerIdx; round=d.round;
+  updateTurnBar(); updateMyTurn();
+  document.getElementById('btnSpin').disabled=!isHost||spinning;
+}
+
+// ═══════════════════════════════════════════════
+// SCORE
+// ═══════════════════════════════════════════════
+function showScore(){
+  const s=[...players].sort((a,b)=>(scores[b].kisses+scores[b].meets)-(scores[a].kisses+scores[a].meets));
+  const m=['🥇','🥈','🥉'];
+  document.getElementById('scList').innerHTML=s.map((p,i)=>`
+    <div class="sc-item" style="animation-delay:${i*.08}s">
+      <div class="sc-rank">${m[i]||`${i+1}.`}</div>
+      <div class="sc-name">${p}</div>
+      <div class="sc-k">💋 ${scores[p].kisses}</div>
+      <div class="sc-m">👋 ${scores[p].meets}</div>
+    </div>`).join('');
+  ss('sScore');
+}
+
+async function resetAll(){
+  if(isHost) await removeRoomFromBin(roomCode);
+  peer?.destroy(); peer=null;
+  guestConns={}; hostConn=null;
+  players=[]; scores={}; spinning=false;
+  document.getElementById('nameInp').value='';
+  ss('sName');
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function ss(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); }
+function setLoad(t,s){ document.getElementById('loadTitle').textContent=t; document.getElementById('loadSub').textContent=s; }
+let bT; function bar(m,t){ const b=document.getElementById('connBar'); b.textContent=m; b.className='conn-bar show '+t; clearTimeout(bT); bT=setTimeout(()=>b.classList.remove('show'),3000); }
+
+// Hearts
+(()=>{ const e=['💋','❤️','🌹','✨','💕']; for(let i=0;i<12;i++){ const h=document.createElement('div'); h.className='hrt'; h.textContent=e[Math.floor(Math.random()*e.length)]; h.style.left=Math.random()*100+'%'; h.style.animationDuration=(9+Math.random()*10)+'s'; h.style.animationDelay=(Math.random()*8)+'s'; document.body.appendChild(h); } })();
+
+// Telegram
+try{ window.Telegram?.WebApp?.ready(); window.Telegram?.WebApp?.expand(); }catch(e){}
+</script>
+</body>
+</html>
