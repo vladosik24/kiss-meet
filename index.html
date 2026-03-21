@@ -175,7 +175,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
     </div>
     <div class="counts">
       <div class="cnt">💋 <b id="gK">0</b></div>
-      <div class="cnt">👋 <b id="gM">0</b></div>
+      <div class="cnt">🙈 <b id="gM">0</b></div>
     </div>
   </div>
   <div class="bottle-wrap">
@@ -188,19 +188,34 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   <button class="btn-ghost" style="margin-top:8px;font-size:.75rem;padding:9px 18px;opacity:.5" onclick="showScore()">Рахунок 📊</button>
 </div>
 
-<!-- ══ RESULT OVERLAY ══ -->
+<!-- ══ RESULT OVERLAY — вибір поцілунку ══ -->
 <div class="overlay" id="oResult">
   <div class="rcard">
-    <span class="r-emoji" id="rEmoji">💋</span>
-    <div class="r-lbl">Пляшка вказала на...</div>
-    <div class="r-type kiss" id="rType">ПОЦІЛУЙ!</div>
-    <div class="r-players">
+    <span class="r-emoji" id="rEmoji">🍾</span>
+    <div class="r-lbl">Пляшка вказала!</div>
+    <div class="r-players" style="margin-bottom:10px">
       <div class="r-bubble" id="rP1">—</div>
-      <div class="r-icon" id="rIcon">💋</div>
+      <div class="r-icon">💋</div>
       <div class="r-bubble" id="rP2">—</div>
     </div>
-    <div class="r-task" id="rTask">...</div>
-    <button class="btn-main" onclick="closeResult()">Виконано! ✅</button>
+    <!-- Вибір (тільки для того хто крутить) -->
+    <div id="rChoice">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:16px;letter-spacing:1px;">Поцілувати?</div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-main" onclick="chooseKiss(true)" style="background:linear-gradient(135deg,var(--r),var(--rg));flex:1;font-size:1.1rem;padding:14px">💋 Так!</button>
+        <button class="btn-main" onclick="chooseKiss(false)" style="background:rgba(255,255,255,.08);border:1px solid var(--border);flex:1;font-size:1.1rem;padding:14px;box-shadow:none">🙈 Ні</button>
+      </div>
+    </div>
+    <!-- Результат після вибору -->
+    <div id="rVerdict" style="display:none">
+      <div class="r-type" id="rType" style="margin-bottom:12px">...</div>
+      <div class="r-task" id="rTask" style="margin-bottom:20px">...</div>
+      <button class="btn-main" onclick="closeResult()">Далі ➡️</button>
+    </div>
+    <!-- Очікування (для глядачів) -->
+    <div id="rWaiting" style="display:none;color:var(--muted);font-size:.85rem;letter-spacing:1px;padding:16px 0">
+      ⏳ Чекаємо рішення...
+    </div>
   </div>
 </div>
 
@@ -485,8 +500,16 @@ function handleMsg(d,conn){
   }
 
   if(d.type==='spin_result'){
-    applySpin(d);
-    if(isHost) broadcast(d);
+    // Хтось покрутив — показуємо всім "чекаємо рішення"
+    if(isHost) broadcast(d); // relay
+    const isSpinner = players[d.spinner] === myName;
+    showSpinResult(d, isSpinner);
+    return;
+  }
+
+  if(d.type==='kiss_choice'){
+    if(isHost) broadcast(d); // relay
+    applyChoice(d);
     return;
   }
 
@@ -592,17 +615,20 @@ function updateTurnBar(){
 }
 
 function updateMyTurn(){
-  const canSpin=isHost && !spinning;
-  document.getElementById('btnSpin').disabled=!canSpin;
-  document.getElementById('gHint').textContent=canSpin
-    ? '👇 Натисни щоб крутити'
-    : `Хід: ${players[spinnerIdx]}`;
+  const isMyTurn = players[spinnerIdx] === myName;
+  document.getElementById('btnSpin').disabled = !isMyTurn || spinning;
+  document.getElementById('gHint').textContent = isMyTurn
+    ? '👇 Твій хід — крути!'
+    : `⏳ Хід: ${players[spinnerIdx]}`;
 }
 
 // ═══════════════════════════════════════════════
-// SPIN
+// SPIN — кожен крутить сам коли його черга
 // ═══════════════════════════════════════════════
-function onTap(){ if(!isHost||spinning) return; doSpin(); }
+function onTap(){
+  if(players[spinnerIdx] !== myName || spinning) return;
+  doSpin();
+}
 
 function doSpin(){
   spinning=true;
@@ -611,14 +637,10 @@ function doSpin(){
   const bottle=document.getElementById('bottleEl');
   bottle.classList.add('go');
 
+  // Вибираємо ціль (не себе)
   let target;
   do{ target=Math.floor(Math.random()*players.length); }
   while(target===spinnerIdx && players.length>1);
-
-  const isKiss=Math.random()<.5;
-  const kPool=naughty?[...KT,...KT18]:KT;
-  const mPool=naughty?[...MT,...MT18]:MT;
-  const task=challenge?rnd(isKiss?kPool:mPool):(isKiss?'Час діяти! 😘':'Познайомтесь ближче! 👋');
 
   const fa=(3+Math.floor(Math.random()*3))*360+(target/players.length)*360;
   const dur=2200+Math.random()*800, t0=performance.now();
@@ -629,26 +651,63 @@ function doSpin(){
     if(p<1){ requestAnimationFrame(anim); return; }
     bottle.classList.remove('go');
     spinning=false;
-    const msg={type:'spin_result',spinner:spinnerIdx,target,isKiss,task};
-    applySpin(msg);
-    broadcast(msg);
+    // Повідомляємо всіх про результат спіну (ще без вибору)
+    const msg={type:'spin_result', spinner:spinnerIdx, target};
+    showSpinResult(msg, true); // true = я крутив
+    broadcastMsg(msg);
   })(t0);
 }
 
-function applySpin(d){
-  const {spinner,target,isKiss,task}=d;
-  if(isKiss){ totalK++; scores[players[spinner]].kisses++; scores[players[target]].kisses++; }
-  else{ totalM++; scores[players[spinner]].meets++; scores[players[target]].meets++; }
+function broadcastMsg(msg){
+  if(isHost) broadcast(msg);
+  else if(hostConn) try{ hostConn.send(msg); }catch(e){}
+}
+
+function showSpinResult(d, isSpinner){
+  document.getElementById('rP1').textContent = players[d.spinner];
+  document.getElementById('rP2').textContent = players[d.target];
+  document.getElementById('rEmoji').textContent = '🍾';
+
+  // Показуємо різний UI залежно від ролі
+  document.getElementById('rChoice').style.display  = isSpinner ? 'block' : 'none';
+  document.getElementById('rWaiting').style.display = isSpinner ? 'none'  : 'block';
+  document.getElementById('rVerdict').style.display = 'none';
+
+  document.getElementById('oResult').classList.add('on');
+}
+
+function chooseKiss(yes){
+  const kPool=naughty?[...KT,...KT18]:KT;
+  const mPool=naughty?[...MT,...MT18]:MT;
+  const task = yes
+    ? (challenge ? rnd(kPool) : 'Поцілунок! 💋')
+    : (challenge ? rnd(mPool) : 'Відмовився 🙈');
+
+  const msg={type:'kiss_choice', spinner:spinnerIdx, target:players.indexOf(players[spinnerIdx]), kissed:yes, task};
+  // target тут — індекс з rP2
+  const targetIdx = players.indexOf(document.getElementById('rP2').textContent);
+  msg.target = targetIdx;
+
+  applyChoice(msg);
+  broadcastMsg(msg);
+}
+
+function applyChoice(d){
+  const {spinner, target, kissed, task}=d;
+  if(kissed){ totalK++; scores[players[spinner]].kisses++; scores[players[target]].kisses++; }
+  else      { totalM++; }
   document.getElementById('gK').textContent=totalK;
   document.getElementById('gM').textContent=totalM;
-  document.getElementById('rEmoji').textContent=isKiss?'💋':'👋';
-  document.getElementById('rType').textContent=isKiss?'ПОЦІЛУЙ!':'ПОЗНАЙСЯ!';
-  document.getElementById('rType').className='r-type '+(isKiss?'kiss':'meet');
-  document.getElementById('rIcon').textContent=isKiss?'💋':'🤝';
-  document.getElementById('rP1').textContent=players[spinner];
-  document.getElementById('rP2').textContent=players[target];
-  document.getElementById('rTask').textContent=task;
-  document.getElementById('oResult').classList.add('on');
+
+  document.getElementById('rEmoji').textContent = kissed ? '💋' : '🙈';
+  const typeEl = document.getElementById('rType');
+  typeEl.textContent   = kissed ? 'ПОЦІЛУНОК!' : 'ВІДМОВА!';
+  typeEl.className     = 'r-type '+(kissed?'kiss':'meet');
+  document.getElementById('rTask').textContent = task;
+
+  document.getElementById('rChoice').style.display  = 'none';
+  document.getElementById('rWaiting').style.display = 'none';
+  document.getElementById('rVerdict').style.display = 'block';
 }
 
 function closeResult(){
@@ -657,13 +716,12 @@ function closeResult(){
   const nr=ni===0?round+1:round;
   const msg={type:'next_turn',spinnerIdx:ni,round:nr};
   applyNextTurn(msg);
-  if(isHost) broadcast(msg);
+  broadcastMsg(msg);
 }
 
 function applyNextTurn(d){
   spinnerIdx=d.spinnerIdx; round=d.round;
   updateTurnBar(); updateMyTurn();
-  document.getElementById('btnSpin').disabled=!isHost||spinning;
 }
 
 // ═══════════════════════════════════════════════
