@@ -507,19 +507,19 @@ function handleMsg(d,conn){
 
   if(d.type==='spin_result'){
     if(isHost) broadcast(d);
-    showSpinResult(d);
+    if(d._from !== myPeerId) showSpinResult(d); // не показуємо собі своє
     return;
   }
 
   if(d.type==='vote'){
     if(isHost) broadcast(d);
-    applyVote(d);
+    if(d._from !== myPeerId) applyVote(d); // не обробляємо свій власний голос
     return;
   }
 
   if(d.type==='next_turn'){
-    applyNextTurn(d);
     if(isHost) broadcast(d);
+    if(d._from !== myPeerId) applyNextTurn(d);
     return;
   }
 
@@ -663,8 +663,10 @@ function doSpin(){
 }
 
 function broadcastMsg(msg){
-  if(isHost) broadcast(msg);
-  else if(hostConn) try{ hostConn.send(msg); }catch(e){}
+  // Додаємо свій peerId щоб уникнути self-echo
+  const m = {...msg, _from: myPeerId};
+  if(isHost) broadcast(m);
+  else if(hostConn) try{ hostConn.send(m); }catch(e){}
 }
 
 // votes = { spinner: null/true/false, target: null/true/false }
