@@ -825,6 +825,31 @@ function floatGift(icon){
 }
 
 // ══════════════════════════════════════
+// ЗАВАНТАЖЕННЯ ПРОФІЛЮ З БОТА
+// ══════════════════════════════════════
+async function loadProfileFromBot(){
+  if(!BOT_WEBHOOK || !myTgId) return;
+  // Використовуємо той самий webhook але з event=get_profile
+  try{
+    const r = await fetch(BOT_WEBHOOK, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({event:'get_profile', uid:myTgId, name:myName})
+    });
+    const json = await r.json();
+    const p = json?.profile;
+    if(p && myName){
+      // Завантажуємо монети і статистику з бота
+      if(p.coins !== undefined) coins[myName] = p.coins;
+      if(p.kisses !== undefined) scores[myName] = {...(scores[myName]||{}), k: p.kisses};
+      if(p.refuses !== undefined) scores[myName] = {...(scores[myName]||{}), n: p.refuses};
+      if(p.gifts !== undefined) scores[myName] = {...(scores[myName]||{}), g: p.gifts};
+      document.getElementById('myCoins').textContent = coins[myName]||0;
+    }
+  }catch(e){}
+}
+
+// ══════════════════════════════════════
 // ENTRY
 // ══════════════════════════════════════
 document.getElementById('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')enterGame();});
@@ -833,6 +858,8 @@ async function enterGame(){
   if(!n){bar('Введи ім\'я','err');return;}
   myName=n; coins[myName]=0; ss('sLoad');
   try{
+    setLoad('Завантажуємо профіль...','');
+    await loadProfileFromBot(); // монети і статистика з бота
     setLoad('Завантажуємо PeerJS...','Зачекай');
     await waitPeer();
     setLoad('Ініціалізуємо...','');
@@ -1043,7 +1070,8 @@ function handleMsg(d,conn){
 
   if(d.type==='spin_result'){
     if(isHost)bcast(d);
-    // Всі анімують пляшку однаково — fa і dur синхронізовані
+    // Синхронізуємо startAngle з хостом щоб анімація була однакова
+    if(d.startAngle !== undefined) currentBottleAngle = d.startAngle;
     animBottle(d.fa,d.dur,d.ti,()=>showVoteCard(d));
     return;
   }
@@ -1238,6 +1266,8 @@ function clearAutoSpin(){
 // ══════════════════════════════════════
 // SPIN — синхронізована анімація
 // ══════════════════════════════════════
+let currentBottleAngle = 0; // відстежуємо поточний кут пляшки
+
 function onTap(){if(myName!==players[spinnerIdx]||spinning)return;doSpin();}
 
 function doSpin(){
@@ -1248,15 +1278,21 @@ function doSpin(){
 
   let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
 
-  // Фіксовані параметри — надсилаємо всім ДО анімації
-  const spins=3+Math.floor(Math.random()*3);
-  const fa=spins*360+(ti/players.length)*360;
-  const dur=2200+Math.floor(Math.random()*800);
+  const n = players.length;
+  // Кут гравця ti відносно верху (12 годин) — гравці йдуть від -90° (верх)
+  const targetDeg = (ti / n) * 360; // 0° = верх = гравець 0
+  // Скільки повних обертів + довернути до цілі
+  const spins = 4 + Math.floor(Math.random()*3);
+  // fa — абсолютний кут куди має повернутись пляшка
+  // мінус поточний кут щоб не накопичувалось
+  const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
+  let delta = targetDeg - normalizedCurrent;
+  if(delta < 0) delta += 360;
+  const fa = currentBottleAngle + spins*360 + delta;
+  const dur = 2200 + Math.floor(Math.random()*800);
 
-  const msg={type:'spin_result',si:spinnerIdx,ti,fa,dur,_from:myPeerId};
-  // Анімуємо локально
+  const msg={type:'spin_result',si:spinnerIdx,ti,fa,dur,startAngle:currentBottleAngle,_from:myPeerId};
   animBottle(fa,dur,ti,()=>showVoteCard(msg));
-  // Надсилаємо решті — вони теж анімують з тими ж fa,dur
   bcastMsg(msg);
 }
 
@@ -1267,11 +1303,15 @@ function animBottle(fa,dur,ti,onDone){
   document.getElementById('gHint').textContent='🌀 Крутиться...';
   const bot=document.getElementById('bottleEl');
   bot.classList.add('go');
+  const startAngle = currentBottleAngle;
   const t0=performance.now();
   (function anim(now){
     const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,4);
-    bot.style.transform=`rotate(${e*fa}deg)`;
+    const angle = startAngle + (fa - startAngle)*e;
+    bot.style.transform=`rotate(${angle}deg)`;
     if(p<1){requestAnimationFrame(anim);return;}
+    currentBottleAngle = fa;
+    bot.style.transform=`rotate(${fa}deg)`;
     bot.classList.remove('go'); spinning=false;
     onDone();
   })(t0);
