@@ -667,15 +667,38 @@ async function binRemove(code){
 // MATCHMAKING
 // ══════════════════════════════════════
 function uid4(){return Math.random().toString(36).substr(2,4).toUpperCase();}
-function findOpen(rooms){const now=Date.now();return rooms.find(r=>!r.started&&r.count<r.max&&(now-r.ts)<90000);}
+function findOpen(rooms){
+  const now=Date.now();
+  return rooms.find(r=>!r.started && r.count<r.max && (now-r.ts)<120000);
+}
+
 async function matchmake(){
-  let rooms=await binGet(), open=findOpen(rooms);
-  if(open){await joinRoom(open.code,open.hp);return;}
-  const delay=Math.floor(Math.random()*1200);
-  setLoad('Шукаємо...',`Ще раз через ${Math.round(delay/100)/10}с`);
-  await new Promise(r=>setTimeout(r,delay));
-  rooms=await binGet(); open=findOpen(rooms);
-  if(open){await joinRoom(open.code,open.hp);return;}
+  setLoad('Шукаємо кімнату...','Перевіряємо список');
+
+  // 3 спроби з зростаючими затримками
+  for(let attempt=0; attempt<3; attempt++){
+    if(attempt>0){
+      const delay=800+attempt*600;
+      setLoad('Шукаємо...',`Спроба ${attempt+1}/3...`);
+      await new Promise(r=>setTimeout(r,delay));
+    }
+
+    let rooms;
+    try{ rooms=await binGet(); }
+    catch(e){ setLoad('JSONBin недоступний',e.message); bar(e.message,'err'); return; }
+
+    const open=findOpen(rooms);
+    if(!open) continue; // немає кімнати — пробуємо ще раз
+
+    setLoad('Знайдено кімнату!',`Підключаємось до ${open.code}...`);
+    const ok=await tryConnect(open.code, open.hp, 10000);
+    if(ok) return; // успішно приєднались
+    // не вдалось — пробуємо ще раз (не видаляємо кімнату!)
+    setLoad('Не вдалось підключитись','Спробуємо ще...');
+  }
+
+  // Після 3 спроб — створюємо нову кімнату
+  setLoad('Створюємо кімнату...','Ти будеш хостом');
   await createRoom();
 }
 
@@ -691,7 +714,11 @@ async function createRoom(){
     conn.on('open',()=>{
       guestConns[conn.peer]=conn;
       conn.on('data',d=>handleMsg(d,conn));
-      conn.on('close',()=>{delete guestConns[conn.peer];renderPwList();binUpdate(roomCode,{count:players.length});});
+      conn.on('close',()=>{
+        delete guestConns[conn.peer];
+        renderPwList();
+        binUpdate(roomCode,{count:players.length});
+      });
     });
   });
 
@@ -700,37 +727,45 @@ async function createRoom(){
   document.getElementById('lobbyRole').textContent='Ти хост 👑';
   renderPwList(); ss('sLobby');
   bar('Кімнату створено: '+roomCode,'ok');
-  cleanTimer=setTimeout(async()=>{await binRemove(roomCode);ss('sName');},90000);
+  cleanTimer=setTimeout(async()=>{await binRemove(roomCode);ss('sName');},120000);
 }
 
 // ══════════════════════════════════════
-// GUEST
+// GUEST — повертає true/false замість throw
 // ══════════════════════════════════════
 async function joinRoom(code,hp){
-  try{await tryConnect(code,hp);}
-  catch(e){
-    bar('Хост недоступний, створюємо нову...','info');
-    await binRemove(code);
-    await new Promise(r=>setTimeout(r,500));
+  const ok=await tryConnect(code,hp,10000);
+  if(!ok){
+    bar('Не вдалось приєднатись','err');
     await createRoom();
   }
 }
-function tryConnect(code,hp){
-  return new Promise((res,rej)=>{
+
+function tryConnect(code,hp,timeout=10000){
+  return new Promise(res=>{
     roomCode=code; isHost=false;
-    const conn=peer.connect(hp,{metadata:myName}); hostConn=conn;
+    const conn=peer.connect(hp,{metadata:myName,reliable:true});
+    hostConn=conn;
     let done=false;
-    const timer=setTimeout(()=>{if(!done){done=true;rej(new Error('timeout'));}},7000);
+
+    const timer=setTimeout(()=>{
+      if(!done){ done=true; res(false); }
+    },timeout);
+
     conn.on('open',()=>{
-      if(done)return; done=true; clearTimeout(timer);
+      if(done) return;
+      done=true; clearTimeout(timer);
       conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId});
       document.getElementById('roomCodeEl').textContent=code;
       document.getElementById('lobbyRole').textContent='Ти гість 🎉';
-      ss('sLobby'); bar('Приєднались до '+code,'ok'); res();
+      ss('sLobby');
+      bar('Приєднались до '+code,'ok');
+      res(true);
     });
+
     conn.on('data',d=>handleMsg(d,conn));
-    conn.on('error',e=>{if(!done){done=true;clearTimeout(timer);rej(e);}});
-    conn.on('close',()=>bar('Хост відключився','err'));
+    conn.on('error',()=>{ if(!done){ done=true; clearTimeout(timer); res(false); } });
+    conn.on('close',()=>{ bar('Хост відключився','err'); });
   });
 }
 
@@ -749,14 +784,24 @@ function handleMsg(d,conn){
 
   if(d.type==='hello'&&isHost){
     const name=d.name||'Гість';
-    if(!players.includes(name)){players.push(name);scores[name]={k:0,n:0,g:0};coins[name]=0;gifts[name]=[];}
+    const isNew=!players.includes(name);
+    if(isNew){players.push(name);scores[name]={k:0,n:0,g:0};coins[name]=0;gifts[name]=[];}
     photos[name]=d.photo||'';
     conn.metadata=name;
-    renderPwList(); binUpdate(roomCode,{count:players.length});
+
+    const gameStarted=document.getElementById('sGame').classList.contains('on');
+    if(gameStarted){
+      // Гра вже йде — надсилаємо стан
+      if(isNew) buildPRing();
+      conn.send({type:'join_running',players,scores,photos,coins,gifts,spinnerIdx,round,totalK,totalN});
+    } else {
+      renderPwList();
+      binUpdate(roomCode,{count:players.length});
+      if(players.length>=2&&document.getElementById('sLobby').classList.contains('on'))
+        setTimeout(()=>hostStartGame(),1000);
+    }
     bcast({type:'sync',players,scores,photos,coins,gifts});
     bar(name+' приєднався 👋','ok');
-    if(players.length>=2&&document.getElementById('sLobby').classList.contains('on'))
-      setTimeout(()=>hostStartGame(),1000);
     return;
   }
   if(d.type==='sync'){
@@ -820,21 +865,13 @@ function hostStartGame(){
   bcast(payload); binUpdate(roomCode,{started:true});
   initGame(payload);
 
+  // Після старту теж приймаємо нових гравців через той самий handleMsg
   peer.removeAllListeners?.('connection');
   peer.on('connection',conn=>{
     conn.on('open',()=>{
       guestConns[conn.peer]=conn;
       conn.on('data',d=>handleMsg(d,conn));
       conn.on('close',()=>{delete guestConns[conn.peer];});
-      conn.on('data',d=>{
-        if(d?.type==='hello'){
-          const name=d.name||'Гість';
-          if(!players.includes(name)){players.push(name);scores[name]={k:0,n:0,g:0};coins[name]=0;gifts[name]=[];buildPRing();}
-          photos[name]=d.photo||'';
-          conn.send({type:'join_running',players,scores,photos,coins,gifts,spinnerIdx,round,totalK,totalN});
-          bcast({type:'sync',players,scores,photos,coins,gifts});
-        }
-      });
     });
   });
 }
