@@ -88,7 +88,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .bottle.go{filter:drop-shadow(0 0 24px rgba(255,77,126,.9));}
 /* p-ring positioned relative to b-outer, not b-area */
 .p-ring{position:absolute;inset:0;pointer-events:none;}
-.pdot{position:absolute;transform:translate(-50%,-50%);text-align:center;width:48px;cursor:pointer;}
+.pdot{position:absolute;transform:translate(-50%,-50%);text-align:center;width:52px;cursor:pointer;pointer-events:all;}
 .pdot-av{width:32px;height:32px;border-radius:50%;object-fit:cover;margin:0 auto 2px;border:2px solid transparent;display:block;}
 .pdot-av-ph{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin:0 auto 2px;border:2px solid transparent;}
 .pdot-n{font-size:.55rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48px;line-height:1.2;}
@@ -583,38 +583,35 @@ let currentGiftTarget='';
 let gpTimeout=null;
 
 function openGiftPopup(name, evt){
-  if(!name||name===myName) return; // на себе не даруємо
+  if(evt) evt.stopPropagation();
+  if(!name||name===myName) return;
   currentGiftTarget=name;
   const popup=document.getElementById('giftPopup');
   const s=scores[name]||{k:0,g:0};
 
-  // Позиція відносно кліку
-  const x=Math.min(evt.clientX-20, window.innerWidth-260);
-  const y=Math.min(evt.clientY+10, window.innerHeight-300);
-  popup.style.left=Math.max(8,x)+'px';
-  popup.style.top=Math.max(8,y)+'px';
+  // Центр екрану — надійно на мобільному
+  popup.style.left='50%';
+  popup.style.top='50%';
+  popup.style.transform='translate(-50%,-50%)';
 
-  // Аватар
   const ph=photos[name]||'';
   document.getElementById('gpAv').innerHTML=ph
     ?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`
-    :`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-weight:700">${name[0]}</div>`;
+    :`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem">${name[0]}</div>`;
   document.getElementById('gpName').textContent=name;
   document.getElementById('gpK').textContent=s.k||0;
   document.getElementById('gpG').textContent=s.g||0;
   document.getElementById('gpMyCoins').textContent=coins[myName]||0;
 
-  // Кнопки подарунків
   document.getElementById('gpGifts').innerHTML=GIFTS.map((g,i)=>`
-    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:7px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:background .15s" ontouchstart="this.style.background='rgba(255,77,126,.18)'" ontouchend="this.style.background='rgba(255,255,255,.06)'">
-      <span style="font-size:1.3rem">${g.icon}</span>
+    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent" ontouchstart="this.style.background='rgba(255,77,126,.2)'" ontouchend="this.style.background='rgba(255,255,255,.06)'">
+      <span style="font-size:1.4rem">${g.icon}</span>
       <span style="font-size:.55rem;color:var(--gold)">🪙${g.cost}</span>
     </div>`).join('');
 
   popup.style.display='block';
-  // Автозакриття через 8с
   clearTimeout(gpTimeout);
-  gpTimeout=setTimeout(closeGiftPopup, 8000);
+  gpTimeout=setTimeout(closeGiftPopup, 10000);
 }
 
 function closeGiftPopup(){
@@ -954,8 +951,9 @@ function handleMsg(d,conn){
     return;
   }
   if(d.type==='next_turn'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId)applyNextTurn(d);
+    if(isHost) bcast(d);
+    // Завжди застосовуємо — але з дедуплікацією по spinnerIdx+round
+    applyNextTurn(d);
     return;
   }
   if(d.type==='chat'){
@@ -1255,12 +1253,21 @@ function applyVoteResult(d){
 function closeVote(){
   clearVoteTimers();
   document.getElementById('oVote').classList.remove('on');
+  // Тільки хост або той хто закриває надсилає next_turn
+  // Локально НЕ застосовуємо — прийде через handleMsg
   const ni=(spinnerIdx+1)%players.length;
   const nr=ni===0?round+1:round;
-  const msg={type:'next_turn',spinnerIdx:ni,round:nr};
-  applyNextTurn(msg); bcastMsg(msg);
+  bcastMsg({type:'next_turn',spinnerIdx:ni,round:nr});
+  // Застосовуємо одразу локально (не чекаємо ехо)
+  spinnerIdx=ni; round=nr;
+  updateBar(); updateMyTurn();
 }
+
+let lastTurnKey='';
 function applyNextTurn(d){
+  const key=`${d.spinnerIdx}-${d.round}`;
+  if(key===lastTurnKey) return; // вже застосовано
+  lastTurnKey=key;
   spinnerIdx=d.spinnerIdx; round=d.round;
   updateBar(); updateMyTurn();
 }
