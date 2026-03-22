@@ -943,13 +943,22 @@ async function joinByCode(){
 function shareRoom(){
   const code=roomCode||document.getElementById('roomCodeEl').textContent;
   if(!code||code==='----') return;
-  // Чистий URL без Telegram hash параметрів
   const gameUrl='https://vladosik24.github.io/kiss-meet/';
-  const text=`💋 Поцілунок-Знайомство\n\nКод кімнати: ${code}\n\nВідкрий гру і впиши код у поле внизу:\n${gameUrl}`;
-  if(navigator.share){
-    navigator.share({title:'Поцілунок-Знайомство — кімната '+code, text}).catch(()=>{});
+  const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий гру і впиши код:\n'+gameUrl;
+  // Копіюємо в буфер — navigator.share на Android додає поточний URL
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>{
+      bar('📋 Скопійовано! Код: '+code,'ok');
+    }).catch(()=>{
+      bar('Код кімнати: '+code,'ok');
+    });
+  } else if(navigator.share){
+    // Передаємо тільки title і text без url щоб не додавався хеш
+    navigator.share({title:'Код кімнати: '+code, text}).catch(()=>{
+      bar('Код: '+code,'ok');
+    });
   } else {
-    navigator.clipboard?.writeText(text).then(()=>bar('Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));
+    bar('Код кімнати: '+code,'ok');
   }
 }
 function waitPeer(ms=9000){
