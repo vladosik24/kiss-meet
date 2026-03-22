@@ -228,6 +228,21 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
     <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
   </div>
   <button class="btn red" onclick="enterGame()">Знайти гру 🔍</button>
+
+  <!-- Вписати код кімнати -->
+  <div style="width:100%;max-width:420px;margin-top:10px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px">АБО ВПИСАТИ КОД</div>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <input class="inp" id="codeInp" placeholder="Код кімнати..." maxlength="4"
+        style="text-transform:uppercase;letter-spacing:4px;font-size:1.1rem;text-align:center;flex:1"
+        oninput="this.value=this.value.toUpperCase()">
+      <button class="btn red" onclick="joinByCode()" style="width:auto;padding:12px 18px;font-size:.9rem">→</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ LOAD ══ -->
@@ -244,6 +259,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
   <div class="code-box">
     <div class="code" id="roomCodeEl">----</div>
     <div class="code-hint">Поділись кодом · або чекай автоматичного приєднання</div>
+    <button onclick="shareRoom()" style="margin-top:8px;background:rgba(255,77,126,.15);border:1px solid rgba(255,77,126,.4);border-radius:50px;padding:6px 18px;color:var(--rg);font-size:.78rem;cursor:pointer">📤 Поділитись кімнатою</button>
   </div>
   <div class="wait-note">🤖 Гра почнеться автоматично коли зайде 2+ гравці</div>
   <div class="lbl" style="width:100%;max-width:420px;margin-bottom:6px;">📡 Гравці онлайн</div>
@@ -853,13 +869,18 @@ async function loadProfileFromBot(){
 // ENTRY
 // ══════════════════════════════════════
 document.getElementById('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')enterGame();});
+document.getElementById('codeInp').addEventListener('keydown',e=>{if(e.key==='Enter')joinByCode();});
+
 async function enterGame(){
   const n=document.getElementById('nameInp').value.trim();
   if(!n){bar('Введи ім\'я','err');return;}
-  myName=n; coins[myName]=0; ss('sLoad');
+  myName=n;
+  // НЕ скидаємо coins — вони вже завантажені з бота
+  if(!coins[myName]) coins[myName]=0;
+  ss('sLoad');
   try{
     setLoad('Завантажуємо профіль...','');
-    await loadProfileFromBot(); // монети і статистика з бота
+    await loadProfileFromBot();
     setLoad('Завантажуємо PeerJS...','Зачекай');
     await waitPeer();
     setLoad('Ініціалізуємо...','');
@@ -870,6 +891,49 @@ async function enterGame(){
     setLoad('Помилка',e.message);
     bar(e.message,'err');
     setTimeout(()=>ss('sName'),2500);
+  }
+}
+
+async function joinByCode(){
+  const code=document.getElementById('codeInp').value.trim().toUpperCase();
+  if(code.length<2){bar('Введи код кімнати','err');return;}
+  const n=document.getElementById('nameInp').value.trim();
+  if(!n){bar('Введи ім\'я','err');return;}
+  myName=n;
+  if(!coins[myName]) coins[myName]=0;
+  ss('sLoad');
+  try{
+    setLoad('Завантажуємо профіль...','');
+    await loadProfileFromBot();
+    setLoad('Завантажуємо PeerJS...','Зачекай');
+    await waitPeer();
+    setLoad('Ініціалізуємо...','');
+    await initPeer();
+    setLoad(`Шукаємо кімнату ${code}...`,'');
+    // Шукаємо кімнату за кодом в JSONBin
+    const rooms=await binGet();
+    const room=rooms.find(r=>r.code===code);
+    if(!room){bar(`Кімнату ${code} не знайдено`,'err');setTimeout(()=>ss('sName'),2000);return;}
+    setLoad('Підключаємось...','');
+    const ok=await tryConnect(room.code, room.hp, 12000);
+    if(!ok){bar('Не вдалось підключитись','err');setTimeout(()=>ss('sName'),2000);}
+  }catch(e){
+    setLoad('Помилка',e.message);
+    bar(e.message,'err');
+    setTimeout(()=>ss('sName'),2500);
+  }
+}
+
+function shareRoom(){
+  const code=document.getElementById('roomCodeEl').textContent;
+  if(!code||code==='----') return;
+  const text=`💋 Поцілунок-Знайомство\nКод кімнати: ${code}\nВідкрий гру і впиши код!`;
+  if(navigator.share){
+    navigator.share({title:'Поцілунок-Знайомство',text}).catch(()=>{});
+  } else {
+    navigator.clipboard?.writeText(text).then(()=>bar('Скопійовано!','ok')).catch(()=>{
+      bar('Код: '+code,'ok');
+    });
   }
 }
 function waitPeer(ms=9000){
