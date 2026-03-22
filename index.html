@@ -943,19 +943,12 @@ async function joinByCode(){
 function shareRoom(){
   const code=roomCode||document.getElementById('roomCodeEl').textContent;
   if(!code||code==='----') return;
-  const gameUrl='https://vladosik24.github.io/kiss-meet/';
-  const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий гру і впиши код:\n'+gameUrl;
-  // Копіюємо в буфер — navigator.share на Android додає поточний URL
+  const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий @KissMeetBot і натисни Грати, потім впиши код!';
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>{
       bar('📋 Скопійовано! Код: '+code,'ok');
     }).catch(()=>{
       bar('Код кімнати: '+code,'ok');
-    });
-  } else if(navigator.share){
-    // Передаємо тільки title і text без url щоб не додавався хеш
-    navigator.share({title:'Код кімнати: '+code, text}).catch(()=>{
-      bar('Код: '+code,'ok');
     });
   } else {
     bar('Код кімнати: '+code,'ok');
