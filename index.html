@@ -584,19 +584,20 @@ let viewingProfile=''; // ім'я кого переглядаємо
 // ══════════════════════════════════════
 // SYNC З БОТОМ
 // ══════════════════════════════════════
-// Webhook URL генерується в боті командою Bot.getUrlFor("km_sync")
-// Вставте сюди URL після запуску бота:
-const BOT_WEBHOOK = ''; // 'https://telebotcreator.com/webhook/...'
+// 1. В боті створи команду з назвою: km_sync
+// 2. Вставь туди блок KM_SYNC_COMMAND з файлу бота
+// 3. Напиши /webhook в боті — скопіюй URL сюди:
+const BOT_WEBHOOK = ''; // вставити URL від /webhook
 
-let myTgId = ''; // заповнюється з Telegram WebApp або URL ?uid=
+let myTgId = '';
 
 function syncToBot(event, payload){
-  if(!BOT_WEBHOOK) return; // не налаштовано
-  const body = {event, uid: myTgId, name: myName, ...payload};
+  if(!BOT_WEBHOOK || !myTgId) return;
+  const body = JSON.stringify({event, uid:myTgId, name:myName, ...payload});
   fetch(BOT_WEBHOOK, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body)
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body
   }).catch(()=>{});
 }
 (function(){
