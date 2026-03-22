@@ -1167,7 +1167,7 @@ function handleMsg(d,conn){
   }
   if(d.type==='chat'){
     if(isHost)bcast(d);
-    renderChatMsg(d,false); return;
+    if(d._from!==myPeerId) renderChatMsg(d,false); return;
   }
   if(d.type==='gift'){
     if(isHost)bcast(d);
