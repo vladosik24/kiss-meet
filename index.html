@@ -603,7 +603,7 @@ let viewingProfile=''; // ім'я кого переглядаємо
 // 1. В боті створи команду з назвою: km_sync
 // 2. Вставь туди блок KM_SYNC_COMMAND з файлу бота
 // 3. Напиши /webhook в боті — скопіюй URL сюди:
-const BOT_WEBHOOK = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABpv7s_jQw8dVx1nqyv0MBuFXJlGTd0DNgGwB7Sta69hmMbsRu_znYMc1EPM4WDl9A66Wz1Ruw71aJT5lTrJbo88VTUyhrfveKvPTCuwfOD8gmn4Q8pDkDmilPldAhJZW_RHO81hIc9z_7mYAA7ZR43mVlaiBOVowv4hw92iDwDsdFpFjrpodFjacwx5b4HrYeISz1K'; // вставити URL від /webhook
+const BOT_WEBHOOK = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABpv8fv6nCwbI7COqUJK9P1HAyma5BI1Bg5DujeeFKTB2-hPEtlEJhfNuBxKVdYP9l_0b1I2uLOAdskMHnPLH4M_gDMm8ZBq73Ydhw0uTopZu-I6xb_EzJk1dHEVFm4pG8cX8_U7mvGf_vGoJOix5eh5RWkoL3Ik3rnCozYV34rHV_DGhC57G3L4DY32zpAzHg628Jw'; // вставити URL від /webhook
 
 let myTgId = '';
 
@@ -844,8 +844,16 @@ function floatGift(icon){
 // ЗАВАНТАЖЕННЯ ПРОФІЛЮ З БОТА
 // ══════════════════════════════════════
 async function loadProfileFromBot(){
+  if(!myName) return;
+
+  // 1. Спочатку читаємо з localStorage (миттєво)
+  try{
+    const saved = localStorage.getItem('km_coins_'+myTgId);
+    if(saved !== null) coins[myName] = parseInt(saved)||0;
+  }catch(e){}
+
+  // 2. Якщо є webhook — синхронізуємо з ботом
   if(!BOT_WEBHOOK || !myTgId) return;
-  // Використовуємо той самий webhook але з event=get_profile
   try{
     const r = await fetch(BOT_WEBHOOK, {
       method:'POST',
@@ -853,13 +861,15 @@ async function loadProfileFromBot(){
       body: JSON.stringify({event:'get_profile', uid:myTgId, name:myName})
     });
     const json = await r.json();
-    const p = json?.profile;
-    if(p && myName){
-      // Завантажуємо монети і статистику з бота
-      if(p.coins !== undefined) coins[myName] = p.coins;
-      if(p.kisses !== undefined) scores[myName] = {...(scores[myName]||{}), k: p.kisses};
-      if(p.refuses !== undefined) scores[myName] = {...(scores[myName]||{}), n: p.refuses};
-      if(p.gifts !== undefined) scores[myName] = {...(scores[myName]||{}), g: p.gifts};
+    const p = json?.profile || json?.json?.profile;
+    if(p){
+      if(p.coins !== undefined){
+        coins[myName] = p.coins;
+        try{localStorage.setItem('km_coins_'+myTgId, String(p.coins));}catch(e){}
+      }
+      if(p.kisses !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0}), k: p.kisses};
+      if(p.refuses !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0}), n: p.refuses};
+      if(p.gifts !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0}), g: p.gifts};
       document.getElementById('myCoins').textContent = coins[myName]||0;
     }
   }catch(e){}
@@ -1330,7 +1340,7 @@ function clearAutoSpin(){
 // ══════════════════════════════════════
 // SPIN — синхронізована анімація
 // ══════════════════════════════════════
-let currentBottleAngle = 0; // відстежуємо поточний кут пляшки
+let currentBottleAngle = 0;
 
 function onTap(){if(myName!==players[spinnerIdx]||spinning)return;doSpin();}
 
@@ -1343,15 +1353,17 @@ function doSpin(){
   let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
 
   const n = players.length;
-  // Кут гравця ti відносно верху (12 годин) — гравці йдуть від -90° (верх)
-  const targetDeg = (ti / n) * 360; // 0° = верх = гравець 0
-  // Скільки повних обертів + довернути до цілі
-  const spins = 4 + Math.floor(Math.random()*3);
-  // fa — абсолютний кут куди має повернутись пляшка
-  // мінус поточний кут щоб не накопичувалось
+  // Гравці розміщені від верху (-90°), крок = 360/n
+  // Пляшка 🍾 вказує вниз при rotate(0), тому базовий offset = 180°
+  // Гравець ti знаходиться на куті: -90 + (ti/n)*360 від верху
+  // Щоб пляшка вказувала на нього: rotate = -90 + (ti/n)*360 + 180 = 90 + (ti/n)*360
+  const BOTTLE_OFFSET = 90; // emoji 🍾 вказує вниз, компенсуємо
+  const targetDeg = BOTTLE_OFFSET + (ti / n) * 360;
+
   const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
   let delta = targetDeg - normalizedCurrent;
-  if(delta < 0) delta += 360;
+  if(delta <= 0) delta += 360; // завжди крутимо вперед
+  const spins = 4 + Math.floor(Math.random()*3);
   const fa = currentBottleAngle + spins*360 + delta;
   const dur = 2200 + Math.floor(Math.random()*800);
 
@@ -1490,6 +1502,8 @@ function applyVoteResult(d){
     coins[sn]=(coins[sn]||0)+KISS_COINS;
     coins[tn]=(coins[tn]||0)+KISS_COINS;
     document.getElementById('myCoins').textContent=coins[myName]||0;
+    // Зберігаємо монети локально
+    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]||0));}catch(e){}
     if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${KISS_COINS} кожному`);
     // Синхронізуємо з ботом — тільки для поточного гравця
     if(myName===sn || myName===tn){
@@ -1564,9 +1578,20 @@ function showScore(){
 async function resetAll(){
   if(isHost)await binRemove(roomCode);
   peer?.destroy(); peer=null; guestConns={}; hostConn=null;
+  // Зберігаємо монети в localStorage перед скиданням
+  if(myName && coins[myName]!==undefined){
+    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  }
+  const savedName = myName; // зберігаємо ім'я
   players=[]; scores={}; photos={}; coins={}; gifts={}; spinning=false;
-  document.getElementById('nameInp').value='';
+  currentBottleAngle=0;
+  myName=savedName; // відновлюємо ім'я
+  // Не очищаємо поле вводу — ім'я залишається
   ss('sName');
+  // Одразу запускаємо нову гру якщо ім'я є
+  if(savedName){
+    setTimeout(()=>enterGame(), 300);
+  }
 }
 
 // ══════════════════════════════════════
