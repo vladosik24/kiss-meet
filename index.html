@@ -333,6 +333,23 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
   </div>
 </div>
 
+<!-- ══ GIFT QUICK POPUP ══ -->
+<div id="giftPopup" style="display:none;position:fixed;z-index:250;background:rgba(10,0,18,.97);border:1px solid rgba(255,77,126,.3);border-radius:20px;padding:16px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:fup .2s ease">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <div id="gpAv" style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0"></div>
+    <div>
+      <div id="gpName" style="font-weight:600;font-size:.92rem"></div>
+      <div style="font-size:.65rem;color:var(--muted)">💋 <span id="gpK">0</span>  🎁 <span id="gpG">0</span>  🪙<span id="gpMyCoins">0</span> у тебе</div>
+    </div>
+    <div onclick="closeGiftPopup()" style="margin-left:auto;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:2px 6px">✕</div>
+  </div>
+  <div style="font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--rg);margin-bottom:8px">🎁 Подарунок</div>
+  <div id="gpGifts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
+  <div style="text-align:center;margin-top:10px">
+    <div onclick="openProfile(currentGiftTarget)" style="font-size:.72rem;color:var(--muted);cursor:pointer;text-decoration:underline">Повний профіль →</div>
+  </div>
+</div>
+
 <!-- ══ PROFILE OVERLAY ══ -->
 <div class="overlay" id="oProfile" onclick="closeProfile(event)">
   <div class="profile-sheet" onclick="event.stopPropagation()">
@@ -392,16 +409,16 @@ const KISS_COINS = 10; // монети за поцілунок
 // MUSIC
 // ══════════════════════════════════════
 // ══════════════════════════════════════
-// MUSIC — локальні файли з телефону
+// MUSIC — стрімінг хостом для всіх
 // ══════════════════════════════════════
 let localTracks=[], audio=null, curTrack=-1, vol=0.6;
+let musicStreaming=false; // хост надіслав файл гостям
 
 function buildTracks(){ renderTrackList(); }
 
 function addLocalTracks(input){
   Array.from(input.files).forEach(f=>{
-    const url=URL.createObjectURL(f);
-    localTracks.push({name:f.name.replace(/\.[^/.]+$/,'').slice(0,28), url});
+    localTracks.push({name:f.name.replace(/\.[^/.]+$/,'').slice(0,28), file:f, url:URL.createObjectURL(f)});
   });
   renderTrackList();
   input.value='';
@@ -422,17 +439,54 @@ function renderTrackList(){
 }
 
 function playTrack(i){
+  // Зупиняємо поточний
   if(audio){audio.pause();audio=null;}
-  if(curTrack===i){curTrack=-1;renderTrackList();document.getElementById('nowPlaying').textContent='';return;}
+  if(curTrack===i){
+    curTrack=-1; renderTrackList();
+    document.getElementById('nowPlaying').textContent='';
+    if(isHost) bcastMsg({type:'music_stop'});
+    return;
+  }
   curTrack=i;
-  audio=new Audio(localTracks[i].url);
+  const t=localTracks[i];
+  // Грати локально
+  audio=new Audio(t.url);
   audio.volume=vol; audio.loop=true;
   audio.play().catch(()=>bar('Помилка відтворення','err'));
   renderTrackList();
-  document.getElementById('nowPlaying').textContent='▶ '+localTracks[i].name;
-  addChatEvent(`🎵 ${myName} вмикає: ${localTracks[i].name}`);
-  bcastMsg({type:'music_event',name:myName,trackName:localTracks[i].name});
+  document.getElementById('nowPlaying').textContent='▶ '+t.name;
+  addChatEvent(`🎵 ${myName} вмикає: ${t.name}`);
+
+  // Якщо хост — надіслати файл всім гостям як base64
+  if(isHost && Object.keys(guestConns).length>0){
+    bar('Надсилаємо музику гостям...','info');
+    streamMusicToGuests(t.file, t.name, i);
+  } else if(!isHost){
+    // Гість просто повідомляє
+    bcastMsg({type:'music_event',name:myName,trackName:t.name});
+  }
 }
+
+function streamMusicToGuests(file, name, idx){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const b64=e.target.result; // data:audio/...;base64,...
+    // Надсилаємо всім гостям одним повідомленням
+    bcast({type:'music_play', name:myName, trackName:name, idx, b64, _from:myPeerId});
+    bar('Музику надіслано ✅','ok');
+  };
+  reader.readAsDataURL(file);
+}
+
+function playRemoteAudio(b64, name){
+  if(audio){audio.pause();audio=null;}
+  audio=new Audio(b64);
+  audio.volume=vol; audio.loop=true;
+  audio.play().catch(()=>bar('Натисни екран для звуку','info'));
+  document.getElementById('nowPlaying').textContent='▶ '+name;
+  addChatEvent(`🎵 Грає: ${name}`);
+}
+
 function setVol(v){vol=v/100;if(audio)audio.volume=vol;}
 function toggleMusic(){
   document.getElementById('musicPanel').classList.toggle('open');
@@ -523,7 +577,59 @@ function addChatEvent(text){
 }
 
 // ══════════════════════════════════════
-// PROFILE
+// GIFT QUICK POPUP (клік на кружечок)
+// ══════════════════════════════════════
+let currentGiftTarget='';
+let gpTimeout=null;
+
+function openGiftPopup(name, evt){
+  if(!name||name===myName) return; // на себе не даруємо
+  currentGiftTarget=name;
+  const popup=document.getElementById('giftPopup');
+  const s=scores[name]||{k:0,g:0};
+
+  // Позиція відносно кліку
+  const x=Math.min(evt.clientX-20, window.innerWidth-260);
+  const y=Math.min(evt.clientY+10, window.innerHeight-300);
+  popup.style.left=Math.max(8,x)+'px';
+  popup.style.top=Math.max(8,y)+'px';
+
+  // Аватар
+  const ph=photos[name]||'';
+  document.getElementById('gpAv').innerHTML=ph
+    ?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`
+    :`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-weight:700">${name[0]}</div>`;
+  document.getElementById('gpName').textContent=name;
+  document.getElementById('gpK').textContent=s.k||0;
+  document.getElementById('gpG').textContent=s.g||0;
+  document.getElementById('gpMyCoins').textContent=coins[myName]||0;
+
+  // Кнопки подарунків
+  document.getElementById('gpGifts').innerHTML=GIFTS.map((g,i)=>`
+    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:7px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:background .15s" ontouchstart="this.style.background='rgba(255,77,126,.18)'" ontouchend="this.style.background='rgba(255,255,255,.06)'">
+      <span style="font-size:1.3rem">${g.icon}</span>
+      <span style="font-size:.55rem;color:var(--gold)">🪙${g.cost}</span>
+    </div>`).join('');
+
+  popup.style.display='block';
+  // Автозакриття через 8с
+  clearTimeout(gpTimeout);
+  gpTimeout=setTimeout(closeGiftPopup, 8000);
+}
+
+function closeGiftPopup(){
+  clearTimeout(gpTimeout);
+  document.getElementById('giftPopup').style.display='none';
+}
+
+function sendGiftTo(name, gIdx){
+  closeGiftPopup();
+  viewingProfile=name;
+  sendGift(gIdx);
+}
+
+// ══════════════════════════════════════
+// PROFILE (повний)
 // ══════════════════════════════════════
 function openProfile(name){
   if(!name||!players.includes(name)) return;
@@ -861,9 +967,20 @@ function handleMsg(d,conn){
     if(d._from!==myPeerId)applyGift(d);
     return;
   }
+  if(d.type==='music_play'){
+    // Гість отримав аудіо файл від хоста — грає локально
+    if(d._from!==myPeerId) playRemoteAudio(d.b64, d.trackName);
+    return;
+  }
+  if(d.type==='music_stop'){
+    if(audio){audio.pause();audio=null;}
+    document.getElementById('nowPlaying').textContent='';
+    addChatEvent('⏹ Музику зупинено');
+    return;
+  }
   if(d.type==='music_event'){
     if(isHost)bcast(d);
-    if(d._from!==myPeerId)addChatEvent(`🎵 ${d.name} вмикає музику: ${d.track.emoji} ${d.track.name}`);
+    if(d._from!==myPeerId)addChatEvent(`🎵 ${d.name} вмикає: ${d.trackName||'трек'}`);
     return;
   }
   if(d.type==='join_running'&&!isHost){
@@ -939,7 +1056,7 @@ function buildPRing(){
     const avEl=ph
       ?`<img class="pdot-av" src="${ph}" onerror="this.outerHTML='<div class=pdot-av-ph>${p[0]}</div>'">`
       :`<div class="pdot-av-ph">${p[0]}</div>`;
-    return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openProfile('${p}')">
+    return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openGiftPopup('${p}',event)">
       ${avEl}<div class="pdot-n">${p}</div></div>`;
   }).join('');
   litDot(spinnerIdx);
@@ -1184,6 +1301,10 @@ function bar(m,t){const b=document.getElementById('cbar');b.textContent=m;b.clas
 (()=>{const e=['💋','❤️','🌹','✨'];for(let i=0;i<10;i++){const h=document.createElement('div');h.className='hrt';h.textContent=e[i%e.length];h.style.left=Math.random()*100+'%';h.style.animationDuration=(10+Math.random()*12)+'s';h.style.animationDelay=(Math.random()*8)+'s';document.body.appendChild(h);}})();
 
 buildTracks();
+document.addEventListener('click', e=>{
+  const p=document.getElementById('giftPopup');
+  if(p.style.display!=='none' && !p.contains(e.target) && !e.target.closest('.pdot')) closeGiftPopup();
+});
 try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();}catch(e){}
 </script>
 </body>
