@@ -67,33 +67,35 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .wait-note{font-size:.76rem;color:rgba(100,255,160,.8);text-align:center;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:10px;padding:9px 14px;width:100%;max-width:420px;margin-bottom:14px;}
 
 /* ── GAME WRAP ── */
-.game-wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;height:100vh;padding:8px 14px;}
-.top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 0 5px;flex-shrink:0;}
-.turn-info .rnd{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-.turn-info .who{font-family:Georgia,serif;font-size:1rem;font-style:italic;}
+.game-wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;height:100vh;padding:6px 14px;overflow:hidden;}
+.top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 0 4px;flex-shrink:0;}
+.turn-info .rnd{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.turn-info .who{font-family:Georgia,serif;font-size:.95rem;font-style:italic;}
 .top-btns{display:flex;gap:7px;}
 .ico-btn{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;position:relative;transition:background .15s;}
 .ico-btn:active{background:rgba(255,255,255,.14);}
 .ico-btn.on{background:rgba(240,180,41,.2);border-color:rgba(240,180,41,.4);}
 .notif{position:absolute;top:-3px;right:-3px;background:var(--r);color:#fff;font-size:.5rem;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;}
-.sc-bar{display:flex;gap:8px;width:100%;justify-content:center;margin-bottom:3px;flex-shrink:0;}
-.sc-pill{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:3px 12px;font-size:.73rem;color:var(--muted);}
+.sc-bar{display:flex;gap:8px;width:100%;justify-content:center;margin-bottom:2px;flex-shrink:0;}
+.sc-pill{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:3px 10px;font-size:.7rem;color:var(--muted);}
 .sc-pill b{color:#fff;}
 
 /* ── BOTTLE ── */
-.b-area{position:relative;width:200px;height:200px;flex-shrink:0;margin:4px 0;}
+.b-outer{position:relative;width:290px;height:290px;flex-shrink:0;margin:2px 0;display:flex;align-items:center;justify-content:center;}
+.b-area{position:relative;width:190px;height:190px;}
 .b-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(200,0,58,.12),rgba(255,77,126,.1),rgba(240,180,41,.07),rgba(200,0,58,.12));border:1px solid rgba(255,255,255,.05);animation:rot 9s linear infinite;}
-.bottle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.6rem;cursor:pointer;user-select:none;filter:drop-shadow(0 0 12px rgba(200,0,58,.4));transition:filter .3s;}
+.bottle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.4rem;cursor:pointer;user-select:none;filter:drop-shadow(0 0 12px rgba(200,0,58,.4));transition:filter .3s;}
 .bottle.go{filter:drop-shadow(0 0 24px rgba(255,77,126,.9));}
-.p-ring{position:absolute;inset:-46px;pointer-events:none;}
-.pdot{position:absolute;transform:translate(-50%,-50%);text-align:center;width:46px;cursor:pointer;}
-.pdot-av{width:30px;height:30px;border-radius:50%;object-fit:cover;margin:0 auto 2px;border:2px solid transparent;transition:border-color .2s;}
-.pdot-av-ph{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin:0 auto 2px;border:2px solid transparent;}
-.pdot-n{font-size:.56rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46px;transition:color .2s;}
+/* p-ring positioned relative to b-outer, not b-area */
+.p-ring{position:absolute;inset:0;pointer-events:none;}
+.pdot{position:absolute;transform:translate(-50%,-50%);text-align:center;width:48px;cursor:pointer;}
+.pdot-av{width:32px;height:32px;border-radius:50%;object-fit:cover;margin:0 auto 2px;border:2px solid transparent;display:block;}
+.pdot-av-ph{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin:0 auto 2px;border:2px solid transparent;}
+.pdot-n{font-size:.55rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48px;line-height:1.2;}
 .pdot.lit .pdot-av,.pdot.lit .pdot-av-ph{border-color:var(--gold);animation:pulse .5s ease infinite alternate;}
 .pdot.lit .pdot-n{color:var(--gold);}
 @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.3)}}
-.g-hint{color:var(--muted);font-size:.76rem;text-align:center;margin:4px 0;flex-shrink:0;}
+.g-hint{color:var(--muted);font-size:.74rem;text-align:center;margin:3px 0;flex-shrink:0;}
 
 /* ── PROFILE OVERLAY ── */
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:flex-end;justify-content:center;padding-bottom:0;}
@@ -195,7 +197,12 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .cbar.err{background:rgba(200,0,58,.92);}
 .cbar.info{background:rgba(0,120,200,.92);}
 
-/* ── GIFT FLOAT ANIMATION ── */
+.music-add-btn{display:block;width:100%;text-align:center;background:rgba(255,77,126,.12);border:1px dashed rgba(255,77,126,.4);border-radius:10px;padding:8px;font-size:.78rem;color:var(--rg);cursor:pointer;margin-top:6px;transition:background .2s;}
+.music-add-btn:active{background:rgba(255,77,126,.22);}
+/* ── VOTE TIMER BAR ── */
+.v-timer-bar{width:100%;height:3px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:12px;overflow:hidden;}
+.v-timer-fill{height:100%;background:linear-gradient(90deg,var(--r),var(--rg));border-radius:3px;transition:width .1s linear;}
+/* ── GIFT FLOAT ── */
 .gift-float{position:fixed;font-size:2rem;pointer-events:none;z-index:400;animation:giftFly 1.4s ease forwards;}
 @keyframes giftFly{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 
@@ -263,9 +270,11 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
     <div class="sc-pill">🙈 <b id="gN">0</b></div>
     <div class="sc-pill">🪙 <b id="myCoins">0</b></div>
   </div>
-  <div class="b-area">
-    <div class="b-ring"></div>
-    <div class="bottle" id="bottleEl" onclick="onTap()">🍾</div>
+  <div class="b-outer">
+    <div class="b-area">
+      <div class="b-ring"></div>
+      <div class="bottle" id="bottleEl" onclick="onTap()">🍾</div>
+    </div>
     <div class="p-ring" id="pRing"></div>
   </div>
   <div class="g-hint" id="gHint">Зачекай свого ходу...</div>
@@ -278,8 +287,13 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 <!-- ══ MUSIC ══ -->
 <div class="music-panel" id="musicPanel">
   <div class="music-title">🎵 Музика</div>
-  <div class="music-tracks" id="trackList"></div>
-  <div class="music-vol"><span>🔈</span><input type="range" min="0" max="100" value="60" oninput="setVol(this.value)"><span>🔊</span></div>
+  <div id="trackList"></div>
+  <label class="music-add-btn" onclick="document.getElementById('musicFilePicker').click()">
+    ＋ Додати з телефону
+  </label>
+  <input type="file" id="musicFilePicker" accept="audio/*" multiple style="display:none" onchange="addLocalTracks(this)">
+  <div class="music-vol" style="margin-top:10px"><span>🔈</span><input type="range" min="0" max="100" value="60" oninput="setVol(this.value)"><span>🔊</span></div>
+  <div id="nowPlaying" style="font-size:.65rem;color:var(--muted);text-align:center;margin-top:6px;min-height:14px"></div>
 </div>
 
 <!-- ══ CHAT ══ -->
@@ -303,6 +317,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
       <div class="v-bubble"><div id="vAv2" class="vav-ph"></div><span id="vP2">—</span></div>
     </div>
     <div class="v-status" id="vStatus"></div>
+    <div class="v-timer-bar"><div class="v-timer-fill" id="vTimerFill" style="width:100%"></div></div>
     <div id="vChoice">
       <div class="v-choice-lbl" id="vChoiceLbl">Поцілувати?</div>
       <div class="v-btns">
@@ -313,7 +328,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
     <div id="vWait" style="display:none;color:var(--muted);font-size:.82rem;padding:8px 0">⏳ Чекаємо рішення...</div>
     <div id="vResult" style="display:none">
       <div class="v-type" id="vType">...</div>
-      <button class="v-next" onclick="closeVote()">Далі ➡️</button>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:8px" id="vAutoSkip">Автопропуск через <b id="vSkipSec">5</b>с</div>
     </div>
   </div>
 </div>
@@ -376,17 +391,54 @@ const KISS_COINS = 10; // монети за поцілунок
 // ══════════════════════════════════════
 // MUSIC
 // ══════════════════════════════════════
-const TRACKS = [
-  {name:'Romantic',  emoji:'🌹', url:'https://www.bensound.com/bensound-music/bensound-romanticsoul.mp3'},
-  {name:'Party',     emoji:'🎉', url:'https://www.bensound.com/bensound-music/bensound-party.mp3'},
-  {name:'Chill',     emoji:'🌙', url:'https://www.bensound.com/bensound-music/bensound-anewbeginning.mp3'},
-  {name:'Sweet',     emoji:'💕', url:'https://www.bensound.com/bensound-music/bensound-sweet.mp3'},
-];
-let audio=null, curTrack=-1, vol=0.6;
+// ══════════════════════════════════════
+// MUSIC — локальні файли з телефону
+// ══════════════════════════════════════
+let localTracks=[], audio=null, curTrack=-1, vol=0.6;
 
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
+function buildTracks(){ renderTrackList(); }
+
+function addLocalTracks(input){
+  Array.from(input.files).forEach(f=>{
+    const url=URL.createObjectURL(f);
+    localTracks.push({name:f.name.replace(/\.[^/.]+$/,'').slice(0,28), url});
+  });
+  renderTrackList();
+  input.value='';
+}
+
+function renderTrackList(){
+  const el=document.getElementById('trackList');
+  if(!localTracks.length){
+    el.innerHTML='<div style="font-size:.72rem;color:var(--muted);text-align:center;padding:6px 0">Немає треків — додай з телефону 👇</div>';
+    return;
+  }
+  el.innerHTML='<div class="music-tracks">'+localTracks.map((t,i)=>`
+    <div class="track${curTrack===i?' playing':''}" onclick="playTrack(${i})">
+      <span class="track-icon">🎵</span>
+      <span class="track-name">${t.name}</span>
+      ${curTrack===i?'<span class="track-eq">♫</span>':''}
+    </div>`).join('')+'</div>';
+}
+
+function playTrack(i){
+  if(audio){audio.pause();audio=null;}
+  if(curTrack===i){curTrack=-1;renderTrackList();document.getElementById('nowPlaying').textContent='';return;}
+  curTrack=i;
+  audio=new Audio(localTracks[i].url);
+  audio.volume=vol; audio.loop=true;
+  audio.play().catch(()=>bar('Помилка відтворення','err'));
+  renderTrackList();
+  document.getElementById('nowPlaying').textContent='▶ '+localTracks[i].name;
+  addChatEvent(`🎵 ${myName} вмикає: ${localTracks[i].name}`);
+  bcastMsg({type:'music_event',name:myName,trackName:localTracks[i].name});
+}
+function setVol(v){vol=v/100;if(audio)audio.volume=vol;}
+function toggleMusic(){
+  document.getElementById('musicPanel').classList.toggle('open');
+  document.getElementById('musicBtn').classList.toggle('on');
+  document.getElementById('chatPanel').classList.remove('open');
+}
 let myName='', myPhoto='', myPeerId='', isHost=false;
 let peer=null, hostConn=null, guestConns={};
 let roomCode='';
@@ -422,40 +474,6 @@ let viewingProfile=''; // ім'я кого переглядаємо
     }
   }catch(e){}
 })();
-
-// ══════════════════════════════════════
-// MUSIC FUNCTIONS
-// ══════════════════════════════════════
-function buildTracks(){
-  document.getElementById('trackList').innerHTML=TRACKS.map((t,i)=>`
-    <div class="track" id="tr${i}" onclick="playTrack(${i})">
-      <span class="track-icon">${t.emoji}</span>
-      <span class="track-name">${t.name}</span>
-      <span id="eq${i}" style="display:none" class="track-eq">♫</span>
-    </div>`).join('');
-}
-function playTrack(i){
-  if(audio){audio.pause();audio=null;}
-  document.querySelectorAll('.track').forEach(t=>t.classList.remove('playing'));
-  document.querySelectorAll('[id^="eq"]').forEach(e=>e.style.display='none');
-  if(curTrack===i){curTrack=-1;return;}
-  curTrack=i;
-  audio=new Audio(TRACKS[i].url);
-  audio.volume=vol; audio.loop=true;
-  audio.play().catch(()=>bar('Натисни ще раз для відтворення','info'));
-  document.getElementById('tr'+i).classList.add('playing');
-  document.getElementById('eq'+i).style.display='inline';
-
-  // Показати в чаті
-  addChatEvent(`🎵 ${myName} вмикає музику: ${TRACKS[i].emoji} ${TRACKS[i].name}`);
-  bcastMsg({type:'music_event',name:myName,track:TRACKS[i]});
-}
-function setVol(v){vol=v/100;if(audio)audio.volume=vol;}
-function toggleMusic(){
-  document.getElementById('musicPanel').classList.toggle('open');
-  document.getElementById('musicBtn').classList.toggle('on');
-  document.getElementById('chatPanel').classList.remove('open');
-}
 
 // ══════════════════════════════════════
 // CHAT
@@ -913,9 +931,10 @@ function renderPwList(){
 function buildPRing(){
   const ring=document.getElementById('pRing');
   const n=players.length;
+  // b-outer = 290px, радіус кіл гравців = 48% від 290 = ~140px → 48% у відсотках
   ring.innerHTML=players.map((p,i)=>{
     const a=(i/n)*2*Math.PI-Math.PI/2;
-    const cx=50+42*Math.cos(a), cy=50+42*Math.sin(a);
+    const cx=50+44*Math.cos(a), cy=50+44*Math.sin(a);
     const ph=photos[p]||'';
     const avEl=ph
       ?`<img class="pdot-av" src="${ph}" onerror="this.outerHTML='<div class=pdot-av-ph>${p[0]}</div>'">`
@@ -1013,6 +1032,37 @@ function showVoteCard(d){
   if(involved) document.getElementById('vChoiceLbl').textContent=`Поцілувати ${iAmSpin?n2:n1}?`;
 
   document.getElementById('oVote').classList.add('on');
+
+  // Автопропуск якщо учасники не реагують за 20 секунд
+  const si=curVote.si, ti=curVote.ti;
+  startVoteCountdown(20, ()=>{
+    // Хто не проголосував — вважається "Ні"
+    if(curVote.spinner===null) applyVoteMsg({role:'spinner',yes:false,si,ti,_from:'auto'});
+    if(curVote.target===null)  applyVoteMsg({role:'target', yes:false,si,ti,_from:'auto'});
+  });
+}
+
+let voteTimer=null, skipTimer=null;
+
+function clearVoteTimers(){
+  clearTimeout(voteTimer); clearTimeout(skipTimer);
+  clearInterval(window._timerInterval);
+}
+
+function startVoteCountdown(sec, onDone){
+  clearVoteTimers();
+  let left=sec;
+  const fill=document.getElementById('vTimerFill');
+  const skipSec=document.getElementById('vSkipSec');
+  if(fill) fill.style.width='100%';
+  window._timerInterval=setInterval(()=>{
+    left-=0.1;
+    const pct=Math.max(0,(left/sec)*100);
+    if(fill) fill.style.width=pct+'%';
+    if(skipSec) skipSec.textContent=Math.ceil(left);
+    if(left<=0){ clearInterval(window._timerInterval); }
+  },100);
+  voteTimer=setTimeout(onDone, sec*1000);
 }
 
 function castVote(yes){
@@ -1079,9 +1129,14 @@ function applyVoteResult(d){
   document.getElementById('vWait').style.display='none';
   document.getElementById('vResult').style.display='block';
   document.getElementById('vStatus').textContent='';
+  document.getElementById('vAutoSkip').style.display='block';
+  // Автопропуск результату через 5 секунд
+  clearVoteTimers();
+  startVoteCountdown(5, ()=>closeVote());
 }
 
 function closeVote(){
+  clearVoteTimers();
   document.getElementById('oVote').classList.remove('on');
   const ni=(spinnerIdx+1)%players.length;
   const nr=ni===0?round+1:round;
