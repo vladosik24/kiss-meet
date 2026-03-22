@@ -281,6 +281,12 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
       <div class="ico-btn" onclick="showScore()">📊</div>
     </div>
   </div>
+  <!-- Код кімнати — завжди видно -->
+  <div onclick="shareRoom()" style="display:flex;align-items:center;gap:6px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.25);border-radius:50px;padding:4px 14px;margin-bottom:3px;cursor:pointer;flex-shrink:0">
+    <span style="font-size:.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase">Кімната</span>
+    <span id="gameRoomCode" style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:4px">----</span>
+    <span style="font-size:.7rem;color:var(--muted)">📤</span>
+  </div>
   <div class="sc-bar">
     <div class="sc-pill">💋 <b id="gK">0</b></div>
     <div class="sc-pill">🙈 <b id="gN">0</b></div>
@@ -935,15 +941,14 @@ async function joinByCode(){
 }
 
 function shareRoom(){
-  const code=document.getElementById('roomCodeEl').textContent;
+  const code=roomCode||document.getElementById('roomCodeEl').textContent;
   if(!code||code==='----') return;
-  const text=`💋 Поцілунок-Знайомство\nКод кімнати: ${code}\nВідкрий гру і впиши код!`;
+  const gameUrl=window.location.href.split('?')[0];
+  const text=`💋 Поцілунок-Знайомство\n\nКод кімнати: ${code}\n\nВідкрий гру і впиши код у поле внизу:\n${gameUrl}`;
   if(navigator.share){
-    navigator.share({title:'Поцілунок-Знайомство',text}).catch(()=>{});
+    navigator.share({title:'Поцілунок-Знайомство — кімната '+code, text}).catch(()=>{});
   } else {
-    navigator.clipboard?.writeText(text).then(()=>bar('Скопійовано!','ok')).catch(()=>{
-      bar('Код: '+code,'ok');
-    });
+    navigator.clipboard?.writeText(text).then(()=>bar('Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));
   }
 }
 function waitPeer(ms=9000){
@@ -1253,8 +1258,14 @@ function initGame(d){
   if(d.coins)coins=d.coins; if(d.gifts)gifts=d.gifts;
   if(d.totalK!=null){totalK=d.totalK;totalN=d.totalN;}
   players.forEach(p=>{if(!scores[p])scores[p]={k:0,n:0,g:0};if(!coins[p])coins[p]=0;if(!gifts[p])gifts[p]=[];});
+  // Відновлюємо монети з localStorage якщо є
+  if(myName && coins[myName]===0){
+    try{const s=localStorage.getItem('km_coins_'+myTgId);if(s)coins[myName]=parseInt(s)||0;}catch(e){}
+  }
   buildPRing(); updateBar(); updateMyTurn(); ss('sGame');
   document.getElementById('myCoins').textContent=coins[myName]||0;
+  // Показуємо код кімнати в грі
+  document.getElementById('gameRoomCode').textContent=roomCode||'----';
 }
 
 // ══════════════════════════════════════
