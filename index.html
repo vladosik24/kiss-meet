@@ -609,7 +609,7 @@ let viewingProfile=''; // ім'я кого переглядаємо
 // 1. В боті створи команду з назвою: km_sync
 // 2. Вставь туди блок KM_SYNC_COMMAND з файлу бота
 // 3. Напиши /webhook в боті — скопіюй URL сюди:
-const BOT_WEBHOOK = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABpv8fv6nCwbI7COqUJK9P1HAyma5BI1Bg5DujeeFKTB2-hPEtlEJhfNuBxKVdYP9l_0b1I2uLOAdskMHnPLH4M_gDMm8ZBq73Ydhw0uTopZu-I6xb_EzJk1dHEVFm4pG8cX8_U7mvGf_vGoJOix5eh5RWkoL3Ik3rnCozYV34rHV_DGhC57G3L4DY32zpAzHg628Jw'; // вставити URL від /webhook
+const BOT_WEBHOOK = 'https://api.telebotcreator.com/new-webhook?data=gAAAAABpwCfsuqntht4vjtsGTWs2HJy_be6rqM3l6BdWvsWdL4zyB8MkGR1xegY5D6rVYbr_E2cem6pTe6z_3hNwFfGI0uAtNDGDR-tYdnyR0iAerxuT6m9NOuyiebMim1zF_bM_39Va0Qikhi9U6uP1Wr3TAlE1E0Sdl4CuLIgsT9nEcTZBZ1ElftH-MNA6kLarzrETBqXY'; // вставити URL від /webhook
 
 let myTgId = '';
 
@@ -943,7 +943,8 @@ async function joinByCode(){
 function shareRoom(){
   const code=roomCode||document.getElementById('roomCodeEl').textContent;
   if(!code||code==='----') return;
-  const gameUrl=window.location.href.split('?')[0];
+  // Чистий URL без Telegram hash параметрів
+  const gameUrl='https://vladosik24.github.io/kiss-meet/';
   const text=`💋 Поцілунок-Знайомство\n\nКод кімнати: ${code}\n\nВідкрий гру і впиши код у поле внизу:\n${gameUrl}`;
   if(navigator.share){
     navigator.share({title:'Поцілунок-Знайомство — кімната '+code, text}).catch(()=>{});
