@@ -97,7 +97,46 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.3)}}
 .g-hint{color:var(--muted);font-size:.74rem;text-align:center;margin:3px 0;flex-shrink:0;}
 
-/* ── PROFILE OVERLAY ── */
+/* ── РАМКИ АВАТАРА ── */
+.pdot-av.frame-gold,.pdot-av-ph.frame-gold{border:2px solid #f0b429!important;box-shadow:0 0 6px rgba(240,180,41,.7);}
+.pdot-av.frame-hearts,.pdot-av-ph.frame-hearts{border:2px solid #ff4d7e!important;box-shadow:0 0 6px rgba(255,77,126,.8);}
+.pdot-av.frame-fire,.pdot-av-ph.frame-fire{border:2px solid #ff6a00!important;box-shadow:0 0 8px rgba(255,106,0,.8);}
+.pdot-av.frame-rainbow,.pdot-av-ph.frame-rainbow{border:2px solid transparent!important;background-clip:padding-box;outline:2px solid transparent;box-shadow:0 0 0 2px #f00,0 0 0 3px #f90,0 0 0 4px #ff0,0 0 8px rgba(255,0,255,.5);}
+.pdot-av.frame-vip,.pdot-av-ph.frame-vip{border:2px solid #b388ff!important;box-shadow:0 0 10px rgba(179,136,255,.9);}
+
+/* Рамка у профілі (більший аватар) */
+.pav-wrap{position:relative;display:inline-block;}
+.pav-frame{position:absolute;inset:-3px;border-radius:50%;pointer-events:none;}
+.pav-frame.frame-gold{box-shadow:0 0 0 3px #f0b429,0 0 12px rgba(240,180,41,.6);}
+.pav-frame.frame-hearts{box-shadow:0 0 0 3px #ff4d7e,0 0 12px rgba(255,77,126,.7);}
+.pav-frame.frame-fire{box-shadow:0 0 0 3px #ff6a00,0 0 14px rgba(255,106,0,.8);}
+.pav-frame.frame-rainbow{box-shadow:0 0 0 2px #f00,0 0 0 4px #ff0,0 0 0 6px #0ff,0 0 16px rgba(255,0,255,.5);}
+.pav-frame.frame-vip{box-shadow:0 0 0 3px #b388ff,0 0 16px rgba(179,136,255,.8);}
+
+/* ── ТЕМИ ── */
+body.theme-pink{--r:#c8003a;--rg:#ff69b4;--dark:#1a0011;background-color:#1a0011;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,105,180,.18),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,20,147,.12),transparent);}
+body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a0015;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(106,13,173,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(179,136,255,.12),transparent);}
+
+/* ── SHOP ── */
+.shop-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);align-items:flex-end;justify-content:center;}
+.shop-overlay.on{display:flex;}
+.shop-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;max-height:85vh;overflow-y:auto;}
+.shop-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.shop-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .2s;}
+.shop-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.shop-item{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.shop-item:active{background:rgba(255,77,126,.12);}
+.shop-item.owned{border-color:rgba(240,180,41,.5);background:rgba(240,180,41,.06);}
+.shop-item.equipped{border-color:var(--rg);background:rgba(255,77,126,.1);}
+.shop-item-icon{font-size:2rem;margin-bottom:6px;}
+.shop-item-name{font-size:.78rem;font-weight:600;margin-bottom:4px;}
+.shop-item-price{font-size:.68rem;color:var(--gold);}
+.shop-item-badge{position:absolute;top:6px;right:8px;font-size:.55rem;padding:2px 6px;border-radius:20px;}
+.badge-owned{background:rgba(240,180,41,.2);color:var(--gold);}
+.badge-on{background:rgba(255,77,126,.2);color:var(--rg);}
+.shop-balance{text-align:center;font-size:.82rem;color:var(--gold);margin-bottom:14px;}
+.shop-close{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:50px;padding:12px;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;margin-top:14px;}
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:flex-end;justify-content:center;padding-bottom:0;}
 .overlay.on{display:flex;}
 .overlay.center{align-items:center;}
@@ -279,6 +318,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
       <div class="ico-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
       <div class="ico-btn" id="chatBtn" onclick="toggleChat()">💬</div>
       <div class="ico-btn" onclick="showScore()">📊</div>
+      <div class="ico-btn" onclick="openShop()" title="Магазин">🛍</div>
     </div>
   </div>
   <!-- Код кімнати — завжди видно -->
@@ -352,6 +392,20 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
       <div class="v-type" id="vType">...</div>
       <div style="font-size:.7rem;color:var(--muted);margin-top:8px" id="vAutoSkip">Автопропуск через <b id="vSkipSec">5</b>с</div>
     </div>
+  </div>
+</div>
+
+<!-- ══ SHOP ══ -->
+<div class="shop-overlay" id="shopOverlay">
+  <div class="shop-sheet">
+    <div style="text-align:center;font-family:Georgia,serif;font-size:1.2rem;margin-bottom:4px">🛍 Магазин</div>
+    <div class="shop-balance">🪙 <span id="shopCoins">0</span> монет</div>
+    <div class="shop-tabs">
+      <button class="shop-tab active" onclick="shopTab('frames',this)">🖼 Рамки</button>
+      <button class="shop-tab" onclick="shopTab('themes',this)">🎨 Теми</button>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <button class="shop-close" onclick="closeShop()">← Закрити</button>
   </div>
 </div>
 
@@ -596,12 +650,149 @@ let myName='', myPhoto='', myPeerId='', isHost=false;
 let peer=null, hostConn=null, guestConns={};
 let roomCode='';
 let players=[], photos={}, scores={}, coins={}, gifts={};
-// scores[name]={k,n,g} k=kisses n=refuses g=gifts received count
+let frames={}; // frames[name] = frame class
+let themes={}; // themes[name] = theme class
 let spinnerIdx=0, round=1, totalK=0, totalN=0;
 let spinning=false;
 let curVote={spinner:null,target:null,si:0,ti:0};
 let cleanTimer=null, voted=false;
-let viewingProfile=''; // ім'я кого переглядаємо
+let viewingProfile='';
+
+// Моя персоналізація
+let myFrame='', myTheme='';
+
+// ══════════════════════════════════════
+// SHOP DATA
+// ══════════════════════════════════════
+const SHOP_FRAMES=[
+  {id:'frame-gold',    name:'Золота',   icon:'💛', price:50},
+  {id:'frame-hearts',  name:'Серця',    icon:'💋', price:80},
+  {id:'frame-fire',    name:'Вогонь',   icon:'🔥', price:120},
+  {id:'frame-vip',     name:'VIP',      icon:'💜', price:200},
+  {id:'frame-rainbow', name:'Веселка',  icon:'🌈', price:300},
+];
+const SHOP_THEMES=[
+  {id:'',            name:'Темна',    icon:'🌑', price:0},
+  {id:'theme-pink',  name:'Рожева',   icon:'🌸', price:100},
+  {id:'theme-purple',name:'Нічна',    icon:'💜', price:150},
+];
+
+function loadMyStyle(){
+  try{
+    const s=localStorage.getItem('km_style_'+myTgId);
+    if(s){const j=JSON.parse(s);myFrame=j.frame||'';myTheme=j.theme||'';}
+  }catch(e){}
+  applyTheme(myTheme);
+}
+
+function saveMyStyle(){
+  try{localStorage.setItem('km_style_'+myTgId, JSON.stringify({frame:myFrame,theme:myTheme}));}catch(e){}
+  // Синхронізуємо з ботом
+  syncToBot('set_style',{frame:myFrame,theme:myTheme});
+}
+
+function applyTheme(t){
+  document.body.classList.remove('theme-pink','theme-purple');
+  if(t) document.body.classList.add(t);
+}
+
+function getFrameClass(name){
+  return frames[name]||'';
+}
+
+function openShop(){
+  document.getElementById('shopCoins').textContent=coins[myName]||0;
+  shopTab('frames', document.querySelector('.shop-tab'));
+  document.getElementById('shopOverlay').classList.add('on');
+}
+
+function closeShop(){
+  document.getElementById('shopOverlay').classList.remove('on');
+}
+
+function shopTab(tab, el){
+  document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const grid=document.getElementById('shopGrid');
+  const myCoins=coins[myName]||0;
+  const ownedFrames=getOwned('frames');
+  const ownedThemes=getOwned('themes');
+
+  if(tab==='frames'){
+    grid.innerHTML=SHOP_FRAMES.map(f=>{
+      const owned=ownedFrames.includes(f.id)||f.price===0;
+      const equipped=myFrame===f.id;
+      return `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" onclick="shopBuy('frame','${f.id}',${f.price})">
+        ${equipped?'<div class="shop-item-badge badge-on">Одягнено</div>':owned?'<div class="shop-item-badge badge-owned">Є</div>':''}
+        <div class="shop-item-icon">${f.icon}</div>
+        <div class="shop-item-name">${f.name}</div>
+        <div class="shop-item-price">${owned?'Натисни щоб одягнути':'🪙 '+f.price}</div>
+      </div>`;
+    }).join('');
+  } else {
+    grid.innerHTML=SHOP_THEMES.map(t=>{
+      const owned=ownedThemes.includes(t.id)||t.price===0;
+      const equipped=myTheme===t.id;
+      return `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" onclick="shopBuy('theme','${t.id}',${t.price})">
+        ${equipped?'<div class="shop-item-badge badge-on">Активна</div>':owned?'<div class="shop-item-badge badge-owned">Є</div>':''}
+        <div class="shop-item-icon">${t.icon}</div>
+        <div class="shop-item-name">${t.name}</div>
+        <div class="shop-item-price">${owned?'Натисни щоб обрати':'🪙 '+t.price}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function getOwned(type){
+  try{
+    const s=localStorage.getItem('km_owned_'+myTgId);
+    if(s){const j=JSON.parse(s);return j[type]||[];}
+  }catch(e){}
+  return [];
+}
+
+function saveOwned(type, id){
+  try{
+    const s=localStorage.getItem('km_owned_'+myTgId);
+    const j=s?JSON.parse(s):{frames:[],themes:[]};
+    if(!j[type]) j[type]=[];
+    if(!j[type].includes(id)) j[type].push(id);
+    localStorage.setItem('km_owned_'+myTgId, JSON.stringify(j));
+  }catch(e){}
+}
+
+function shopBuy(type, id, price){
+  const myCoins=coins[myName]||0;
+  const owned=type==='frame'?getOwned('frames').includes(id):getOwned('themes').includes(id);
+
+  if(!owned && price>0){
+    if(myCoins<price){bar('Недостатньо монет! 🪙'+myCoins+' / '+price,'err');return;}
+    coins[myName]-=price;
+    document.getElementById('myCoins').textContent=coins[myName];
+    document.getElementById('shopCoins').textContent=coins[myName];
+    try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
+    saveOwned(type==='frame'?'frames':'themes', id);
+    syncToBot('buy_item',{item_id:id,item_type:type,coins:-price});
+  }
+
+  if(type==='frame'){
+    myFrame=id;
+    frames[myName]=id;
+    // Оновлюємо рамку на кільці
+    buildPRing();
+    // Надсилаємо всім
+    bcastMsg({type:'style_update',name:myName,frame:id,theme:myTheme,_from:myPeerId});
+  } else {
+    myTheme=id;
+    themes[myName]=id;
+    applyTheme(id);
+    bcastMsg({type:'style_update',name:myName,frame:myFrame,theme:id,_from:myPeerId});
+  }
+  saveMyStyle();
+  bar(owned?'Одягнено!':'Куплено! 🎉','ok');
+  // Оновлюємо грід
+  shopTab(type==='frame'?'frames':'themes', document.querySelector('.shop-tab.active'));
+}
 
 // ══════════════════════════════════════
 // SYNC З БОТОМ
@@ -921,6 +1112,8 @@ async function joinByCode(){
   try{
     setLoad('Завантажуємо профіль...','');
     await loadProfileFromBot();
+    loadMyStyle(); // завантажуємо стиль з localStorage
+    frames[myName]=myFrame; // встановлюємо свою рамку
     setLoad('Завантажуємо PeerJS...','Зачекай');
     await waitPeer();
     setLoad('Ініціалізуємо...','');
@@ -1092,7 +1285,7 @@ function tryConnect(code,hp,timeout=10000){
     conn.on('open',()=>{
       if(done) return;
       done=true; clearTimeout(timer);
-      conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId});
+      conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId,frame:myFrame});
       document.getElementById('roomCodeEl').textContent=code;
       document.getElementById('lobbyRole').textContent='Ти гість 🎉';
       ss('sLobby');
@@ -1124,6 +1317,7 @@ function handleMsg(d,conn){
     const isNew=!players.includes(name);
     if(isNew){players.push(name);scores[name]={k:0,n:0,g:0};coins[name]=0;gifts[name]=[];}
     photos[name]=d.photo||'';
+    if(d.frame!==undefined) frames[name]=d.frame;
     conn.metadata=name;
 
     const gameStarted=document.getElementById('sGame').classList.contains('on');
@@ -1173,9 +1367,14 @@ function handleMsg(d,conn){
     applyNextTurn(d);
     return;
   }
-  if(d.type==='chat'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId) renderChatMsg(d,false); return;
+  if(d.type==='style_update'){
+    if(isHost) bcast(d);
+    if(d.name){
+      if(d.frame!==undefined) frames[d.name]=d.frame;
+      if(d.name===myName && d.theme!==undefined){applyTheme(d.theme);myTheme=d.theme;}
+      buildPRing();
+    }
+    return;
   }
   if(d.type==='gift'){
     if(isHost)bcast(d);
@@ -1295,14 +1494,14 @@ function renderPwList(){
 function buildPRing(){
   const ring=document.getElementById('pRing');
   const n=players.length;
-  // b-outer = 290px, радіус кіл гравців = 48% від 290 = ~140px → 48% у відсотках
   ring.innerHTML=players.map((p,i)=>{
     const a=(i/n)*2*Math.PI-Math.PI/2;
     const cx=50+44*Math.cos(a), cy=50+44*Math.sin(a);
     const ph=photos[p]||'';
+    const fc=frames[p]||''; // рамка гравця
     const avEl=ph
-      ?`<img class="pdot-av" src="${ph}" onerror="this.outerHTML='<div class=pdot-av-ph>${p[0]}</div>'">`
-      :`<div class="pdot-av-ph">${p[0]}</div>`;
+      ?`<img class="pdot-av ${fc}" src="${ph}" onerror="this.outerHTML='<div class=\\'pdot-av-ph ${fc}\\'>${p[0]}</div>'">`
+      :`<div class="pdot-av-ph ${fc}">${p[0]}</div>`;
     return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openGiftPopup('${p}',event)">
       ${avEl}<div class="pdot-n">${p}</div></div>`;
   }).join('');
