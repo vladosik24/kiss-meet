@@ -4,44 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>💋 Поцілуй або Познайся</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap');
 :root{--r:#d4003a;--rg:#ff4d7e;--gold:#f0b429;--dark:#08000f;--border:rgba(255,255,255,.1);--muted:rgba(255,255,255,.4);}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--dark);color:#fff;font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+/* Системні шрифти — не залежать від Google Fonts */
+body{ font-family: -apple-system, 'Segoe UI', sans-serif; }
+.serif{ font-family: Georgia, 'Times New Roman', serif; }
+body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 60%,rgba(212,0,58,.18) 0%,transparent 70%),radial-gradient(ellipse 50% 35% at 85% 25%,rgba(255,77,126,.12) 0%,transparent 65%);pointer-events:none;z-index:0;}
 
 .screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;position:relative;z-index:1;animation:fadeUp .4s ease;}
 .screen.on{display:flex;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-.logo{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,8vw,3.6rem);font-weight:700;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.05;margin-bottom:6px;}
+.logo{font-family:Georgia,'Times New Roman',serif;font-size:clamp(2.2rem,8vw,3.6rem);font-weight:700;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.05;margin-bottom:6px;}
 .sub{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:28px;}
 
 /* LOADING */
 .spinner{width:52px;height:52px;border:3px solid rgba(255,77,126,.2);border-top-color:var(--rg);border-radius:50%;animation:rot .8s linear infinite;margin:0 auto 20px;}
 @keyframes rot{to{transform:rotate(360deg)}}
-.load-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;margin-bottom:8px;text-align:center;}
+.load-title{font-family:Georgia,'Times New Roman',serif;font-size:1.6rem;font-style:italic;margin-bottom:8px;text-align:center;}
 .load-sub{color:var(--muted);font-size:.85rem;text-align:center;letter-spacing:1px;}
 
 /* NAME SCREEN */
 .card{width:100%;max-width:420px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:20px;padding:22px 20px;margin-bottom:16px;backdrop-filter:blur(8px);}
 .label{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--rg);margin-bottom:14px;font-weight:500;}
-.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .25s,background .25s;}
+.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:#fff;font-family:-apple-system,'Segoe UI',sans-serif;font-size:.95rem;outline:none;transition:border-color .25s,background .25s;}
 .inp:focus{border-color:var(--rg);background:rgba(255,77,126,.1);}
 .inp::placeholder{color:rgba(255,255,255,.28);}
 
-.btn-main{width:100%;max-width:420px;background:linear-gradient(135deg,var(--r) 0%,#9e002b 100%);border:none;border-radius:50px;padding:17px 30px;color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;font-weight:600;cursor:pointer;letter-spacing:.5px;box-shadow:0 8px 28px rgba(212,0,58,.4);transition:transform .2s,box-shadow .2s,opacity .2s;}
+.btn-main{width:100%;max-width:420px;background:linear-gradient(135deg,var(--r) 0%,#9e002b 100%);border:none;border-radius:50px;padding:17px 30px;color:#fff;font-family:Georgia,'Times New Roman',serif;font-size:1.25rem;font-style:italic;font-weight:600;cursor:pointer;letter-spacing:.5px;box-shadow:0 8px 28px rgba(212,0,58,.4);transition:transform .2s,box-shadow .2s,opacity .2s;}
 .btn-main:not(:disabled):active{transform:translateY(-2px);box-shadow:0 12px 36px rgba(212,0,58,.6);}
 .btn-main:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
-.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:13px 26px;color:rgba(255,255,255,.65);font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;letter-spacing:1px;transition:all .25s;width:100%;max-width:420px;margin-top:10px;}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:13px 26px;color:rgba(255,255,255,.65);font-family:-apple-system,'Segoe UI',sans-serif;font-size:.85rem;cursor:pointer;letter-spacing:1px;transition:all .25s;width:100%;max-width:420px;margin-top:10px;}
 .btn-ghost:active{background:rgba(255,255,255,.1);}
 
 /* LOBBY */
 .room-badge{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);border-radius:14px;padding:16px 22px;text-align:center;margin-bottom:18px;width:100%;max-width:420px;}
-.room-code{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:700;color:var(--gold);letter-spacing:8px;line-height:1;}
+.room-code{font-family:Georgia,'Times New Roman',serif;font-size:2.6rem;font-weight:700;color:var(--gold);letter-spacing:8px;line-height:1;}
 .room-hint{font-size:.7rem;color:var(--muted);margin-top:4px;letter-spacing:1px;}
 
 .pw-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
@@ -56,7 +56,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 
 /* GAME */
 .turn-bar{width:100%;max-width:420px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.turn-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;}
+.turn-name{font-family:Georgia,'Times New Roman',serif;font-size:1.15rem;font-style:italic;}
 .turn-round{font-size:.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
 .counts{display:flex;gap:10px;}
 .cnt{font-size:.76rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px 12px;}
@@ -86,7 +86,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .r-emoji{font-size:3.5rem;display:block;margin-bottom:8px;animation:bob .9s ease infinite alternate;}
 @keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
 .r-lbl{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-.r-type{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,6vw,2.7rem);font-weight:700;margin-bottom:16px;line-height:1;}
+.r-type{font-family:Georgia,'Times New Roman',serif;font-size:clamp(1.9rem,6vw,2.7rem);font-weight:700;margin-bottom:16px;line-height:1;}
 .r-type.kiss{background:linear-gradient(135deg,var(--r),var(--rg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .r-type.meet{background:linear-gradient(135deg,var(--gold),#e88a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .r-players{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
@@ -116,6 +116,30 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 /* joining badge */
 .auto-badge{background:rgba(0,180,80,.12);border:1px solid rgba(0,180,80,.3);border-radius:12px;padding:10px 16px;font-size:.82rem;color:rgba(150,255,180,.9);text-align:center;width:100%;max-width:420px;margin-bottom:12px;}
 </style>
+<script>
+// Завантажуємо PeerJS з кількох CDN — перший що відповість
+(function(){
+  const CDNS = [
+    'https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js',
+    'https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js',
+    'https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js',
+  ];
+  let idx = 0;
+  function tryLoad(){
+    if(idx >= CDNS.length){
+      document.getElementById('loadTitle').textContent = 'Помилка завантаження';
+      document.getElementById('loadSub').textContent = 'Перевір інтернет-з\'єднання';
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = CDNS[idx];
+    s.onload = () => { window._peerReady = true; };
+    s.onerror = () => { idx++; tryLoad(); };
+    document.head.appendChild(s);
+  }
+  tryLoad();
+})();
+</script>
 </head>
 <body>
 
@@ -283,13 +307,28 @@ async function enterGame(){
 }
 
 // ═══════════════════════════════════════════════
-// PEER INIT
+// PEER INIT — чекаємо завантаження PeerJS
 // ═══════════════════════════════════════════════
-function initPeer(){
+function waitForPeer(timeout=8000){
   return new Promise((res,rej)=>{
-    peer = new Peer(undefined,{debug:0});
-    peer.on('open',id=>{ myPeerId=id; res(); });
-    peer.on('error',e=>{ bar('PeerJS: '+e.type,'err'); rej(e); });
+    if(window.Peer) return res();
+    const start = Date.now();
+    const t = setInterval(()=>{
+      if(window.Peer){ clearInterval(t); res(); }
+      else if(Date.now()-start > timeout){ clearInterval(t); rej(new Error('PeerJS не завантажився')); }
+    }, 100);
+  });
+}
+
+function initPeer(){
+  return new Promise(async(res,rej)=>{
+    try{
+      setLoad('Завантажуємо PeerJS...','Зачекай секунду');
+      await waitForPeer();
+      peer = new Peer(undefined,{debug:0});
+      peer.on('open',id=>{ myPeerId=id; res(); });
+      peer.on('error',e=>{ bar('PeerJS: '+e.type,'err'); rej(e); });
+    } catch(e){ rej(e); }
   });
 }
 
