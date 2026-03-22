@@ -582,9 +582,28 @@ let cleanTimer=null, voted=false;
 let viewingProfile=''; // ім'я кого переглядаємо
 
 // ══════════════════════════════════════
-// TELEGRAM INIT
+// SYNC З БОТОМ
 // ══════════════════════════════════════
+// Webhook URL генерується в боті командою Bot.getUrlFor("km_sync")
+// Вставте сюди URL після запуску бота:
+const BOT_WEBHOOK = ''; // 'https://telebotcreator.com/webhook/...'
+
+let myTgId = ''; // заповнюється з Telegram WebApp або URL ?uid=
+
+function syncToBot(event, payload){
+  if(!BOT_WEBHOOK) return; // не налаштовано
+  const body = {event, uid: myTgId, name: myName, ...payload};
+  fetch(BOT_WEBHOOK, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  }).catch(()=>{});
+}
 (function(){
+  // uid з URL (?uid=...) — передає бот через кнопку Грати
+  const urlUid=new URLSearchParams(window.location.search).get('uid');
+  if(urlUid) myTgId=urlUid;
+
   try{
     const tg=window.Telegram?.WebApp;
     const u=tg?.initDataUnsafe?.user;
@@ -593,6 +612,7 @@ let viewingProfile=''; // ім'я кого переглядаємо
       const ln=(u.last_name||'').trim();
       const full=(fn+' '+ln).trim()||u.username||'';
       myPhoto=u.photo_url||'';
+      if(u.id) myTgId=String(u.id); // перезаписуємо — точніше
       if(full){
         document.getElementById('nameInp').value=full.slice(0,16);
         document.getElementById('tgProfile').style.display='flex';
@@ -777,6 +797,15 @@ function applyGift(d){
     const gl=gifts[to];
     document.getElementById('profGiftsText').textContent=gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  ');
     document.getElementById('profG').textContent=scores[to].g;
+  }
+
+  // Синхронізуємо з ботом
+  if(myName===from){
+    // Відправник — витратив монети
+    syncToBot('gift_sent', {coins: -gift.cost, gift_name: gift.name, gift_icon: gift.icon, to_name: to});
+  } else if(myName===to){
+    // Отримувач — отримав подарунок
+    syncToBot('gift_received', {gifts: 1, gift_name: gift.name, gift_icon: gift.icon, from_name: from});
   }
 
   // В чат
@@ -1356,12 +1385,18 @@ function applyVoteResult(d){
     coins[sn]=(coins[sn]||0)+KISS_COINS;
     coins[tn]=(coins[tn]||0)+KISS_COINS;
     document.getElementById('myCoins').textContent=coins[myName]||0;
-    // Чат тільки один раз — у того хто надіслав результат
     if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${KISS_COINS} кожному`);
+    // Синхронізуємо з ботом — тільки для поточного гравця
+    if(myName===sn || myName===tn){
+      syncToBot('kiss', {kisses:1, coins:KISS_COINS, partner: myName===sn?tn:sn});
+    }
   } else {
     totalN++;
     const refuser=sv===false?sn:tn;
     if(isOriginator) addChatEvent(`🙈 ${refuser} відмовив(ла)`);
+    if(myName===refuser){
+      syncToBot('refuse', {refuses:1});
+    }
   }
   document.getElementById('gK').textContent=totalK;
   document.getElementById('gN').textContent=totalN;
