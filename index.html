@@ -448,16 +448,14 @@ function renderTrackList(){
 }
 
 function playTrack(i, giftMode=false){
-  // Якщо хтось інший грає — забороняємо
   if(globalMusicPlaying && globalMusicOwner!==myName){
     bar(`🎵 Зараз грає ${globalMusicOwner}`, 'info'); return;
   }
   if(audio){audio.pause();audio=null;}
-  // Зупинити якщо той самий трек
   if(curTrack===i && !giftMode){
     curTrack=-1;
     setMusicState(false,'');
-    bcastMsg({type:'music_stop',from:myName});
+    bcast({type:'music_stop',from:myName,_from:myPeerId});
     renderTrackList();
     document.getElementById('nowPlaying').textContent='';
     return;
@@ -466,30 +464,45 @@ function playTrack(i, giftMode=false){
   const t=localTracks[i];
   audio=new Audio(t.url);
   audio.volume=vol;
-  audio.loop=false; // не нескінченно
+  audio.loop=false;
   audio.onended=()=>{
     curTrack=-1; audio=null;
     setMusicState(false,'');
-    bcastMsg({type:'music_stop',from:myName});
+    bcast({type:'music_stop',from:myName,_from:myPeerId});
     renderTrackList();
     document.getElementById('nowPlaying').textContent='';
   };
   audio.play().catch(()=>bar('Помилка відтворення','err'));
-
   setMusicState(true, myName);
   renderTrackList();
   document.getElementById('nowPlaying').textContent='▶ '+t.name;
-  const chatTxt = giftMode
-    ? `🎁🎵 ${myName} дарує пісню "${t.name}"`
-    : `🎵 ${myName} вмикає: ${t.name}`;
-  addChatEvent(chatTxt);
+  addChatEvent(giftMode ? `🎁🎵 ${myName} дарує пісню "${t.name}"` : `🎵 ${myName} вмикає: ${t.name}`);
 
-  // Надіслати файл всім як base64
+  // Надіслати файл чанками по 12КБ
+  if(Object.keys(guestConns).length===0) return;
   bar('Надсилаємо музику...','info');
   const reader=new FileReader();
   reader.onload=e=>{
-    bcast({type:'music_play', from:myName, trackName:t.name, b64:e.target.result, _from:myPeerId});
-    bar('✅ Музику надіслано','ok');
+    const b64=e.target.result; // data:audio/...;base64,XXXXX
+    const CHUNK=12000; // 12КБ на чанк — безпечно для PeerJS DataChannel
+    const total=Math.ceil(b64.length/CHUNK);
+    // Спочатку надсилаємо заголовок
+    bcast({type:'music_header', from:myName, trackName:t.name, total, _from:myPeerId});
+    // Потім чанки з невеликою паузою між ними
+    let idx=0;
+    function sendNext(){
+      if(idx>=total) return;
+      bcast({type:'music_chunk', idx, data:b64.slice(idx*CHUNK,(idx+1)*CHUNK), _from:myPeerId});
+      idx++;
+      setTimeout(sendNext, 20); // 20мс між чанками
+    }
+    sendNext();
+    // Показуємо прогрес
+    const prog=setInterval(()=>{
+      const pct=Math.min(100,Math.round(idx/total*100));
+      bar(`📤 Надсилаємо музику... ${pct}%`,'info');
+      if(pct>=100){ clearInterval(prog); bar('✅ Музику надіслано','ok'); }
+    },300);
   };
   reader.readAsDataURL(t.file);
 }
@@ -499,10 +512,14 @@ function setMusicState(playing, owner){
   globalMusicOwner=owner;
 }
 
+// Буфер для збирання чанків
+let musicBuf={chunks:[], total:0, name:'', from:''};
+
 function playRemoteAudio(b64, name, from){
   if(audio){audio.pause();audio=null;}
   setMusicState(true, from);
   renderTrackList();
+  document.getElementById('nowPlaying').textContent='⏳ Завантажуємо...';
   audio=new Audio(b64);
   audio.volume=vol;
   audio.loop=false;
@@ -512,12 +529,21 @@ function playRemoteAudio(b64, name, from){
     renderTrackList();
     document.getElementById('nowPlaying').textContent='';
   };
-  audio.play().catch(()=>{
-    // Автовідтворення заблоковано — показуємо кнопку
-    document.getElementById('nowPlaying').textContent='▶ Натисни для звуку: '+name;
-    document.getElementById('nowPlaying').onclick=()=>{audio.play();document.getElementById('nowPlaying').onclick=null;};
-  });
-  document.getElementById('nowPlaying').textContent='▶ '+name;
+  const tryPlay=()=>{
+    audio.play().catch(()=>{
+      document.getElementById('nowPlaying').textContent='▶ Натисни для звуку: '+name;
+      document.getElementById('nowPlaying').style.cursor='pointer';
+      document.getElementById('nowPlaying').onclick=()=>{
+        audio?.play();
+        document.getElementById('nowPlaying').textContent='▶ '+name;
+        document.getElementById('nowPlaying').onclick=null;
+        document.getElementById('nowPlaying').style.cursor='default';
+      };
+      return;
+    });
+    document.getElementById('nowPlaying').textContent='▶ '+name;
+  };
+  tryPlay();
 }
 
 function setVol(v){vol=v/100;if(audio)audio.volume=vol;}
@@ -1014,12 +1040,33 @@ function handleMsg(d,conn){
     if(d._from!==myPeerId)applyGift(d);
     return;
   }
-  if(d.type==='music_play'){
+  if(d.type==='music_header'){
     if(isHost) bcast(d);
     if(d._from!==myPeerId){
+      // Починаємо приймати новий трек
+      musicBuf={chunks:new Array(d.total), total:d.total, name:d.trackName, from:d.from, received:0};
       setMusicState(true, d.from);
-      playRemoteAudio(d.b64, d.trackName, d.from);
+      renderTrackList();
+      document.getElementById('nowPlaying').textContent=`⏳ Отримуємо "${d.trackName}"... 0%`;
       addChatEvent(`🎵 ${d.from} вмикає: ${d.trackName}`);
+    }
+    return;
+  }
+  if(d.type==='music_chunk'){
+    if(isHost) bcast(d);
+    if(d._from!==myPeerId && musicBuf.total>0){
+      musicBuf.chunks[d.idx]=d.data;
+      musicBuf.received++;
+      const pct=Math.round(musicBuf.received/musicBuf.total*100);
+      document.getElementById('nowPlaying').textContent=`⏳ "${musicBuf.name}"... ${pct}%`;
+      // Всі чанки отримано — збираємо і граємо
+      if(musicBuf.received>=musicBuf.total){
+        const full=musicBuf.chunks.join('');
+        const tName=musicBuf.name;
+        const tFrom=musicBuf.from;
+        musicBuf={chunks:[],total:0,name:'',from:'',received:0};
+        playRemoteAudio(full, tName, tFrom);
+      }
     }
     return;
   }
@@ -1028,14 +1075,14 @@ function handleMsg(d,conn){
     if(d._from!==myPeerId){
       if(audio){audio.pause();audio=null;}
       setMusicState(false,'');
+      musicBuf={chunks:[],total:0,name:'',from:'',received:0};
       renderTrackList();
       document.getElementById('nowPlaying').textContent='';
     }
     return;
   }
-  if(d.type==='music_event'){
-    if(isHost) bcast(d);
-    if(d._from!==myPeerId) addChatEvent(`🎵 ${d.from||d.name}: ${d.trackName||'трек'}`);
+  if(d.type==='music_play'||d.type==='music_event'){
+    // застарілі типи — ігноруємо
     return;
   }
   if(d.type==='join_running'&&!isHost){
