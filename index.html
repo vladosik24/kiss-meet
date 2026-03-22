@@ -388,8 +388,8 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 // ══════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════
-const JSONBIN_KEY = "$2a$10$RKGaS/3FFtt.b7jI46Pkg.QFC69mAj7eqxN0Gn0AEtTQQCmn75GpC";
-const JSONBIN_BIN = "69becda5c3097a1dd5477a1b";
+const JSONBIN_KEY = "$2a$10$REPLACE_WITH_YOUR_KEY";
+const JSONBIN_BIN = "REPLACE_WITH_BIN_ID";
 const BIN_URL     = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
 const MAX_P = 10;
 
@@ -478,31 +478,33 @@ function playTrack(i, giftMode=false){
   document.getElementById('nowPlaying').textContent='▶ '+t.name;
   addChatEvent(giftMode ? `🎁🎵 ${myName} дарує пісню "${t.name}"` : `🎵 ${myName} вмикає: ${t.name}`);
 
-  // Надіслати файл чанками по 12КБ
-  if(Object.keys(guestConns).length===0) return;
+  // Надіслати файл всім чанками по 12КБ
+  const connCount = isHost ? Object.keys(guestConns).length : (hostConn ? 1 : 0);
+  if(connCount === 0) return;
   bar('Надсилаємо музику...','info');
   const reader=new FileReader();
   reader.onload=e=>{
-    const b64=e.target.result; // data:audio/...;base64,XXXXX
-    const CHUNK=12000; // 12КБ на чанк — безпечно для PeerJS DataChannel
+    const b64=e.target.result;
+    const CHUNK=12000;
     const total=Math.ceil(b64.length/CHUNK);
-    // Спочатку надсилаємо заголовок
-    bcast({type:'music_header', from:myName, trackName:t.name, total, _from:myPeerId});
-    // Потім чанки з невеликою паузою між ними
+    // Надсилаємо заголовок
+    const header={type:'music_header', from:myName, trackName:t.name, total, _from:myPeerId};
+    if(isHost) bcast(header); else hostConn.send(header);
+    // Надсилаємо чанки
     let idx=0;
     function sendNext(){
       if(idx>=total) return;
-      bcast({type:'music_chunk', idx, data:b64.slice(idx*CHUNK,(idx+1)*CHUNK), _from:myPeerId});
+      const chunk={type:'music_chunk', idx, data:b64.slice(idx*CHUNK,(idx+1)*CHUNK), _from:myPeerId};
+      if(isHost) bcast(chunk); else hostConn.send(chunk);
       idx++;
-      setTimeout(sendNext, 20); // 20мс між чанками
+      setTimeout(sendNext, 20);
     }
     sendNext();
-    // Показуємо прогрес
     const prog=setInterval(()=>{
       const pct=Math.min(100,Math.round(idx/total*100));
-      bar(`📤 Надсилаємо музику... ${pct}%`,'info');
-      if(pct>=100){ clearInterval(prog); bar('✅ Музику надіслано','ok'); }
-    },300);
+      bar(`📤 Надсилаємо... ${pct}%`,'info');
+      if(pct>=100){ clearInterval(prog); bar('✅ Надіслано','ok'); }
+    },400);
   };
   reader.readAsDataURL(t.file);
 }
@@ -1041,14 +1043,14 @@ function handleMsg(d,conn){
     return;
   }
   if(d.type==='music_header'){
-    if(isHost) bcast(d);
+    if(isHost) bcast(d); // хост ретранслює іншим гостям
+    // Показуємо в чаті ВСІМ (і хосту і гостям) крім відправника
     if(d._from!==myPeerId){
-      // Починаємо приймати новий трек
+      addChatEvent(`🎵 ${d.from} вмикає: ${d.trackName}`);
       musicBuf={chunks:new Array(d.total), total:d.total, name:d.trackName, from:d.from, received:0};
       setMusicState(true, d.from);
       renderTrackList();
       document.getElementById('nowPlaying').textContent=`⏳ Отримуємо "${d.trackName}"... 0%`;
-      addChatEvent(`🎵 ${d.from} вмикає: ${d.trackName}`);
     }
     return;
   }
@@ -1059,7 +1061,6 @@ function handleMsg(d,conn){
       musicBuf.received++;
       const pct=Math.round(musicBuf.received/musicBuf.total*100);
       document.getElementById('nowPlaying').textContent=`⏳ "${musicBuf.name}"... ${pct}%`;
-      // Всі чанки отримано — збираємо і граємо
       if(musicBuf.received>=musicBuf.total){
         const full=musicBuf.chunks.join('');
         const tName=musicBuf.name;
@@ -1078,13 +1079,11 @@ function handleMsg(d,conn){
       musicBuf={chunks:[],total:0,name:'',from:'',received:0};
       renderTrackList();
       document.getElementById('nowPlaying').textContent='';
+      addChatEvent(`⏹ ${d.from||'хтось'} зупинив музику`);
     }
     return;
   }
-  if(d.type==='music_play'||d.type==='music_event'){
-    // застарілі типи — ігноруємо
-    return;
-  }
+  if(d.type==='music_play'||d.type==='music_event'){return;}
   if(d.type==='join_running'&&!isHost){
     players=d.players; scores=d.scores||{}; photos=d.photos||{}; coins=d.coins||{}; gifts=d.gifts||{};
     initGame(d); return;
