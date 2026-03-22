@@ -1126,10 +1126,37 @@ function updateBar(){
   document.getElementById('myCoins').textContent=coins[myName]||0;
   litDot(spinnerIdx);
 }
+let autoSpinTimer=null, autoSpinInterval=null;
+const AUTO_SPIN_SEC=15;
+
 function updateMyTurn(){
   const mine=myName===players[spinnerIdx];
   document.getElementById('btnSpin').disabled=!mine||spinning;
   document.getElementById('gHint').textContent=mine?'👇 Твій хід — крути!':'⏳ Хід: '+players[spinnerIdx];
+  // Хост запускає автоспін для будь-якого гравця
+  if(isHost) startAutoSpin();
+}
+
+function startAutoSpin(){
+  clearAutoSpin();
+  let left=AUTO_SPIN_SEC;
+  const spinnerName=players[spinnerIdx];
+  autoSpinInterval=setInterval(()=>{
+    left--;
+    const mine=myName===players[spinnerIdx];
+    const hint=mine?`👇 Крути! (${left}с)`:`⏳ ${spinnerName} крутить... (${left}с)`;
+    document.getElementById('gHint').textContent=hint;
+    if(left<=0) clearInterval(autoSpinInterval);
+  },1000);
+  autoSpinTimer=setTimeout(()=>{
+    if(!spinning) doSpin(); // хост крутить автоматично
+  }, AUTO_SPIN_SEC*1000);
+}
+
+function clearAutoSpin(){
+  clearTimeout(autoSpinTimer);
+  clearInterval(autoSpinInterval);
+  autoSpinTimer=null; autoSpinInterval=null;
 }
 
 // ══════════════════════════════════════
@@ -1138,6 +1165,7 @@ function updateMyTurn(){
 function onTap(){if(myName!==players[spinnerIdx]||spinning)return;doSpin();}
 
 function doSpin(){
+  clearAutoSpin();
   spinning=true;
   document.getElementById('btnSpin').disabled=true;
   document.getElementById('gHint').textContent='🌀 Крутиться...';
@@ -1157,6 +1185,7 @@ function doSpin(){
 }
 
 function animBottle(fa,dur,ti,onDone){
+  clearAutoSpin();
   spinning=true;
   document.getElementById('btnSpin').disabled=true;
   document.getElementById('gHint').textContent='🌀 Крутиться...';
