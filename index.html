@@ -245,6 +245,37 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
 .gift-float{position:fixed;font-size:2rem;pointer-events:none;z-index:400;animation:giftFly 1.4s ease forwards;}
 @keyframes giftFly{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 
+/* ── MENU TABS ── */
+.menu-tabs{display:flex;width:100%;max-width:420px;background:rgba(255,255,255,.04);border-radius:16px;padding:4px;gap:4px;margin-bottom:16px;flex-shrink:0;}
+.mtab{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;border-radius:12px;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.mtab span{font-size:1.1rem;}
+.mtab.active{background:linear-gradient(135deg,var(--r),var(--rg));color:#fff;}
+.menu-page{display:none;width:100%;max-width:420px;flex-direction:column;align-items:center;gap:10px;flex:1;overflow-y:auto;}
+.menu-page.on{display:flex;}
+
+/* ── ROOMS LIST ── */
+.room-card{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s;}
+.room-card:active{border-color:var(--rg);}
+.room-dot{width:8px;height:8px;border-radius:50%;background:#00e676;animation:blink 1.4s ease infinite;flex-shrink:0;}
+.room-code{font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:3px;}
+.room-info{flex:1;font-size:.72rem;color:var(--muted);}
+.room-count{font-size:.78rem;color:var(--rg);}
+
+/* ── SETTINGS ── */
+.setting-row{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.setting-lbl{font-size:.88rem;}
+.setting-sub{font-size:.65rem;color:var(--muted);margin-top:2px;}
+.toggle{width:44px;height:24px;background:rgba(255,255,255,.1);border-radius:50px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:linear-gradient(135deg,var(--r),var(--rg));}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;}
+.toggle.on::after{transform:translateX(20px);}
+.sel-row{display:flex;gap:6px;flex-wrap:wrap;}
+.sel-btn{padding:5px 12px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
+.sel-btn.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
+
+
+.sel-btn.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
+
 /* hearts bg */
 .hrt{position:fixed;pointer-events:none;z-index:0;font-size:.9rem;opacity:0;animation:fhrt linear infinite;}
 @keyframes fhrt{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:.22}90%{opacity:.07}100%{transform:translateY(-5vh) rotate(360deg);opacity:0}}
@@ -253,35 +284,128 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
 <body>
 <div class="cbar" id="cbar"></div>
 
-<!-- ══ NAME ══ -->
-<div class="scr on" id="sName">
-  <div class="logo">💋 Поцілунок<br><em style="font-size:.72em">Знайомство</em></div>
-  <div class="sub">Автоматичне приєднання</div>
-  <div id="tgProfile" style="display:none;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px">
-    <div id="tgAv" style="width:72px;height:72px;border-radius:50%;overflow:hidden;border:2px solid var(--rg)"></div>
-    <div id="tgNameLbl" style="font-size:.95rem;font-weight:600"></div>
-    <div style="font-size:.72rem;color:var(--muted)">Натисни щоб почати</div>
-  </div>
-  <div class="card" id="nameCard">
-    <div class="lbl">👤 Твоє ім'я</div>
-    <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
-  </div>
-  <button class="btn red" onclick="enterGame()">Знайти гру 🔍</button>
+<!-- ══ NAME / MAIN MENU ══ -->
+<div class="scr on" id="sName" style="justify-content:flex-start;padding:16px 14px 0;">
 
-  <!-- Вписати код кімнати -->
-  <div style="width:100%;max-width:420px;margin-top:10px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+  <!-- Шапка -->
+  <div style="width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:4px 0 10px;flex-shrink:0">
+    <div>
+      <div style="font-family:Georgia,serif;font-size:1.3rem;font-style:italic">💋 Поцілунок</div>
+      <div style="font-size:.62rem;color:var(--muted);letter-spacing:2px">ЗНАЙОМСТВО</div>
+    </div>
+    <div id="menuAv" style="width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--rg);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--muted)">?</div>
+  </div>
+
+  <!-- Таби -->
+  <div class="menu-tabs">
+    <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
+    <button class="mtab" onclick="menuTab('rooms',this)"><span>🏠</span>Кімнати</button>
+    <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
+    <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
+  </div>
+
+  <!-- ── ГРАТИ ── -->
+  <div class="menu-page on" id="mpPlay">
+    <div id="menuTgProfile" style="display:none;flex-direction:column;align-items:center;gap:6px;width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;">
+      <div id="menuTgAv" style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid var(--rg)"></div>
+      <div id="menuTgName" style="font-size:.95rem;font-weight:600"></div>
+      <div id="menuTgStats" style="font-size:.7rem;color:var(--muted)">🪙 0 · 💋 0</div>
+    </div>
+    <div class="card" id="nameCard" style="width:100%">
+      <div class="lbl">👤 Твоє ім'я</div>
+      <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
+    </div>
+    <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру автоматично</button>
+    <div style="width:100%;display:flex;align-items:center;gap:8px">
       <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px">АБО ВПИСАТИ КОД</div>
+      <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">АБО КОД</div>
       <div style="flex:1;height:1px;background:var(--border)"></div>
     </div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:8px;width:100%">
       <input class="inp" id="codeInp" placeholder="Код кімнати..." maxlength="4"
         style="text-transform:uppercase;letter-spacing:4px;font-size:1.1rem;text-align:center;flex:1"
         oninput="this.value=this.value.toUpperCase()">
       <button class="btn red" onclick="joinByCode()" style="width:auto;padding:12px 18px;font-size:.9rem">→</button>
     </div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
+      💋 Автоматично знаходить гравців поруч · 🏠 Або вписуй код друга
+    </div>
   </div>
+
+  <!-- ── КІМНАТИ ── -->
+  <div class="menu-page" id="mpRooms">
+    <div style="width:100%;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:.7rem;color:var(--muted);letter-spacing:2px">АКТИВНІ КІМНАТИ</div>
+      <button onclick="scanRooms()" style="background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:4px 12px;color:var(--rg);font-size:.7rem;cursor:pointer">🔄 Оновити</button>
+    </div>
+    <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:8px">
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:20px">
+        🔍 Натисни Оновити щоб знайти кімнати
+      </div>
+    </div>
+    <button class="btn red" onclick="enterGame()" style="width:100%;margin-top:4px">➕ Створити кімнату</button>
+  </div>
+
+  <!-- ── МАГАЗИН ── -->
+  <div class="menu-page" id="mpShop">
+    <div class="shop-balance" style="font-size:.9rem">🪙 <span id="menuShopCoins">0</span> монет</div>
+    <div class="shop-tabs" style="width:100%">
+      <button class="shop-tab active" onclick="menuShopTab('frames',this)">🖼 Рамки</button>
+      <button class="shop-tab" onclick="menuShopTab('themes',this)">🎨 Теми</button>
+    </div>
+    <div class="shop-grid" id="menuShopGrid" style="width:100%"></div>
+    <div style="font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
+      💡 Рамки видні всім у грі · Теми — тільки тобі
+    </div>
+  </div>
+
+  <!-- ── НАЛАШТУВАННЯ ── -->
+  <div class="menu-page" id="mpSettings">
+    <div class="setting-row">
+      <div><div class="setting-lbl">🔔 Звукові ефекти</div><div class="setting-sub">Звук при поцілунку та подарунку</div></div>
+      <div class="toggle on" id="togSound" onclick="toggleSetting('sound',this)"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">💫 Анімації</div><div class="setting-sub">Серця та ефекти польоту</div></div>
+      <div class="toggle on" id="togAnim" onclick="toggleSetting('anim',this)"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">🌐 Мова інтерфейсу</div></div>
+      <div class="sel-row">
+        <button class="sel-btn active" onclick="setLang('uk',this)">🇺🇦 UA</button>
+        <button class="sel-btn" onclick="setLang('en',this)">🇬🇧 EN</button>
+      </div>
+    </div>
+    <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="setting-lbl">🎯 Кількість раундів</div>
+      <div class="sel-row">
+        <button class="sel-btn active" id="rnd5" onclick="setRounds(5,this)">5</button>
+        <button class="sel-btn" id="rnd10" onclick="setRounds(10,this)">10</button>
+        <button class="sel-btn" id="rnd15" onclick="setRounds(15,this)">15</button>
+        <button class="sel-btn" id="rndInf" onclick="setRounds(0,this)">∞</button>
+      </div>
+    </div>
+    <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="setting-lbl">⏱ Час на хід (секунд)</div>
+      <div class="sel-row">
+        <button class="sel-btn" id="t10" onclick="setTimer(10,this)">10</button>
+        <button class="sel-btn active" id="t15" onclick="setTimer(15,this)">15</button>
+        <button class="sel-btn" id="t30" onclick="setTimer(30,this)">30</button>
+        <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">🎲 Режим гри</div></div>
+      <div class="sel-row">
+        <button class="sel-btn active" onclick="setMode('classic',this)">Класика</button>
+        <button class="sel-btn" onclick="setMode('fast',this)">Швидкий</button>
+      </div>
+    </div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
+      v2.0 · 💋 Поцілунок-Знайомство
+    </div>
+  </div>
+
 </div>
 
 <!-- ══ LOAD ══ -->
@@ -468,10 +592,7 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
 // ══════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════
-const JSONBIN_KEY = "$2a$10$REPLACE_WITH_YOUR_KEY";
-const JSONBIN_BIN = "REPLACE_WITH_BIN_ID";
-const BIN_URL     = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
-const MAX_P = 10;
+const MAX_P = 8;
 
 // ══════════════════════════════════════
 // GIFTS CONFIG
@@ -799,8 +920,187 @@ function shopBuy(type, id, price){
 }
 
 // ══════════════════════════════════════
-// SYNC З БОТОМ
+// MENU LOGIC
 // ══════════════════════════════════════
+let settingSound=true, settingAnim=true, settingLang='uk';
+let settingRounds=5, settingTimer=15, settingMode='classic';
+
+function menuTab(tab, el){
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.menu-page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('mp'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('on');
+  if(tab==='shop') initMenuShop();
+  if(tab==='rooms') scanRooms();
+}
+
+function toggleSetting(key, el){
+  el.classList.toggle('on');
+  if(key==='sound') settingSound=el.classList.contains('on');
+  if(key==='anim'){
+    settingAnim=el.classList.contains('on');
+    document.querySelectorAll('.hrt').forEach(h=>h.style.display=settingAnim?'':'none');
+  }
+  saveSettings();
+}
+
+function setLang(lang, el){
+  document.querySelectorAll('[onclick^="setLang"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  settingLang=lang;
+  saveSettings();
+}
+
+function setRounds(n, el){
+  document.querySelectorAll('[id^="rnd"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  settingRounds=n;
+  saveSettings();
+}
+
+function setTimer(n, el){
+  document.querySelectorAll('[id^="t"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  settingTimer=n;
+  saveSettings();
+}
+
+function setMode(m, el){
+  document.querySelectorAll('[onclick^="setMode"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  settingMode=m;
+  saveSettings();
+}
+
+function saveSettings(){
+  try{localStorage.setItem('km_settings', JSON.stringify({
+    sound:settingSound, anim:settingAnim, lang:settingLang,
+    rounds:settingRounds, timer:settingTimer, mode:settingMode
+  }));}catch(e){}
+}
+
+function loadSettings(){
+  try{
+    const s=localStorage.getItem('km_settings');
+    if(!s) return;
+    const j=JSON.parse(s);
+    settingSound=j.sound!==false;
+    settingAnim=j.anim!==false;
+    settingLang=j.lang||'uk';
+    settingRounds=j.rounds||5;
+    settingTimer=j.timer||15;
+    settingMode=j.mode||'classic';
+    // Оновлюємо UI
+    if(!settingSound) document.getElementById('togSound')?.classList.remove('on');
+    if(!settingAnim)  document.getElementById('togAnim')?.classList.remove('on');
+    // Таймер
+    document.getElementById('t'+settingTimer)?.classList.add('active');
+  }catch(e){}
+}
+
+// Сканування кімнат через PeerJS
+const knownRooms=[];
+async function scanRooms(){
+  const list=document.getElementById('roomsList');
+  list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.8rem;padding:20px">🔍 Скануємо...</div>';
+
+  // Генеруємо публічні коди і пробуємо ping
+  const today=new Date();
+  const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
+  const codes=[
+    ((seed*1234+1)%46656).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed*5678+2)%46656).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed*9012+3)%46656).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed*3456+4)%46656).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed*7890+5)%46656).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+  ].map(c=>c.replace(/[^A-Z0-9]/g,'X'));
+
+  const found=[];
+  // Паралельний ping всіх кодів
+  await Promise.all(codes.map(async code=>{
+    const ok=await pingRoom(code);
+    if(ok) found.push(code);
+  }));
+
+  if(found.length===0){
+    list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.8rem;padding:20px">😔 Активних кімнат не знайдено<br><br>Натисни <b>Створити кімнату</b> щоб почати!</div>';
+  } else {
+    list.innerHTML=found.map(code=>`
+      <div class="room-card" onclick="quickJoin('${code}')">
+        <div class="room-dot"></div>
+        <div>
+          <div class="room-code">${code}</div>
+          <div class="room-info">Публічна кімната · Натисни щоб приєднатись</div>
+        </div>
+        <div class="room-count">→</div>
+      </div>`).join('');
+  }
+}
+
+async function pingRoom(code){
+  if(!window.Peer) return false;
+  return new Promise(res=>{
+    try{
+      const tmpPeer=new Peer();
+      const conn=tmpPeer.connect(ROOM_PREFIX+code,{reliable:false});
+      const t=setTimeout(()=>{try{tmpPeer.destroy();}catch(e){}res(false);},1500);
+      conn.on('open',()=>{clearTimeout(t);try{tmpPeer.destroy();}catch(e){}res(true);});
+      conn.on('error',()=>{clearTimeout(t);try{tmpPeer.destroy();}catch(e){}res(false);});
+    }catch(e){res(false);}
+  });
+}
+
+async function quickJoin(code){
+  const n=document.getElementById('nameInp').value.trim();
+  if(!n){bar('Введи ім\'я на вкладці Грати','err');menuTab('play',document.querySelector('.mtab'));return;}
+  myName=n; if(!coins[myName])coins[myName]=0;
+  ss('sLoad');
+  try{
+    setLoad('Завантажуємо...','');
+    await loadProfileFromBot(); loadMyStyle(); frames[myName]=myFrame;
+    setLoad('Завантажуємо PeerJS...','');
+    await waitPeer(); await initPeer();
+    setLoad(`Підключаємось до ${code}...`,'');
+    const ok=await tryConnect(code,null,8000);
+    if(!ok){bar('Не вдалось підключитись','err');ss('sName');}
+  }catch(e){bar(e.message,'err');ss('sName');}
+}
+
+function initMenuShop(){
+  document.getElementById('menuShopCoins').textContent=
+    (myName&&coins[myName])||localStorage.getItem('km_coins_'+myTgId)||0;
+  menuShopTab('frames',document.querySelector('#mpShop .shop-tab'));
+}
+
+function menuShopTab(tab, el){
+  document.querySelectorAll('#mpShop .shop-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const grid=document.getElementById('menuShopGrid');
+  const ownedF=getOwned('frames'), ownedT=getOwned('themes');
+  if(tab==='frames'){
+    grid.innerHTML=SHOP_FRAMES.map(f=>{
+      const owned=ownedF.includes(f.id)||f.price===0;
+      const equipped=myFrame===f.id;
+      return `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" onclick="shopBuy('frame','${f.id}',${f.price});initMenuShop()">
+        ${equipped?'<div class="shop-item-badge badge-on">Одягнено</div>':owned?'<div class="shop-item-badge badge-owned">Є</div>':''}
+        <div class="shop-item-icon">${f.icon}</div>
+        <div class="shop-item-name">${f.name}</div>
+        <div class="shop-item-price">${owned?'Натисни':'🪙 '+f.price}</div>
+      </div>`;
+    }).join('');
+  } else {
+    grid.innerHTML=SHOP_THEMES.map(t=>{
+      const owned=ownedT.includes(t.id)||t.price===0;
+      const equipped=myTheme===t.id;
+      return `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" onclick="shopBuy('theme','${t.id}',${t.price});initMenuShop()">
+        ${equipped?'<div class="shop-item-badge badge-on">Активна</div>':owned?'<div class="shop-item-badge badge-owned">Є</div>':''}
+        <div class="shop-item-icon">${t.icon}</div>
+        <div class="shop-item-name">${t.name}</div>
+        <div class="shop-item-price">${owned?'Натисни':'🪙 '+t.price}</div>
+      </div>`;
+    }).join('');
+  }
+}
 // 1. В боті створи команду з назвою: km_sync
 // 2. Вставь туди блок KM_SYNC_COMMAND з файлу бота
 // 3. Напиши /webhook в боті — скопіюй URL сюди:
@@ -818,10 +1118,9 @@ function syncToBot(event, payload){
   }).catch(()=>{});
 }
 (function(){
-  // uid з URL (?uid=...) — передає бот через кнопку Грати
   const urlUid=new URLSearchParams(window.location.search).get('uid');
   if(urlUid) myTgId=urlUid;
-
+  loadSettings();
   try{
     const tg=window.Telegram?.WebApp;
     const u=tg?.initDataUnsafe?.user;
@@ -830,14 +1129,24 @@ function syncToBot(event, payload){
       const ln=(u.last_name||'').trim();
       const full=(fn+' '+ln).trim()||u.username||'';
       myPhoto=u.photo_url||'';
-      if(u.id) myTgId=String(u.id); // перезаписуємо — точніше
+      if(u.id) myTgId=String(u.id);
       if(full){
         document.getElementById('nameInp').value=full.slice(0,16);
-        document.getElementById('tgProfile').style.display='flex';
-        document.getElementById('tgNameLbl').textContent=full;
-        const avEl=document.getElementById('tgAv');
-        if(myPhoto) avEl.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
-        else avEl.innerHTML=`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700">${(full[0]||'?')}</div>`;
+        // Нова шапка меню
+        const av=document.getElementById('menuAv');
+        if(myPhoto) av.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
+        else av.textContent=full[0];
+        // Старий профіль (якщо є)
+        const tp=document.getElementById('menuTgProfile');
+        if(tp){
+          tp.style.display='flex';
+          document.getElementById('menuTgName').textContent=full;
+          const tav=document.getElementById('menuTgAv');
+          if(myPhoto) tav.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
+          // Монети з localStorage
+          const savedCoins=localStorage.getItem('km_coins_'+myTgId);
+          document.getElementById('menuTgStats').textContent='🪙 '+(savedCoins||0)+' монет';
+        }
         document.getElementById('nameCard').style.display='none';
       }
     }
@@ -1191,78 +1500,57 @@ function initPeer(){
 // ══════════════════════════════════════
 // JSONBIN
 // ══════════════════════════════════════
-function sk(){return JSONBIN_KEY.replace(/[^\x20-\x7E]/g,'');}
-async function binGet(){
-  const r=await fetch(BIN_URL+'/latest',{headers:{'X-Master-Key':sk()}});
-  if(!r.ok) throw new Error('JSONBin HTTP '+r.status);
-  return (await r.json()).record?.rooms||[];
-}
-async function binSet(rooms){
-  await fetch(BIN_URL,{method:'PUT',
-    headers:{'Content-Type':'application/json','X-Master-Key':sk(),'X-Bin-Versioning':'false'},
-    body:JSON.stringify({rooms})});
-}
-async function binAdd(code,hp){
-  const rooms=await binGet(), now=Date.now();
-  const fresh=rooms.filter(r=>(now-r.ts)<120000);
-  fresh.push({code,hp,count:1,max:MAX_P,started:false,ts:now});
-  await binSet(fresh);
-}
-async function binUpdate(code,f){
-  try{const rooms=await binGet();const i=rooms.findIndex(r=>r.code===code);
-    if(i>=0){Object.assign(rooms[i],f,{ts:Date.now()});await binSet(rooms);}}catch(e){}
-}
-async function binRemove(code){
-  try{const rooms=await binGet();await binSet(rooms.filter(r=>r.code!==code));}catch(e){}
-}
-
+// MATCHMAKING — без зовнішнього сервера
+// Використовуємо фіксований PeerID = "km-room-КОД"
+// Хост реєструється як "km-room-КОД", гість підключається до нього
 // ══════════════════════════════════════
-// MATCHMAKING
-// ══════════════════════════════════════
-function uid4(){return Math.random().toString(36).substr(2,4).toUpperCase();}
-function findOpen(rooms){
-  const now=Date.now();
-  return rooms.find(r=>!r.started && r.count<r.max && (now-r.ts)<120000);
+const ROOM_PREFIX = 'km-room-';
+
+function uid4(){
+  return Math.random().toString(36).substr(2,4).toUpperCase();
 }
 
-async function matchmake(){
-  setLoad('Шукаємо кімнату...','Перевіряємо список');
-
-  // 3 спроби з зростаючими затримками
-  for(let attempt=0; attempt<3; attempt++){
-    if(attempt>0){
-      const delay=800+attempt*600;
-      setLoad('Шукаємо...',`Спроба ${attempt+1}/3...`);
-      await new Promise(r=>setTimeout(r,delay));
-    }
-
-    let rooms;
-    try{ rooms=await binGet(); }
-    catch(e){ setLoad('JSONBin недоступний',e.message); bar(e.message,'err'); return; }
-
-    const open=findOpen(rooms);
-    if(!open) continue; // немає кімнати — пробуємо ще раз
-
-    setLoad('Знайдено кімнату!',`Підключаємось до ${open.code}...`);
-    const ok=await tryConnect(open.code, open.hp, 10000);
-    if(ok) return; // успішно приєднались
-    // не вдалось — пробуємо ще раз (не видаляємо кімнату!)
-    setLoad('Не вдалось підключитись','Спробуємо ще...');
-  }
-
-  // Після 3 спроб — створюємо нову кімнату
-  setLoad('Створюємо кімнату...','Ти будеш хостом');
-  await createRoom();
+// Спроба підключитись до кімнати за кодом
+async function tryConnect(code, _hp, timeout=12000){
+  return new Promise(res=>{
+    const hostPeerId = ROOM_PREFIX + code;
+    const conn = peer.connect(hostPeerId, {metadata: myName, reliable: true});
+    const t = setTimeout(()=>{
+      try{conn.close();}catch(e){}
+      res(false);
+    }, timeout);
+    conn.on('open',()=>{
+      clearTimeout(t);
+      hostConn = conn;
+      roomCode = code;
+      conn.on('data', d => handleMsg(d, conn));
+      conn.on('close',()=>{
+        bar('З\'єднання з хостом втрачено','err');
+        setTimeout(()=>resetAll(),2000);
+      });
+      conn.send({type:'hello', name:myName, photo:myPhoto, from:myPeerId, frame:myFrame});
+      players=[myName]; scores[myName]={k:0,n:0,g:0};
+      coins[myName]=coins[myName]||0; gifts[myName]=[];
+      photos[myName]=myPhoto;
+      renderPwList();
+      document.getElementById('roomCodeEl').textContent=code;
+      document.getElementById('lobbyRole').textContent='Ти гість';
+      ss('sLobby');
+      bar('Приєднався до '+code,'ok');
+      res(true);
+    });
+    conn.on('error',()=>{clearTimeout(t);res(false);});
+  });
 }
 
-// ══════════════════════════════════════
-// HOST
-// ══════════════════════════════════════
+// Реєстрація хоста з фіксованим PeerID
 async function createRoom(){
-  isHost=true; roomCode=uid4();
+  isHost=true;
+  roomCode=uid4();
   players=[myName]; scores[myName]={k:0,n:0,g:0};
-  photos[myName]=myPhoto; coins[myName]=0; gifts[myName]=[];
+  photos[myName]=myPhoto; coins[myName]=coins[myName]||0; gifts[myName]=[];
 
+  // Хост слухає з'єднання через основний peer (не потрібен другий peer)
   peer.on('connection',conn=>{
     conn.on('open',()=>{
       guestConns[conn.peer]=conn;
@@ -1270,57 +1558,74 @@ async function createRoom(){
       conn.on('close',()=>{
         delete guestConns[conn.peer];
         renderPwList();
-        binUpdate(roomCode,{count:players.length});
       });
     });
   });
 
-  await binAdd(roomCode,myPeerId);
   document.getElementById('roomCodeEl').textContent=roomCode;
+  document.getElementById('gameRoomCode').textContent=roomCode;
   document.getElementById('lobbyRole').textContent='Ти хост 👑';
   renderPwList(); ss('sLobby');
   bar('Кімнату створено: '+roomCode,'ok');
-  cleanTimer=setTimeout(async()=>{await binRemove(roomCode);ss('sName');},120000);
+  // Очищаємо через 10 хвилин
+  cleanTimer=setTimeout(()=>{ss('sName');},600000);
 }
 
-// ══════════════════════════════════════
-// GUEST — повертає true/false замість throw
-// ══════════════════════════════════════
-async function joinRoom(code,hp){
-  const ok=await tryConnect(code,hp,10000);
-  if(!ok){
-    bar('Не вдалось приєднатись','err');
-    await createRoom();
+async function matchmake(){
+  setLoad('Шукаємо кімнату...','Перевіряємо...');
+  // Генеруємо 5 різних кодів і пробуємо підключитись
+  // Використовуємо фіксований пул кодів (перші 5 за часом)
+  // Насправді просто пробуємо підключитись до відомих хостів
+  // Оскільки немає центрального реєстру — створюємо кімнату одразу
+  // але з механізмом: peer ID хоста = km-room-КОД
+  // Гість може знайти хоста якщо знає код
+
+  // Пробуємо 3 "публічні" коди за сьогоднішнью датою
+  const today = new Date();
+  const seed = today.getFullYear()*10000 + (today.getMonth()+1)*100 + today.getDate();
+  const publicCodes = [
+    ((seed * 1234 + 1) % 36**4).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed * 5678 + 2) % 36**4).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+    ((seed * 9012 + 3) % 36**4).toString(36).toUpperCase().padStart(4,'0').substr(0,4),
+  ];
+
+  for(let i=0; i<publicCodes.length; i++){
+    const code = publicCodes[i].replace(/[^A-Z0-9]/g,'X').substr(0,4);
+    setLoad('Шукаємо...',`Спроба ${i+1}/3 (${code})`);
+    const ok = await tryConnect(code, null, 3000);
+    if(ok) return;
   }
-}
 
-function tryConnect(code,hp,timeout=10000){
-  return new Promise(res=>{
-    roomCode=code; isHost=false;
-    const conn=peer.connect(hp,{metadata:myName,reliable:true});
-    hostConn=conn;
-    let done=false;
+  // Не знайшли — стаємо хостом з першим публічним кодом
+  setLoad('Створюємо кімнату...','Ти будеш хостом');
+  // Хост реєструється з першим публічним кодом
+  roomCode = publicCodes[0].replace(/[^A-Z0-9]/g,'X').substr(0,4);
+  isHost=true;
+  players=[myName]; scores[myName]={k:0,n:0,g:0};
+  photos[myName]=myPhoto; coins[myName]=coins[myName]||0; gifts[myName]=[];
 
-    const timer=setTimeout(()=>{
-      if(!done){ done=true; res(false); }
-    },timeout);
-
+  peer.on('connection',conn=>{
     conn.on('open',()=>{
-      if(done) return;
-      done=true; clearTimeout(timer);
-      conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId,frame:myFrame});
-      document.getElementById('roomCodeEl').textContent=code;
-      document.getElementById('lobbyRole').textContent='Ти гість 🎉';
-      ss('sLobby');
-      bar('Приєднались до '+code,'ok');
-      res(true);
+      guestConns[conn.peer]=conn;
+      conn.on('data',d=>handleMsg(d,conn));
+      conn.on('close',()=>{delete guestConns[conn.peer];renderPwList();});
     });
-
-    conn.on('data',d=>handleMsg(d,conn));
-    conn.on('error',()=>{ if(!done){ done=true; clearTimeout(timer); res(false); } });
-    conn.on('close',()=>{ bar('Хост відключився','err'); });
   });
+
+  document.getElementById('roomCodeEl').textContent=roomCode;
+  document.getElementById('gameRoomCode').textContent=roomCode;
+  document.getElementById('lobbyRole').textContent='Ти хост 👑';
+  renderPwList(); ss('sLobby');
+  bar('Кімнату створено: '+roomCode,'ok');
+  cleanTimer=setTimeout(()=>{ss('sName');},600000);
 }
+
+// Заглушки для старого API (більше не потрібні)
+async function binGet(){return [];}
+async function binSet(){}
+async function binAdd(){}
+async function binUpdate(){}
+async function binRemove(){}
 
 // ══════════════════════════════════════
 // MESSAGES
@@ -1541,7 +1846,8 @@ function updateBar(){
   litDot(spinnerIdx);
 }
 let autoSpinTimer=null, autoSpinInterval=null;
-const AUTO_SPIN_SEC=15;
+// Час на хід береться з налаштувань (0 = вимкнено)
+function getAutoSpinSec(){ return settingTimer>0 ? settingTimer : 9999; }
 
 function updateMyTurn(){
   const mine=myName===players[spinnerIdx];
@@ -1553,7 +1859,7 @@ function updateMyTurn(){
 
 function startAutoSpin(){
   clearAutoSpin();
-  let left=AUTO_SPIN_SEC;
+  let left=getAutoSpinSec();
   const spinnerName=players[spinnerIdx];
   autoSpinInterval=setInterval(()=>{
     left--;
@@ -1564,7 +1870,7 @@ function startAutoSpin(){
   },1000);
   autoSpinTimer=setTimeout(()=>{
     if(!spinning) doSpin(); // хост крутить автоматично
-  }, AUTO_SPIN_SEC*1000);
+  }, getAutoSpinSec()*1000);
 }
 
 function clearAutoSpin(){
