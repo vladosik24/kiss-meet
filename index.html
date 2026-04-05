@@ -101,6 +101,17 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 
 /* ── GAME WRAP ── */
 .game-wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;height:100vh;padding:6px 14px;overflow:hidden;}
+.top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;flex-shrink:0;}
+.turn-info .rnd{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.turn-info .who{font-family:Georgia,serif;font-size:.95rem;font-style:italic;}
+.top-btns{display:flex;gap:7px;}
+.ico-btn{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;position:relative;transition:background .15s;}
+.ico-btn:active{background:rgba(255,255,255,.14);}
+.ico-btn.on{background:rgba(240,180,41,.2);border-color:rgba(240,180,41,.4);}
+.notif{position:absolute;top:-3px;right:-3px;background:var(--r);color:#fff;font-size:.5rem;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;}
+.sc-bar{display:flex;gap:8px;width:100%;justify-content:center;margin-bottom:4px;flex-shrink:0;}
+.sc-pill{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:3px 10px;font-size:.7rem;color:var(--muted);}
+.sc-pill b{color:#fff;}
 .top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 0 4px;flex-shrink:0;}
 .turn-info .rnd{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 .turn-info .who{font-family:Georgia,serif;font-size:.95rem;font-style:italic;}
@@ -114,7 +125,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .sc-pill b{color:#fff;}
 
 /* ── BOTTLE ── */
-.b-outer{position:relative;width:290px;height:290px;flex-shrink:0;margin:2px 0;display:flex;align-items:center;justify-content:center;}
+.b-outer{position:relative;width:310px;height:310px;flex-shrink:0;margin:8px 0 4px;display:flex;align-items:center;justify-content:center;}
 .b-area{position:relative;width:190px;height:190px;}
 .b-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(200,0,58,.12),rgba(255,77,126,.1),rgba(240,180,41,.07),rgba(200,0,58,.12));border:1px solid rgba(255,255,255,.05);animation:rot 9s linear infinite;}
 .bottle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.4rem;cursor:pointer;user-select:none;filter:drop-shadow(0 0 12px rgba(200,0,58,.4));transition:filter .3s;}
@@ -1064,7 +1075,12 @@ async function roomsGetActive(){
     const val = snap.val();
     if(!val) return [];
     const now = Date.now();
-    return Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
+    const active = Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
+    // Видаляємо застарілі з Firebase
+    Object.entries(val).forEach(([code,r])=>{
+      if((now-r.ts)>=ROOM_TTL) db.ref('kiss_rooms/'+code).remove().catch(()=>{});
+    });
+    return active;
   }catch(e){ return []; }
 }
 
@@ -1094,17 +1110,20 @@ async function scanRooms(){
 
 async function quickJoin(code){
   const n=document.getElementById('nameInp').value.trim();
-  if(!n){bar('Введи ім\'я на вкладці Грати','err');menuTab('play',document.querySelector('.mtab'));return;}
+  if(!n){bar('Введи ім\'я','err');menuTab('play',document.querySelector('.mtab'));return;}
   myName=n; if(!coins[myName])coins[myName]=0;
   ss('sLoad');
   try{
     setLoad('Завантажуємо...','');
     await loadProfileFromBot(); loadMyStyle(); frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
-    await waitPeer(); await initPeer();
-    setLoad(`Підключаємось до ${code}...`,'');
+    await waitPeer();
+    // Знищуємо старий peer якщо є
+    if(peer){try{peer.destroy();}catch(e){} peer=null;}
+    await initPeer();
+    setLoad('Підключаємось до '+code+'...','');
     const ok=await tryConnect(code,null,8000);
-    if(!ok){bar('Не вдалось підключитись','err');ss('sName');}
+    if(!ok){bar('Кімнату '+code+' не знайдено або вона зайнята','err');ss('sName');}
   }catch(e){bar(e.message,'err');ss('sName');}
 }
 
@@ -1464,6 +1483,7 @@ async function enterGame(){
     loadMyStyle(); frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
+    if(peer){try{peer.destroy();}catch(e){} peer=null;}
     setLoad('Шукаємо кімнату...','');
     await matchmake();
   }catch(e){
@@ -1487,7 +1507,7 @@ async function joinByCode(){
     loadMyStyle(); frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
-    setLoad('Ініціалізуємо...','');
+    if(peer){try{peer.destroy();}catch(e){} peer=null;}
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
     const ok=await tryConnect(code,null,12000);
