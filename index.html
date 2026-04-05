@@ -35,8 +35,8 @@ function loadFirebase(){
     document.head.appendChild(s1);
   });
 }
-// Завантажуємо одразу
-loadFirebase();
+// Завантажуємо одразу і сканує кімнати
+loadFirebase().then(()=>scanRooms());
 </script>
 <script>
 (function(){
@@ -348,7 +348,17 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
       <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
     </div>
     <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру</button>
-    <div style="width:100%;display:flex;align-items:center;gap:8px">
+
+    <!-- Список активних кімнат -->
+    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+      <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px">АКТИВНІ КІМНАТИ</div>
+      <button onclick="scanRooms()" style="background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:3px 10px;color:var(--rg);font-size:.65rem;cursor:pointer">🔄</button>
+    </div>
+    <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:6px;min-height:60px">
+      <div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Натисни 🔄 щоб оновити</div>
+    </div>
+
+    <div style="width:100%;display:flex;align-items:center;gap:8px;margin-top:4px">
       <div style="flex:1;height:1px;background:var(--border)"></div>
       <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">ПРИЄДНАТИСЬ ЗА КОДОМ</div>
       <div style="flex:1;height:1px;background:var(--border)"></div>
@@ -960,6 +970,7 @@ function menuTab(tab, el){
   const page=document.getElementById(pageId);
   if(page) page.classList.add('on');
   if(tab==='shop') initMenuShop();
+  if(tab==='play') scanRooms();
 }
 
 function toggleSetting(key, el){
@@ -1059,27 +1070,24 @@ async function roomsGetActive(){
 
 async function scanRooms(){
   const list = document.getElementById('roomsList');
-  list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.8rem;padding:20px">🔍 Скануємо...</div>';
+  if(!list) return;
+  list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">🔍 Скануємо...</div>';
 
-  // Чекаємо трохи щоб PeerJS завантажився якщо треба
-  await new Promise(r=>setTimeout(r,300));
+  if(!db) await loadFirebase();
 
-  const active = roomsGetActive();
+  const active = await roomsGetActive();
 
   if(active.length === 0){
-    list.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:.8rem;padding:24px">
-      😔 Активних кімнат не знайдено<br><br>
-      <span style="font-size:.7rem">Відкрий гру на іншому пристрої або<br>натисни <b>Створити кімнату</b></span>
-    </div>`;
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Активних кімнат немає · Натисни Знайти гру</div>';
   } else {
-    list.innerHTML = active.map(r => `
+    list.innerHTML = active.map(r=>`
       <div class="room-card" onclick="quickJoin('${r.code}')">
         <div class="room-dot"></div>
         <div style="flex:1">
           <div class="room-code">${r.code}</div>
-          <div class="room-info">Хост: ${r.hostName} · ${r.count} гравець</div>
+          <div class="room-info">Хост: ${r.hostName} · ${r.count} гравців</div>
         </div>
-        <div class="room-count">Приєднатись →</div>
+        <div style="font-size:.7rem;color:var(--rg)">Приєднатись →</div>
       </div>`).join('');
   }
 }
