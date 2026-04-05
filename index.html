@@ -421,13 +421,19 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
   <div class="sub" id="lobbyRole">Ти хост</div>
   <div class="code-box">
     <div class="code" id="roomCodeEl">----</div>
-    <div class="code-hint">Поділись кодом · або чекай автоматичного приєднання</div>
+    <div class="code-hint">Поділись кодом з друзями</div>
     <button onclick="shareRoom()" style="margin-top:8px;background:rgba(255,77,126,.15);border:1px solid rgba(255,77,126,.4);border-radius:50px;padding:6px 18px;color:var(--rg);font-size:.78rem;cursor:pointer">📤 Поділитись кімнатою</button>
   </div>
-  <div class="wait-note">🤖 Гра почнеться автоматично коли зайде 2+ гравці</div>
   <div class="lbl" style="width:100%;max-width:420px;margin-bottom:6px;">📡 Гравці онлайн</div>
-  <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:7px" id="pwCount">1 / 10</div>
+  <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:7px" id="pwCount">1 / 8</div>
   <div class="pw-list" id="pwList"></div>
+  <button id="btnStartGame" class="btn red" onclick="hostStartGame()"
+    style="display:none;width:100%;max-width:420px;margin-top:8px">
+    🎮 Почати гру!
+  </button>
+  <div id="waitingHint" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">
+    ⏳ Чекаємо на гравців...
+  </div>
 </div>
 
 <!-- ══ GAME ══ -->
@@ -1427,17 +1433,17 @@ async function enterGame(){
   const n=document.getElementById('nameInp').value.trim();
   if(!n){bar('Введи ім\'я','err');return;}
   myName=n;
-  // НЕ скидаємо coins — вони вже завантажені з бота
   if(!coins[myName]) coins[myName]=0;
   ss('sLoad');
   try{
-    setLoad('Завантажуємо профіль...','');
+    setLoad('Профіль...','');
     await loadProfileFromBot();
-    setLoad('Завантажуємо PeerJS...','Зачекай');
+    loadMyStyle(); frames[myName]=myFrame;
+    setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
-    setLoad('Ініціалізуємо...','');
-    await initPeer();
     setLoad('Шукаємо кімнату...','');
+    // Для matchmake ініціалізуємо звичайний peer (не фіксований)
+    await initPeer();
     await matchmake();
   }catch(e){
     setLoad('Помилка',e.message);
@@ -1455,22 +1461,19 @@ async function joinByCode(){
   if(!coins[myName]) coins[myName]=0;
   ss('sLoad');
   try{
-    setLoad('Завантажуємо профіль...','');
+    setLoad('Профіль...','');
     await loadProfileFromBot();
-    loadMyStyle(); // завантажуємо стиль з localStorage
-    frames[myName]=myFrame; // встановлюємо свою рамку
-    setLoad('Завантажуємо PeerJS...','Зачекай');
+    loadMyStyle(); frames[myName]=myFrame;
+    setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
     setLoad('Ініціалізуємо...','');
     await initPeer();
-    setLoad(`Шукаємо кімнату ${code}...`,'');
-    // Шукаємо кімнату за кодом в JSONBin
-    const rooms=await binGet();
-    const room=rooms.find(r=>r.code===code);
-    if(!room){bar(`Кімнату ${code} не знайдено`,'err');setTimeout(()=>ss('sName'),2000);return;}
-    setLoad('Підключаємось...','');
-    const ok=await tryConnect(room.code, room.hp, 12000);
-    if(!ok){bar('Не вдалось підключитись','err');setTimeout(()=>ss('sName'),2000);}
+    setLoad('Підключаємось до '+code+'...','');
+    const ok=await tryConnect(code,null,12000);
+    if(!ok){
+      bar('Кімнату '+code+' не знайдено','err');
+      setTimeout(()=>ss('sName'),2000);
+    }
   }catch(e){
     setLoad('Помилка',e.message);
     bar(e.message,'err');
@@ -1511,11 +1514,9 @@ function initPeer(){
 }
 
 // ══════════════════════════════════════
-// JSONBIN
-// ══════════════════════════════════════
-// MATCHMAKING — без зовнішнього сервера
-// Використовуємо фіксований PeerID = "km-room-КОД"
-// Хост реєструється як "km-room-КОД", гість підключається до нього
+// MATCHMAKING — простий і надійний
+// Хост реєструє peer з ID = km-room-КОД
+// Гість підключається до km-room-КОД
 // ══════════════════════════════════════
 const ROOM_PREFIX = 'km-room-';
 
@@ -1523,90 +1524,104 @@ function uid4(){
   return Math.random().toString(36).substr(2,4).toUpperCase();
 }
 
-// Спроба підключитись до кімнати за кодом
-async function tryConnect(code, _hp, timeout=12000){
-  return new Promise(res=>{
-    const hostPeerId = ROOM_PREFIX + code;
-    const conn = peer.connect(hostPeerId, {metadata: myName, reliable: true});
-    const t = setTimeout(()=>{
-      try{conn.close();}catch(e){}
-      res(false);
-    }, timeout);
-    conn.on('open',()=>{
-      clearTimeout(t);
-      hostConn = conn;
-      roomCode = code;
-      conn.on('data', d => handleMsg(d, conn));
-      conn.on('close',()=>{
-        bar('З\'єднання з хостом втрачено','err');
-        setTimeout(()=>resetAll(),2000);
-      });
-      conn.send({type:'hello', name:myName, photo:myPhoto, from:myPeerId, frame:myFrame});
-      players=[myName]; scores[myName]={k:0,n:0,g:0};
-      coins[myName]=coins[myName]||0; gifts[myName]=[];
-      photos[myName]=myPhoto;
-      renderPwList();
-      document.getElementById('roomCodeEl').textContent=code;
-      document.getElementById('lobbyRole').textContent='Ти гість';
-      ss('sLobby');
-      bar('Приєднався до '+code,'ok');
-      res(true);
-    });
-    conn.on('error',()=>{clearTimeout(t);res(false);});
-  });
-}
-
-// Реєстрація хоста з фіксованим PeerID
+// Хост — створює кімнату з фіксованим PeerJS ID
 async function createRoom(){
   isHost=true;
   roomCode=uid4();
   players=[myName]; scores[myName]={k:0,n:0,g:0};
   photos[myName]=myPhoto; coins[myName]=coins[myName]||0; gifts[myName]=[];
+  frames[myName]=myFrame;
 
-  // Хост слухає з'єднання через основний peer (не потрібен другий peer)
-  peer.on('connection',conn=>{
-    conn.on('open',()=>{
-      guestConns[conn.peer]=conn;
-      conn.on('data',d=>handleMsg(d,conn));
-      conn.on('close',()=>{
-        delete guestConns[conn.peer];
-        renderPwList();
+  // Знищуємо старий peer і створюємо новий з фіксованим ID
+  if(peer){ try{peer.destroy();}catch(e){} peer=null; }
+  await new Promise((res,rej)=>{
+    peer = new Peer(ROOM_PREFIX+roomCode, {debug:0});
+    const t=setTimeout(()=>rej(new Error('PeerJS timeout')),10000);
+    peer.on('open', id=>{
+      myPeerId=id; clearTimeout(t);
+      // Слухаємо підключення гостей
+      peer.on('connection', conn=>{
+        conn.on('open',()=>{
+          guestConns[conn.peer]=conn;
+          conn.on('data',d=>handleMsg(d,conn));
+          conn.on('close',()=>{
+            delete guestConns[conn.peer];
+            renderPwList();
+            roomsRegister(roomCode,myName,players.length);
+          });
+        });
       });
+      res();
+    });
+    peer.on('error', e=>{
+      clearTimeout(t);
+      // Якщо ID зайнятий — генеруємо новий код
+      if(e.type==='unavailable-id'){
+        roomCode=uid4();
+        peer.destroy();
+        peer=new Peer(ROOM_PREFIX+roomCode,{debug:0});
+        peer.on('open',id=>{myPeerId=id;res();});
+        peer.on('error',e2=>rej(new Error('PeerJS: '+e2.type)));
+      } else {
+        rej(new Error('PeerJS: '+e.type));
+      }
     });
   });
 
   document.getElementById('roomCodeEl').textContent=roomCode;
-  document.getElementById('gameRoomCode').textContent=roomCode;
+  try{document.getElementById('gameRoomCode').textContent=roomCode;}catch(e){}
   document.getElementById('lobbyRole').textContent='Ти хост 👑';
   renderPwList(); ss('sLobby');
   bar('Кімнату створено: '+roomCode,'ok');
-  // Реєструємо кімнату в localStorage
-  roomsRegister(roomCode, myName, 1);
-  // Оновлюємо реєстр кожні 60 сек
-  cleanTimer=setInterval(()=>{
-    roomsRegister(roomCode, myName, players.length);
-  }, 60000);
-  // Видаляємо через 10 хвилин
-  setTimeout(()=>{roomsUnregister(roomCode);ss('sName');},600000);
+  roomsRegister(roomCode,myName,1);
+  cleanTimer=setInterval(()=>roomsRegister(roomCode,myName,players.length),60000);
+}
+
+// Гість — підключається до хоста за кодом
+async function tryConnect(code, _unused, timeout=12000){
+  return new Promise(res=>{
+    const hostId=ROOM_PREFIX+code.toUpperCase();
+    let done=false;
+    const conn=peer.connect(hostId,{metadata:myName,reliable:true});
+    const t=setTimeout(()=>{
+      if(done)return; done=true;
+      try{conn.close();}catch(e){} res(false);
+    },timeout);
+    conn.on('open',()=>{
+      if(done)return; done=true; clearTimeout(t);
+      hostConn=conn; roomCode=code.toUpperCase();
+      conn.on('data',d=>handleMsg(d,conn));
+      conn.on('close',()=>{bar('Хост відключився','err');setTimeout(()=>resetAll(),1500);});
+      conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId,frame:myFrame});
+      players=[myName]; scores[myName]={k:0,n:0,g:0};
+      coins[myName]=coins[myName]||0; gifts[myName]=[];
+      photos[myName]=myPhoto; frames[myName]=myFrame;
+      renderPwList();
+      document.getElementById('roomCodeEl').textContent=roomCode;
+      document.getElementById('lobbyRole').textContent='Ти гість 🎉';
+      ss('sLobby');
+      bar('Приєднався до '+roomCode,'ok');
+      res(true);
+    });
+    conn.on('error',()=>{if(done)return;done=true;clearTimeout(t);res(false);});
+  });
 }
 
 async function matchmake(){
   setLoad('Шукаємо кімнату...','Перевіряємо список');
-
-  // Шукаємо в реєстрі localStorage
-  const active = roomsGetActive();
+  // Шукаємо в localStorage реєстрі
+  const active=roomsGetActive();
   for(const room of active){
-    setLoad('Знайдено кімнату!',`Підключаємось до ${room.code}...`);
-    const ok = await tryConnect(room.code, null, 5000);
-    if(ok) return;
+    setLoad(`Знайдено: ${room.code}`,`Підключаємось...`);
+    const ok=await tryConnect(room.code,null,6000);
+    if(ok)return;
   }
-
-  // Не знайшли — стаємо хостом з рандомним кодом
+  // Не знайшли — створюємо кімнату
   setLoad('Створюємо кімнату...','Ти будеш хостом');
   await createRoom();
 }
 
-// Заглушки для старого API (більше не потрібні)
+// Заглушки
 async function binGet(){return [];}
 async function binSet(){}
 async function binAdd(){}
@@ -1635,19 +1650,17 @@ function handleMsg(d,conn){
 
     const gameStarted=document.getElementById('sGame').classList.contains('on');
     if(gameStarted){
-      // Гра вже йде — надсилаємо стан
       if(isNew) buildPRing();
       conn.send({type:'join_running',players,scores,photos,coins,gifts,spinnerIdx,round,totalK,totalN});
     } else {
       renderPwList();
-      binUpdate(roomCode,{count:players.length});
-      if(players.length>=2&&document.getElementById('sLobby').classList.contains('on'))
-        setTimeout(()=>hostStartGame(),1000);
+      // Показуємо кнопку старту якщо 2+ гравці
+      const startBtn=document.getElementById('btnStartGame');
+      if(startBtn) startBtn.style.display=players.length>=2?'block':'none';
     }
     bcast({type:'sync',players,scores,photos,coins,gifts});
     bar(name+' приєднався 👋','ok');
-    // Оновлюємо реєстр
-    if(isHost) roomsRegister(roomCode, myName, players.length);
+    if(isHost) roomsRegister(roomCode,myName,players.length);
     return;
   }
   if(d.type==='sync'){
@@ -1804,6 +1817,14 @@ function renderPwList(){
       <div style="flex:1;font-size:.88rem">${p}${p===myName?' (ти)':''}</div>
       ${i===0?'<div class="pw-badge">хост</div>':'<div class="pw-dot g"></div>'}
     </div>`).join('');
+  // Кнопка старту — тільки хост бачить коли 2+ гравці
+  const startBtn=document.getElementById('btnStartGame');
+  const waitHint=document.getElementById('waitingHint');
+  if(startBtn){
+    const show=isHost && players.length>=2;
+    startBtn.style.display=show?'block':'none';
+    if(waitHint) waitHint.style.display=show?'none':'block';
+  }
 }
 
 function buildPRing(){
