@@ -1,10 +1,43 @@
-<!DOCTYPE html><!-- v20260404-2357 -->
+<!DOCTYPE html><!-- v20260405-0001 -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>💋 Поцілунок-Знайомство</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+// Firebase завантажуємо динамічно
+let db = null;
+function loadFirebase(){
+  return new Promise(res=>{
+    const s1=document.createElement('script');
+    s1.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    s1.onload=()=>{
+      const s2=document.createElement('script');
+      s2.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';
+      s2.onload=()=>{
+        try{
+          firebase.initializeApp({
+            apiKey:"AIzaSyBKaK0216j_tt_mjIY1G-Vvr1DQuyLQ8Z8",
+            authDomain:"kiss-f789d.firebaseapp.com",
+            databaseURL:"https://kiss-f789d-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId:"kiss-f789d",
+            appId:"1:1006824371258:web:ea1af3e3d132e05f183103"
+          });
+          db=firebase.database();
+        }catch(e){}
+        res();
+      };
+      s2.onerror=()=>res();
+      document.head.appendChild(s2);
+    };
+    s1.onerror=()=>res();
+    document.head.appendChild(s1);
+  });
+}
+// Завантажуємо одразу
+loadFirebase();
+</script>
 <script>
 (function(){
   const C=['https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js',
@@ -299,7 +332,6 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
   <!-- Таби -->
   <div class="menu-tabs">
     <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
-    <button class="mtab" onclick="menuTab('rooms',this)"><span>🏠</span>Кімнати</button>
     <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
     <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
   </div>
@@ -315,10 +347,10 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
       <div class="lbl">👤 Твоє ім'я</div>
       <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
     </div>
-    <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру автоматично</button>
+    <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру</button>
     <div style="width:100%;display:flex;align-items:center;gap:8px">
       <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">АБО КОД</div>
+      <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">ПРИЄДНАТИСЬ ЗА КОДОМ</div>
       <div style="flex:1;height:1px;background:var(--border)"></div>
     </div>
     <div style="display:flex;gap:8px;width:100%">
@@ -328,22 +360,8 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
       <button class="btn red" onclick="joinByCode()" style="width:auto;padding:12px 18px;font-size:.9rem">→</button>
     </div>
     <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
-      💋 Автоматично знаходить гравців поруч · 🏠 Або вписуй код друга
+      Отримай код від друга і впиши його вище
     </div>
-  </div>
-
-  <!-- ── КІМНАТИ ── -->
-  <div class="menu-page" id="mpRooms">
-    <div style="width:100%;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:.7rem;color:var(--muted);letter-spacing:2px">АКТИВНІ КІМНАТИ</div>
-      <button onclick="scanRooms()" style="background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:4px 12px;color:var(--rg);font-size:.7rem;cursor:pointer">🔄 Оновити</button>
-    </div>
-    <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:8px">
-      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:20px">
-        🔍 Натисни Оновити щоб знайти кімнати
-      </div>
-    </div>
-    <button class="btn red" onclick="enterGame()" style="width:100%;margin-top:4px">➕ Створити кімнату</button>
   </div>
 
   <!-- ── МАГАЗИН ── -->
@@ -369,11 +387,12 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
       <div><div class="setting-lbl">💫 Анімації</div><div class="setting-sub">Серця та ефекти польоту</div></div>
       <div class="toggle on" id="togAnim" onclick="toggleSetting('anim',this)"></div>
     </div>
-    <div class="setting-row">
-      <div><div class="setting-lbl">🌐 Мова інтерфейсу</div></div>
-      <div class="sel-row">
-        <button class="sel-btn active" onclick="setLang('uk',this)">🇺🇦 UA</button>
-        <button class="sel-btn" onclick="setLang('en',this)">🇬🇧 EN</button>
+    <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="setting-lbl">🎨 Тема гри</div>
+      <div class="sel-row" id="themeRow">
+        <button class="sel-btn active" id="th-" onclick="setThemeBtn('',this)">🌑 Темна</button>
+        <button class="sel-btn" id="th-theme-pink" onclick="setThemeBtn('theme-pink',this)">🌸 Рожева</button>
+        <button class="sel-btn" id="th-theme-purple" onclick="setThemeBtn('theme-purple',this)">💜 Нічна</button>
       </div>
     </div>
     <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
@@ -392,13 +411,6 @@ body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a00
         <button class="sel-btn active" id="t15" onclick="setTimer(15,this)">15</button>
         <button class="sel-btn" id="t30" onclick="setTimer(30,this)">30</button>
         <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div><div class="setting-lbl">🎲 Режим гри</div></div>
-      <div class="sel-row">
-        <button class="sel-btn active" onclick="setMode('classic',this)">Класика</button>
-        <button class="sel-btn" onclick="setMode('fast',this)">Швидкий</button>
       </div>
     </div>
     <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
@@ -931,13 +943,23 @@ function shopBuy(type, id, price){
 let settingSound=true, settingAnim=true, settingLang='uk';
 let settingRounds=5, settingTimer=15, settingMode='classic';
 
+function setThemeBtn(theme, el){
+  document.querySelectorAll('#themeRow .sel-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  myTheme=theme;
+  applyTheme(theme);
+  saveMyStyle();
+  saveSettings();
+}
+
 function menuTab(tab, el){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('.menu-page').forEach(p=>p.classList.remove('on'));
-  document.getElementById('mp'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('on');
+  const pageId='mp'+tab.charAt(0).toUpperCase()+tab.slice(1);
+  const page=document.getElementById(pageId);
+  if(page) page.classList.add('on');
   if(tab==='shop') initMenuShop();
-  if(tab==='rooms') scanRooms();
 }
 
 function toggleSetting(key, el){
@@ -992,54 +1014,47 @@ function loadSettings(){
     const j=JSON.parse(s);
     settingSound=j.sound!==false;
     settingAnim=j.anim!==false;
-    settingLang=j.lang||'uk';
     settingRounds=j.rounds||5;
     settingTimer=j.timer||15;
     settingMode=j.mode||'classic';
-    // Оновлюємо UI
     if(!settingSound) document.getElementById('togSound')?.classList.remove('on');
     if(!settingAnim)  document.getElementById('togAnim')?.classList.remove('on');
-    // Таймер
     document.getElementById('t'+settingTimer)?.classList.add('active');
+    // Тема — синхронізуємо кнопки
+    const themeId='th-'+(myTheme||'');
+    document.querySelectorAll('#themeRow .sel-btn').forEach(b=>b.classList.remove('active'));
+    const thBtn=document.getElementById(themeId);
+    if(thBtn) thBtn.classList.add('active');
   }catch(e){}
 }
 
 // Сканування кімнат через PeerJS
 // ══════════════════════════════════════
-// РЕЄСТР КІМНАТ (через localStorage)
-// Хост записує кімнату, всі читають
+// РЕЄСТР КІМНАТ (Firebase)
 // ══════════════════════════════════════
-const ROOMS_KEY = 'km_active_rooms';
-const ROOM_TTL  = 5 * 60 * 1000; // 5 хвилин
+const ROOM_TTL = 5 * 60 * 1000;
 
-function roomsRegister(code, hostName, count){
+async function roomsRegister(code, hostName, count){
+  if(!db) return;
   try{
-    const raw = localStorage.getItem(ROOMS_KEY);
-    const rooms = raw ? JSON.parse(raw) : [];
-    const now = Date.now();
-    // Прибираємо застарілі
-    const fresh = rooms.filter(r => (now - r.ts) < ROOM_TTL && r.code !== code);
-    fresh.push({code, hostName, count, ts: now});
-    localStorage.setItem(ROOMS_KEY, JSON.stringify(fresh));
+    await db.ref('kiss_rooms/'+code).set({code, hostName, count, ts:Date.now()});
   }catch(e){}
 }
 
-function roomsUnregister(code){
-  try{
-    const raw = localStorage.getItem(ROOMS_KEY);
-    if(!raw) return;
-    const rooms = JSON.parse(raw).filter(r => r.code !== code);
-    localStorage.setItem(ROOMS_KEY, JSON.stringify(rooms));
-  }catch(e){}
+async function roomsUnregister(code){
+  if(!db) return;
+  try{ await db.ref('kiss_rooms/'+code).remove(); }catch(e){}
 }
 
-function roomsGetActive(){
+async function roomsGetActive(){
+  if(!db) return [];
   try{
-    const raw = localStorage.getItem(ROOMS_KEY);
-    if(!raw) return [];
+    const snap = await db.ref('kiss_rooms').once('value');
+    const val = snap.val();
+    if(!val) return [];
     const now = Date.now();
-    return JSON.parse(raw).filter(r => (now - r.ts) < ROOM_TTL);
-  }catch(e){return [];}
+    return Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
+  }catch(e){ return []; }
 }
 
 async function scanRooms(){
@@ -1442,8 +1457,6 @@ async function enterGame(){
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
     setLoad('Шукаємо кімнату...','');
-    // Для matchmake ініціалізуємо звичайний peer (не фіксований)
-    await initPeer();
     await matchmake();
   }catch(e){
     setLoad('Помилка',e.message);
@@ -1608,15 +1621,19 @@ async function tryConnect(code, _unused, timeout=12000){
 }
 
 async function matchmake(){
-  setLoad('Шукаємо кімнату...','Перевіряємо список');
-  // Шукаємо в localStorage реєстрі
-  const active=roomsGetActive();
-  for(const room of active){
-    setLoad(`Знайдено: ${room.code}`,`Підключаємось...`);
-    const ok=await tryConnect(room.code,null,6000);
-    if(ok)return;
+  setLoad('Шукаємо кімнату...','Підключаємо Firebase...');
+  // Чекаємо Firebase якщо ще не завантажений
+  if(!db){
+    await loadFirebase();
+    await new Promise(r=>setTimeout(r,500));
   }
-  // Не знайшли — створюємо кімнату
+  setLoad('Шукаємо кімнату...','Перевіряємо список');
+  const active = await roomsGetActive();
+  for(const room of active){
+    setLoad(`Знайдено: ${room.code}`,'Підключаємось...');
+    const ok = await tryConnect(room.code, null, 6000);
+    if(ok) return;
+  }
   setLoad('Створюємо кімнату...','Ти будеш хостом');
   await createRoom();
 }
@@ -2128,14 +2145,14 @@ function showScore(){
 }
 async function resetAll(){
   if(isHost){
-    roomsUnregister(roomCode);
+    await roomsUnregister(roomCode);
     clearInterval(cleanTimer);
   }
   peer?.destroy(); peer=null; guestConns={}; hostConn=null;
   if(myName && coins[myName]!==undefined){
     try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
   }
-  const savedName = myName;
+  const savedName=myName;
   players=[]; scores={}; photos={}; coins={}; gifts={}; spinning=false;
   currentBottleAngle=0;
   myName=savedName;
