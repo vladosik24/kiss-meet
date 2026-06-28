@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260405-0002 -->
+<!DOCTYPE html><!-- v20260405-0003 -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -300,10 +300,15 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .hrt{position:fixed;pointer-events:none;z-index:0;font-size:.9rem;opacity:0;animation:fhrt linear infinite;}
 @keyframes fhrt{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:.22}90%{opacity:.07}100%{transform:translateY(-5vh) rotate(360deg);opacity:0}}
 
-/* Score tabs */
-.score-tabs{display:flex;gap:6px;margin-bottom:14px;width:100%;max-width:400px;}
-.score-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
-.score-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
+/* Leaderboard */
+.lb-tabs{display:flex;gap:6px;margin-bottom:14px;width:100%;max-width:400px;}
+.lb-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
+.lb-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
+.lb-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slr .4s ease both;}
+.lb-rank{font-size:1.05rem;width:26px;text-align:center;}
+.lb-name{flex:1;font-weight:500;font-size:.9rem;}
+.lb-stat{color:var(--rg);font-size:.76rem;font-weight:600;}
+.lb-loading{text-align:center;color:var(--muted);font-size:.8rem;padding:20px}
 </style>
 </head>
 <body>
@@ -321,6 +326,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <div class="menu-tabs">
     <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
     <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
+    <button class="mtab" onclick="menuTab('leaderboard',this)"><span>🏆</span>Рейтинг</button>
     <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
   </div>
 
@@ -368,6 +374,19 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
   </div>
 
+  <div class="menu-page" id="mpLeaderboard">
+    <div style="font-family:Georgia,serif;font-size:1.4rem;font-style:italic;margin-bottom:4px">🏆 Рейтинг</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:14px">Топ гравців за всі часи</div>
+    <div class="lb-tabs">
+      <button class="lb-tab active" onclick="lbTab('kisses',this)">💋 Поцілунки</button>
+      <button class="lb-tab" onclick="lbTab('gifts',this)">🎁 Подарунки</button>
+      <button class="lb-tab" onclick="lbTab('music',this)">🎵 Музика</button>
+    </div>
+    <div class="sc-list" id="lbList">
+      <div class="lb-loading">Завантаження...</div>
+    </div>
+  </div>
+
   <div class="menu-page" id="mpSettings">
     <div class="setting-row">
       <div><div class="setting-lbl">🔔 Звукові ефекти</div><div class="setting-sub">Звук при поцілунку та подарунку</div></div>
@@ -409,7 +428,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
       </div>
     </div>
     <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
-      v2.1 · 💋 Поцілунок-Знайомство
+      v2.2 · 💋 Поцілунок-Знайомство
     </div>
   </div>
 </div>
@@ -450,7 +469,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <div class="top-btns">
       <div class="ico-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
       <div class="ico-btn" id="chatBtn" onclick="toggleChat()">💬</div>
-      <div class="ico-btn" onclick="showScore()">📊</div>
       <div class="ico-btn" onclick="openShop()" title="Магазин">🛍</div>
     </div>
   </div>
@@ -578,19 +596,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   </div>
 </div>
 
-<div class="scr" id="sScore">
-  <div class="logo" style="font-size:1.7rem">🏆 Рейтинг</div>
-  <div class="sub">Статистика гри</div>
-  <div class="score-tabs">
-    <button class="score-tab active" onclick="scoreTab('kisses',this)">💋 Поцілунки</button>
-    <button class="score-tab" onclick="scoreTab('gifts',this)">🎁 Подарунки</button>
-    <button class="score-tab" onclick="scoreTab('music',this)">🎵 Музика</button>
-  </div>
-  <div class="sc-list" id="scList"></div>
-  <button class="btn red" onclick="ss('sGame')">← До гри</button>
-  <button class="btn ghost" onclick="resetAll()">Нова гра 🔄</button>
-</div>
-
 <script>
 const MAX_P = 8;
 
@@ -670,10 +675,12 @@ function playTrack(i, giftMode=false){
   document.getElementById('nowPlaying').textContent='▶ '+t.name;
   addChatEvent(giftMode ? `🎁🎵 ${myName} дарує пісню "${t.name}"` : `🎵 ${myName} вмикає: ${t.name}`);
   
-  // Оновлюємо лічильник музики
   if(!scores[myName]) scores[myName]={k:0,n:0,g:0,m:0};
   scores[myName].m=(scores[myName].m||0)+1;
   bcastMsg({type:'music_play',name:myName,_from:myPeerId});
+  
+  // Оновлюємо глобальний рейтинг
+  updateLeaderboard('music', 1);
 
   const connCount = isHost ? Object.keys(guestConns).length : (hostConn ? 1 : 0);
   if(connCount === 0) return;
@@ -898,6 +905,7 @@ function menuTab(tab, el){
   if(page) page.classList.add('on');
   if(tab==='shop') initMenuShop();
   if(tab==='play') scanRooms();
+  if(tab==='leaderboard') loadLeaderboard();
 }
 
 function toggleSetting(key, el){
@@ -948,6 +956,72 @@ function loadSettings(){
     document.querySelectorAll('#themeRow .sel-btn').forEach(b=>b.classList.remove('active'));
     const thBtn=document.getElementById(themeId);
     if(thBtn) thBtn.classList.add('active');
+  }catch(e){}
+}
+
+// ══════════════════════════════════════
+// LEADERBOARD (Глобальний рейтинг через Firebase)
+// ══════════════════════════════════════
+let currentLbTab='kisses';
+
+function lbTab(tab, el){
+  document.querySelectorAll('.lb-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentLbTab=tab;
+  loadLeaderboard();
+}
+
+async function loadLeaderboard(){
+  const list=document.getElementById('lbList');
+  list.innerHTML='<div class="lb-loading">🔍 Завантаження рейтингу...</div>';
+  
+  if(!db) await loadFirebase();
+  if(!db){
+    list.innerHTML='<div class="lb-loading">❌ Firebase недоступний</div>';
+    return;
+  }
+  
+  try{
+    const snap=await db.ref('kiss_leaderboard').orderByChild(currentLbTab).limitToLast(50).once('value');
+    const val=snap.val();
+    if(!val){
+      list.innerHTML='<div class="lb-loading">🏆 Поки що порожньо. Будь першим!</div>';
+      return;
+    }
+    
+    const arr=Object.entries(val).map(([uid,d])=>({uid,...d}));
+    arr.sort((a,b)=>(b[currentLbTab]||0)-(a[currentLbTab]||0));
+    const top=arr.slice(0,20);
+    
+    const medals=['🥇','🥈','🥉'];
+    list.innerHTML=top.map((p,i)=>{
+      const stat=currentLbTab==='kisses'?`💋 ${p.kisses||0}`:
+                 currentLbTab==='gifts'?`🎁 ${p.gifts||0}`:`🎵 ${p.music||0}`;
+      const avHtml=p.photo?
+        `<img src="${p.photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div class=av-ph>${(p.name||'?')[0]}</div>'">`:
+        `<div class="av-ph">${(p.name||'?')[0]}</div>`;
+      return `<div class="lb-item" style="animation-delay:${i*.05}s">
+        <div class="lb-rank">${medals[i]||`${i+1}.`}</div>
+        ${avHtml}
+        <div class="lb-name">${p.name||'Анонім'}</div>
+        <div class="lb-stat">${stat}</div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div class="lb-loading">❌ Помилка завантаження</div>';
+  }
+}
+
+async function updateLeaderboard(stat, amount){
+  if(!db || !myTgId || !myName) return;
+  try{
+    const ref=db.ref('kiss_leaderboard/'+myTgId);
+    const updates={};
+    updates[stat]=firebase.database.ServerValue.increment(amount);
+    updates.name=myName;
+    updates.photo=myPhoto||'';
+    updates.ts=Date.now();
+    await ref.update(updates);
   }catch(e){}
 }
 
@@ -1256,6 +1330,9 @@ function sendGift(gIdx){
 
   floatGift(g.icon);
   bar(`Надіслав ${g.icon} для ${viewingProfile}!`,'ok');
+  
+  // Оновлюємо глобальний рейтинг
+  updateLeaderboard('gifts', 1);
 }
 
 function applyGift(d){
@@ -1916,6 +1993,8 @@ function applyVoteResult(d){
     if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${KISS_COINS} кожному`);
     if(myName===sn || myName===tn){
       syncToBot('kiss', {kisses:1, coins:KISS_COINS, partner: myName===sn?tn:sn});
+      // Оновлюємо глобальний рейтинг
+      updateLeaderboard('kisses', 1);
     }
   } else {
     totalN++;
@@ -1965,52 +2044,6 @@ function applyNextTurn(d){
   updateBar(); updateMyTurn();
 }
 
-let currentScoreTab='kisses';
-function scoreTab(tab, el){
-  document.querySelectorAll('.score-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  currentScoreTab=tab;
-  renderScoreList();
-}
-
-function renderScoreList(){
-  let sorted;
-  if(currentScoreTab==='kisses'){
-    sorted=[...players].sort((a,b)=>(scores[b].k||0)-(scores[a].k||0));
-  } else if(currentScoreTab==='gifts'){
-    sorted=[...players].sort((a,b)=>(scores[b].g||0)-(scores[a].g||0));
-  } else {
-    sorted=[...players].sort((a,b)=>(scores[b].m||0)-(scores[a].m||0));
-  }
-  
-  const m=['🥇','🥈','🥉'];
-  document.getElementById('scList').innerHTML=sorted.map((p,i)=>{
-    const s=scores[p]||{k:0,n:0,g:0,m:0};
-    let statHtml='';
-    if(currentScoreTab==='kisses'){
-      statHtml=`<div class="sc-k">💋 ${s.k||0}</div><div class="sc-g">🎁 ${s.g||0}</div>`;
-    } else if(currentScoreTab==='gifts'){
-      statHtml=`<div class="sc-g">🎁 ${s.g||0}</div><div class="sc-k">💋 ${s.k||0}</div>`;
-    } else {
-      statHtml=`<div class="sc-m">🎵 ${s.m||0}</div><div class="sc-k">💋 ${s.k||0}</div>`;
-    }
-    return `<div class="sc-item" onclick="openProfile('${p}')" style="cursor:pointer;animation-delay:${i*.07}s">
-      <div class="sc-rank">${m[i]||`${i+1}.`}</div>
-      ${avHtml(p,'sm')}
-      <div class="sc-name">${p}</div>
-      ${statHtml}
-    </div>`;
-  }).join('');
-}
-
-function showScore(){
-  currentScoreTab='kisses';
-  document.querySelectorAll('.score-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelector('.score-tab').classList.add('active');
-  renderScoreList();
-  ss('sScore');
-}
-
 async function resetAll(){
   if(isHost){
     await roomsUnregister(roomCode);
@@ -2043,4 +2076,4 @@ document.addEventListener('click', e=>{
 try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();}catch(e){}
 </script>
 </body>
-</html>
+  </html>
