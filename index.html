@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v3.0-ultimate -->
+<!DOCTYPE html><!-- v3.1-ultimate -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -48,12 +48,10 @@ loadFirebase().then(()=>scanRooms());
 :root{--r:#c8003a;--rg:#ff4d7e;--gold:#f0b429;--dark:#07000e;--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--muted:rgba(255,255,255,.38);}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
-body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans-serif;
-  background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(200,0,58,.15),transparent),
-                   radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,77,126,.1),transparent);}
-.scr{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto;animation:fup .3s ease;}
-.scr.on{display:flex;}
-@keyframes fup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans-serif;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(200,0,58,.15),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,77,126,.1),transparent);}
+.scr{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto;}
+.scr.on{display:flex;animation:screenIn .4s cubic-bezier(.4,0,.2,1);}
+@keyframes screenIn{0%{opacity:0;transform:scale(.96) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 .logo{font-family:Georgia,serif;font-size:clamp(1.9rem,8vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.1;margin-bottom:4px;}
 .sub{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:22px;}
 .card{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:14px;}
@@ -62,9 +60,10 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .inp:focus{border-color:var(--rg);}
 .inp::placeholder{color:rgba(255,255,255,.22);}
 .btn{width:100%;max-width:420px;border:none;border-radius:50px;padding:14px 26px;color:#fff;font-family:Georgia,serif;font-size:1.1rem;font-style:italic;cursor:pointer;transition:transform .15s,opacity .2s;}
-.btn.red{background:linear-gradient(135deg,var(--r),#8a0028);box-shadow:0 5px 22px rgba(200,0,58,.4);}
+.btn.red{background:linear-gradient(135deg,var(--r),#8a0028);box-shadow:0 5px 22px rgba(200,0,58,.4);animation:softPulse 2.5s ease infinite;}
+@keyframes softPulse{0%,100%{box-shadow:0 5px 22px rgba(200,0,58,.4)}50%{box-shadow:0 5px 30px rgba(200,0,58,.7)}}
 .btn.red:active{transform:translateY(-2px);}
-.btn.red:disabled{opacity:.32;cursor:not-allowed;transform:none;}
+.btn.red:disabled{opacity:.32;cursor:not-allowed;transform:none;animation:none;}
 .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(255,255,255,.55);font-family:-apple-system,sans-serif;font-size:.83rem;font-style:normal;margin-top:8px;}
 .spin-anim{width:46px;height:46px;border:3px solid rgba(255,77,126,.2);border-top-color:var(--rg);border-radius:50%;animation:rot .8s linear infinite;margin:0 auto 16px;}
 @keyframes rot{to{transform:rotate(360deg)}}
@@ -76,8 +75,7 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .code{font-family:Georgia,serif;font-size:2.3rem;font-weight:700;color:var(--gold);letter-spacing:8px;}
 .code-hint{font-size:.66rem;color:var(--muted);margin-top:3px;}
 .pw-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
-.pw-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slr .3s ease;}
-@keyframes slr{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+.pw-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slideIn .4s cubic-bezier(.4,0,.2,1) backwards;}
 .pw-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .pw-dot.h{background:var(--gold);}
 .pw-dot.g{background:var(--rg);animation:blink 1.4s ease infinite;}
@@ -126,12 +124,20 @@ body.theme-cyber{--r:#00f5ff;--rg:#b388ff;--dark:#000814;background-color:#00081
 body.theme-forest{--r:#2d6a4f;--rg:#52b788;--dark:#081c15;background-color:#081c15;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(45,106,79,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(82,183,136,.12),transparent);}
 body.theme-candy{--r:#ff69b4;--rg:#ffd700;--dark:#1a0020;background-color:#1a0020;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,105,180,.18),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,215,0,.12),transparent);}
 body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045e;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(0,119,182,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(0,180,216,.15),transparent);}
+body.theme-neon{--r:#ff006e;--rg:#8338ec;--gold:#ffbe0b;--dark:#0a0014;background-color:#0a0014;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,0,110,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(131,56,236,.18),transparent),radial-gradient(ellipse 40% 30% at 50% 90%,rgba(255,190,11,.1),transparent);}
+body.theme-neon .btn.red{background:linear-gradient(135deg,#ff006e,#8338ec);box-shadow:0 5px 25px rgba(131,56,236,.5),0 0 40px rgba(255,0,110,.3);}
+body.theme-neon .logo{filter:drop-shadow(0 0 20px rgba(131,56,236,.5));}
+body.theme-neon .bottle.go{filter:drop-shadow(0 0 30px rgba(255,0,110,1));}
+body.theme-goldnight{--r:#d4a017;--rg:#ffd700;--dark:#0a0600;background-color:#0a0600;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(212,160,23,.18),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,215,0,.12),transparent);}
+body.theme-goldnight .btn.red{background:linear-gradient(135deg,#d4a017,#8b6914);box-shadow:0 5px 25px rgba(212,160,23,.5);}
+body.theme-aurora{--r:#00ff88;--rg:#00d9ff;--gold:#ffeb3b;--dark:#001a1a;background-color:#001a1a;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(0,255,136,.15),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(0,217,255,.15),transparent),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(255,235,59,.08),transparent);}
+body.theme-aurora .btn.red{background:linear-gradient(135deg,#00ff88,#00d9ff);color:#001a1a;box-shadow:0 5px 25px rgba(0,255,136,.4);}
 .shop-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);align-items:flex-end;justify-content:center;}
 .shop-overlay.on{display:flex;}
 .shop-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;max-height:85vh;overflow-y:auto;}
 .shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.shop-item{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
-.shop-item:active{background:rgba(255,77,126,.12);}
+.shop-item{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;}
+.shop-item:active{transform:scale(.95);background:rgba(255,77,126,.12);}
 .shop-item.owned{border-color:rgba(240,180,41,.5);background:rgba(240,180,41,.06);}
 .shop-item.equipped{border-color:var(--rg);background:rgba(255,77,126,.1);}
 .shop-item-icon{font-size:2rem;margin-bottom:6px;}
@@ -145,7 +151,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:flex-end;justify-content:center;padding-bottom:0;}
 .overlay.on{display:flex;}
 .overlay.center{align-items:center;}
-.profile-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 22px 36px;animation:slideUp .32s ease;max-height:90vh;overflow-y:auto;}
+.profile-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 22px 36px;animation:slideUp .4s cubic-bezier(.4,0,.2,1);max-height:90vh;overflow-y:auto;}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .profile-header{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:20px;}
 .profile-name{font-family:Georgia,serif;font-size:1.4rem;font-style:italic;}
@@ -156,8 +162,8 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .gifts-received{font-size:.76rem;color:var(--muted);text-align:center;min-height:20px;margin-bottom:14px;}
 .gifts-title{font-size:.66rem;letter-spacing:3px;text-transform:uppercase;color:var(--rg);margin-bottom:10px;}
 .gifts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-.gift-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:background .2s,border-color .2s;}
-.gift-btn:active{background:rgba(255,77,126,.15);border-color:var(--rg);}
+.gift-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);}
+.gift-btn:active{background:rgba(255,77,126,.15);border-color:var(--rg);transform:scale(.9);}
 .gift-icon{font-size:1.5rem;}
 .gift-cost{font-size:.6rem;color:var(--gold);}
 .gift-name{font-size:.58rem;color:var(--muted);}
@@ -180,7 +186,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .v-btns{display:flex;gap:9px;}
 .v-yes{flex:1;background:linear-gradient(135deg,var(--r),var(--rg));border:none;border-radius:50px;padding:12px;color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 4px 14px rgba(200,0,58,.4);}
 .v-no{flex:1;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:50px;padding:12px;color:rgba(255,255,255,.65);font-size:1rem;cursor:pointer;}
-.chat-panel{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(7,0,14,.97);border-top:1px solid var(--border);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s ease;max-height:60vh;}
+.chat-panel{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(7,0,14,.97);border-top:1px solid var(--border);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);max-height:60vh;}
 .chat-panel.open{transform:translateY(0);}
 .chat-header{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .chat-header span{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
@@ -227,11 +233,24 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .gift-float{position:fixed;font-size:2rem;pointer-events:none;z-index:400;animation:giftFly 1.4s ease forwards;}
 @keyframes giftFly{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
 .menu-tabs{display:flex;width:100%;max-width:420px;background:rgba(255,255,255,.04);border-radius:16px;padding:4px;gap:4px;margin-bottom:16px;flex-shrink:0;}
-.mtab{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;border-radius:12px;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.mtab{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;border-radius:12px;transition:all .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;overflow:hidden;}
 .mtab span{font-size:1.1rem;}
-.mtab.active{background:linear-gradient(135deg,var(--r),var(--rg));color:#fff;}
-.menu-page{display:none;width:100%;max-width:420px;flex-direction:column;align-items:center;gap:10px;flex:1;overflow-y:auto;}
-.menu-page.on{display:flex;}
+.mtab.active{background:linear-gradient(135deg,var(--r),var(--rg));color:#fff;transform:translateY(-2px);box-shadow:0 4px 15px rgba(255,77,126,.4);}
+.mtab::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(255,255,255,.3),transparent 60%);opacity:0;transition:opacity .3s;}
+.mtab:active::before{opacity:1;}
+.menu-page{display:none;width:100%;max-width:420px;flex-direction:column;align-items:center;gap:10px;flex:1;overflow-y:auto;opacity:0;transform:translateY(15px) scale(.98);transition:opacity .35s ease, transform .35s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+.menu-page.on{display:flex;opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
+.menu-page.on .room-card,.menu-page.on .shop-item,.menu-page.on .ach-item,.menu-page.on .lb-item,.menu-page.on .setting-row{animation:slideIn .4s cubic-bezier(.4,0,.2,1) backwards;}
+.menu-page.on .room-card:nth-child(1),.menu-page.on .shop-item:nth-child(1),.menu-page.on .ach-item:nth-child(1),.menu-page.on .lb-item:nth-child(1),.menu-page.on .setting-row:nth-child(1){animation-delay:.05s}
+.menu-page.on .room-card:nth-child(2),.menu-page.on .shop-item:nth-child(2),.menu-page.on .ach-item:nth-child(2),.menu-page.on .lb-item:nth-child(2),.menu-page.on .setting-row:nth-child(2){animation-delay:.1s}
+.menu-page.on .room-card:nth-child(3),.menu-page.on .shop-item:nth-child(3),.menu-page.on .ach-item:nth-child(3),.menu-page.on .lb-item:nth-child(3),.menu-page.on .setting-row:nth-child(3){animation-delay:.15s}
+.menu-page.on .room-card:nth-child(4),.menu-page.on .shop-item:nth-child(4),.menu-page.on .ach-item:nth-child(4),.menu-page.on .lb-item:nth-child(4),.menu-page.on .setting-row:nth-child(4){animation-delay:.2s}
+.menu-page.on .room-card:nth-child(5),.menu-page.on .shop-item:nth-child(5),.menu-page.on .ach-item:nth-child(5),.menu-page.on .lb-item:nth-child(5),.menu-page.on .setting-row:nth-child(5){animation-delay:.25s}
+.menu-page.on .room-card:nth-child(6),.menu-page.on .shop-item:nth-child(6),.menu-page.on .ach-item:nth-child(6),.menu-page.on .lb-item:nth-child(6),.menu-page.on .setting-row:nth-child(6){animation-delay:.3s}
+.menu-page.on .room-card:nth-child(7),.menu-page.on .shop-item:nth-child(7),.menu-page.on .ach-item:nth-child(7),.menu-page.on .lb-item:nth-child(7){animation-delay:.35s}
+.menu-page.on .room-card:nth-child(8),.menu-page.on .shop-item:nth-child(8),.menu-page.on .ach-item:nth-child(8),.menu-page.on .lb-item:nth-child(8){animation-delay:.4s}
+.menu-page.on .room-card:nth-child(9),.menu-page.on .shop-item:nth-child(9),.menu-page.on .ach-item:nth-child(9),.menu-page.on .lb-item:nth-child(9){animation-delay:.45s}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 .room-card{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s;}
 .room-card:active{border-color:var(--rg);}
 .room-dot{width:8px;height:8px;border-radius:50%;background:#00e676;animation:blink 1.4s ease infinite;flex-shrink:0;}
@@ -252,7 +271,8 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .lb-tabs{display:flex;gap:6px;margin-bottom:14px;width:100%;max-width:400px;}
 .lb-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
 .lb-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
-.lb-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slr .4s ease both;}
+.lb-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;transition:all .3s ease;}
+.lb-item:hover{transform:translateX(4px);border-color:var(--rg);}
 .lb-rank{font-size:1.05rem;width:26px;text-align:center;}
 .lb-name{flex:1;font-weight:500;font-size:.9rem;}
 .lb-stat{color:var(--rg);font-size:.76rem;font-weight:600;}
@@ -269,13 +289,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .daily-title{font-family:Georgia,serif;font-size:1.2rem;margin-bottom:6px;}
 .daily-reward{font-size:1.5rem;font-weight:700;color:var(--gold);margin:10px 0;}
 .daily-btn{background:linear-gradient(135deg,var(--gold),#d4a017);border:none;border-radius:50px;padding:12px 24px;color:#000;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(240,180,41,.5);}
-.task-card{background:linear-gradient(145deg,#1a0028,#2a0038);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;max-width:340px;width:100%;text-align:center;box-shadow:0 0 40px rgba(240,180,41,.3);animation:cpop .4s cubic-bezier(.175,.885,.32,1.275);}
-.task-emoji{font-size:3.5rem;margin-bottom:10px;}
-.task-title{font-family:Georgia,serif;font-size:1.3rem;margin-bottom:8px;color:var(--gold);}
-.task-text{font-size:.95rem;margin-bottom:16px;line-height:1.5;}
-.task-btns{display:flex;gap:10px;}
-.task-btn{flex:1;background:linear-gradient(135deg,var(--gold),#d4a017);border:none;border-radius:50px;padding:12px;color:#000;font-weight:700;cursor:pointer;}
-.task-btn.skip{background:rgba(255,255,255,.1);color:var(--muted);}
 .confetti{position:fixed;width:10px;height:10px;pointer-events:none;z-index:999;animation:confettiFall 3s ease-out forwards;}
 @keyframes confettiFall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
 .powerup-bar{display:flex;gap:8px;width:100%;max-width:240px;margin-top:8px;}
@@ -288,13 +301,12 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .xp-bar{width:100%;max-width:420px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:50px;padding:3px;margin-bottom:10px;}
 .xp-fill{height:8px;background:linear-gradient(90deg,var(--gold),var(--rg));border-radius:50px;transition:width .3s ease;}
 .xp-info{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px;}
-.like-btn{position:absolute;top:-4px;left:-4px;background:rgba(255,77,126,.9);border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.6rem;cursor:pointer;z-index:10;}
-.like-btn.liked{background:var(--gold);}
+.like-btn{position:absolute;top:-4px;left:-4px;background:rgba(255,77,126,.9);border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.6rem;cursor:pointer;z-index:10;transition:all .2s;}
+.like-btn.liked{background:var(--gold);transform:scale(1.1);}
 </style>
 </head>
 <body>
 <div class="cbar" id="cbar"></div>
-
 <div class="scr on" id="sName" style="justify-content:flex-start;padding:16px 14px 0;">
   <div style="width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:4px 0 10px;flex-shrink:0">
     <div>
@@ -303,7 +315,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
     <div id="menuAv" style="width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--rg);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--muted)">?</div>
   </div>
-
   <div class="menu-tabs">
     <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
     <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
@@ -311,17 +322,13 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="mtab" onclick="menuTab('achievements',this)"><span>🎖</span>Досяг.</button>
     <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
   </div>
-
   <div class="menu-page on" id="mpPlay">
     <div id="menuTgProfile" style="display:none;flex-direction:column;align-items:center;gap:6px;width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;">
       <div id="menuTgAv" style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid var(--rg)"></div>
       <div id="menuTgName" style="font-size:.95rem;font-weight:600"></div>
       <div id="menuTgStats" style="font-size:.7rem;color:var(--muted)">🪙 0 · 💋 0</div>
       <div class="xp-bar">
-        <div class="xp-info">
-          <span id="xpLevel">Рівень 1</span>
-          <span id="xpText">0 / 100 XP</span>
-        </div>
+        <div class="xp-info"><span id="xpLevel">Рівень 1</span><span id="xpText">0 / 100 XP</span></div>
         <div class="xp-fill" id="xpFill" style="width:0%"></div>
       </div>
     </div>
@@ -331,7 +338,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
     <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру</button>
     <button class="btn ghost" onclick="enterBlitz()" style="width:100%">⚡ Бліц-гра (швидка)</button>
-
     <div style="width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:4px">
       <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px">АКТИВНІ КІМНАТИ</div>
       <button onclick="scanRooms()" style="background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:3px 10px;color:var(--rg);font-size:.65rem;cursor:pointer">🔄</button>
@@ -339,29 +345,22 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:6px;min-height:60px">
       <div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Натисни 🔄 щоб оновити</div>
     </div>
-
     <div style="width:100%;display:flex;align-items:center;gap:8px;margin-top:4px">
       <div style="flex:1;height:1px;background:var(--border)"></div>
       <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">ПРИЄДНАТИСЬ ЗА КОДОМ</div>
       <div style="flex:1;height:1px;background:var(--border)"></div>
     </div>
     <div style="display:flex;gap:8px;width:100%">
-      <input class="inp" id="codeInp" placeholder="Код кімнати..." maxlength="4"
-        style="text-transform:uppercase;letter-spacing:4px;font-size:1.1rem;text-align:center;flex:1"
-        oninput="this.value=this.value.toUpperCase()">
+      <input class="inp" id="codeInp" placeholder="Код кімнати..." maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-size:1.1rem;text-align:center;flex:1" oninput="this.value=this.value.toUpperCase()">
       <button class="btn red" onclick="joinByCode()" style="width:auto;padding:12px 18px;font-size:.9rem">→</button>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
-      Отримай код від друга і впиши його вище
-    </div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">Отримай код від друга і впиши його вище</div>
   </div>
-
   <div class="menu-page" id="mpShop">
     <div class="shop-balance" style="font-size:.9rem">🪙 <span id="menuShopCoins">0</span> монет</div>
     <div class="shop-grid" id="menuShopGrid" style="width:100%"></div>
     <div style="font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">💡 Рамки видні всім у грі</div>
   </div>
-
   <div class="menu-page" id="mpLeaderboard">
     <div style="font-family:Georgia,serif;font-size:1.4rem;font-style:italic;margin-bottom:4px">🏆 Рейтинг</div>
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:14px">Топ гравців за всі часи</div>
@@ -372,13 +371,11 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
     <div class="sc-list" id="lbList"><div class="lb-loading">Завантаження...</div></div>
   </div>
-
   <div class="menu-page" id="mpAchievements">
     <div style="font-family:Georgia,serif;font-size:1.4rem;font-style:italic;margin-bottom:4px">🎖 Досягнення</div>
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:14px">Збирай бейджі та отримуй нагороди</div>
     <div class="ach-grid" id="achGrid"></div>
   </div>
-
   <div class="menu-page" id="mpSettings">
     <div class="setting-row">
       <div><div class="setting-lbl">🔔 Звукові ефекти</div><div class="setting-sub">Звук при поцілунку та подарунку</div></div>
@@ -399,6 +396,9 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
         <button class="sel-btn" id="th-theme-forest" onclick="setThemeBtn('theme-forest',this)">🌲 Ліс</button>
         <button class="sel-btn" id="th-theme-candy" onclick="setThemeBtn('theme-candy',this)">🍬 Канді</button>
         <button class="sel-btn" id="th-theme-ocean" onclick="setThemeBtn('theme-ocean',this)">🌊 Океан</button>
+        <button class="sel-btn" id="th-theme-neon" onclick="setThemeBtn('theme-neon',this)">⚡ Неон</button>
+        <button class="sel-btn" id="th-theme-goldnight" onclick="setThemeBtn('theme-goldnight',this)">🌙 Золота</button>
+        <button class="sel-btn" id="th-theme-aurora" onclick="setThemeBtn('theme-aurora',this)">🌌 Аврора</button>
       </div>
     </div>
     <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
@@ -419,10 +419,9 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
         <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
       </div>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.0 · 💋 Поцілунок-Знайомство</div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.1 · 💋 Поцілунок-Знайомство</div>
   </div>
 </div>
-
 <div class="overlay center" id="oDaily">
   <div class="daily-card">
     <div class="daily-streak" id="dailyStreak">🔥</div>
@@ -432,25 +431,11 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="daily-btn" onclick="claimDaily()">Забрати!</button>
   </div>
 </div>
-
-<div class="overlay center" id="oTask">
-  <div class="task-card">
-    <div class="task-emoji" id="taskEmoji">🎭</div>
-    <div class="task-title" id="taskTitle">Завдання</div>
-    <div class="task-text" id="taskText">Виконай завдання!</div>
-    <div class="task-btns">
-      <button class="task-btn" onclick="completeTask()">✅ Виконано (+20🪙)</button>
-      <button class="task-btn skip" onclick="skipTask()">Пропустити</button>
-    </div>
-  </div>
-</div>
-
 <div class="scr" id="sLoad">
   <div class="spin-anim"></div>
   <div style="font-family:Georgia,serif;font-size:1.45rem;font-style:italic;margin-bottom:5px;text-align:center" id="loadT">Завантажуємо...</div>
   <div style="font-size:.8rem;color:var(--muted);text-align:center" id="loadS">Зачекай</div>
 </div>
-
 <div class="scr" id="sLobby">
   <div class="logo" style="font-size:clamp(1.4rem,5vw,1.9rem)">Кімната готова!</div>
   <div class="sub" id="lobbyRole">Ти хост</div>
@@ -465,7 +450,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <button id="btnStartGame" class="btn red" onclick="hostStartGame()" style="display:none;width:100%;max-width:420px;margin-top:8px">🎮 Почати гру!</button>
   <div id="waitingHint" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">⏳ Чекаємо на гравців...</div>
 </div>
-
 <div class="scr" id="sGame" style="padding:0;justify-content:flex-start;">
 <div class="game-wrap">
   <div class="top-bar">
@@ -501,25 +485,12 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="btn red" id="btnSpin" onclick="onTap()" disabled style="font-size:.98rem;padding:11px">Крутити 🔄</button>
   </div>
   <div class="powerup-bar">
-    <div class="powerup-btn" onclick="usePowerup('lucky')">
-      <div class="powerup-icon">🍀</div>
-      <div class="powerup-cost">20🪙</div>
-      <div class="powerup-count" id="pwrLucky">0</div>
-    </div>
-    <div class="powerup-btn" onclick="usePowerup('shield')">
-      <div class="powerup-icon">🛡️</div>
-      <div class="powerup-cost">15🪙</div>
-      <div class="powerup-count" id="pwrShield">0</div>
-    </div>
-    <div class="powerup-btn" onclick="usePowerup('peek')">
-      <div class="powerup-icon">👀</div>
-      <div class="powerup-cost">10🪙</div>
-      <div class="powerup-count" id="pwrPeek">0</div>
-    </div>
+    <div class="powerup-btn" onclick="usePowerup('lucky')"><div class="powerup-icon">🍀</div><div class="powerup-cost">20🪙</div><div class="powerup-count" id="pwrLucky">0</div></div>
+    <div class="powerup-btn" onclick="usePowerup('shield')"><div class="powerup-icon">🛡️</div><div class="powerup-cost">15🪙</div><div class="powerup-count" id="pwrShield">0</div></div>
+    <div class="powerup-btn" onclick="usePowerup('peek')"><div class="powerup-icon">👀</div><div class="powerup-cost">10🪙</div><div class="powerup-count" id="pwrPeek">0</div></div>
   </div>
 </div>
 </div>
-
 <div class="music-panel" id="musicPanel">
   <div class="music-title">🎵 Музика</div>
   <div id="trackList"></div>
@@ -528,7 +499,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <div class="music-vol" style="margin-top:10px"><span>🔈</span><input type="range" min="0" max="100" value="60" oninput="setVol(this.value)"><span>🔊</span></div>
   <div id="nowPlaying" style="font-size:.65rem;color:var(--muted);text-align:center;margin-top:6px;min-height:14px"></div>
 </div>
-
 <div class="chat-panel" id="chatPanel">
   <div class="chat-header"><span>💬 Чат</span><button class="chat-close" onclick="toggleChat()">✕</button></div>
   <div class="chat-msgs" id="chatMsgs"></div>
@@ -537,7 +507,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="chat-send" onclick="sendChat()">➤</button>
   </div>
 </div>
-
 <div class="overlay center" id="oVote">
   <div class="vcard-wrap">
     <span class="v-emoji" id="vEmoji">🍾</span>
@@ -563,7 +532,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
   </div>
 </div>
-
 <div class="shop-overlay" id="shopOverlay">
   <div class="shop-sheet">
     <div style="text-align:center;font-family:Georgia,serif;font-size:1.2rem;margin-bottom:4px">🛍 Магазин рамок</div>
@@ -572,8 +540,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="shop-close" onclick="closeShop()">← Закрити</button>
   </div>
 </div>
-
-<div id="giftPopup" style="display:none;position:fixed;z-index:250;background:rgba(10,0,18,.97);border:1px solid rgba(255,77,126,.3);border-radius:20px;padding:16px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:fup .2s ease">
+<div id="giftPopup" style="display:none;position:fixed;z-index:250;background:rgba(10,0,18,.97);border:1px solid rgba(255,77,126,.3);border-radius:20px;padding:16px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:screenIn .2s ease">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
     <div id="gpAv" style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0"></div>
     <div>
@@ -589,7 +556,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <div onclick="openProfile(currentGiftTarget)" style="font-size:.72rem;color:var(--muted);cursor:pointer;text-decoration:underline">Повний профіль →</div>
   </div>
 </div>
-
 <div class="overlay" id="oProfile" onclick="closeProfile(event)">
   <div class="profile-sheet" onclick="event.stopPropagation()">
     <div class="profile-header">
@@ -615,79 +581,95 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     </div>
   </div>
 </div>
-
 <script>
-// ЧАСТИНА 2/3 БУДЕ ПРОДОВЖЕННЯМ — напишіть "далі" щоб отримати
-  const MAX_P = 8;
-const GIFTS = [
-  {icon:'🌹', name:'Троянда', cost:5}, {icon:'💌', name:'Листівка', cost:8},
-  {icon:'🍫', name:'Шоколад', cost:10}, {icon:'🧸', name:'Ведмедик', cost:15},
-  {icon:'💍', name:'Кільце', cost:30}, {icon:'🥂', name:'Шампань', cost:20},
-  {icon:'🎂', name:'Торт', cost:12}, {icon:'⭐', name:'Зірка', cost:25},
-];
-const KISS_COINS = 10;
+const MAX_P=8;
+const GIFTS=[{icon:'🌹',name:'Троянда',cost:5},{icon:'💌',name:'Листівка',cost:8},{icon:'🍫',name:'Шоколад',cost:10},{icon:'🧸',name:'Ведмедик',cost:15},{icon:'💍',name:'Кільце',cost:30},{icon:'🥂',name:'Шампань',cost:20},{icon:'🎂',name:'Торт',cost:12},{icon:'⭐',name:'Зірка',cost:25}];
+const KISS_COINS=10;
+
+// ══════════════════════════════════════
+// SOUNDS (Web Audio API)
+// ══════════════════════════════════════
+let audioCtx=null;
+function initAudio(){
+  if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(audioCtx&&audioCtx.state==='suspended'){audioCtx.resume().catch(()=>{});}
+}
+document.addEventListener('click',initAudio,{once:true});
+document.addEventListener('touchstart',initAudio,{once:true});
+
+function playTone(freq,duration,type='sine',volume=0.3,delay=0){
+  if(!settingSound||!audioCtx)return;
+  try{
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.type=type;osc.frequency.value=freq;
+    gain.gain.setValueAtTime(0,audioCtx.currentTime+delay);
+    gain.gain.linearRampToValueAtTime(volume,audioCtx.currentTime+delay+0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+delay+duration);
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime+delay);
+    osc.stop(audioCtx.currentTime+delay+duration);
+  }catch(e){}
+}
+function playKissSound(){if(!settingSound)return;initAudio();playTone(523.25,0.15,'sine',0.25,0);playTone(659.25,0.15,'sine',0.2,0.05);playTone(783.99,0.2,'sine',0.2,0.1);playTone(1046.5,0.25,'triangle',0.15,0.15);}
+function playGiftSound(){if(!settingSound)return;initAudio();playTone(880,0.1,'triangle',0.3,0);playTone(1318.5,0.15,'triangle',0.25,0.08);playTone(1760,0.3,'sine',0.2,0.15);}
+function playAchievementSound(){if(!settingSound)return;initAudio();playTone(523.25,0.2,'triangle',0.3,0);playTone(659.25,0.2,'triangle',0.25,0.1);playTone(783.99,0.2,'triangle',0.25,0.2);playTone(1046.5,0.4,'sine',0.3,0.3);}
+function playCoinSound(){if(!settingSound)return;initAudio();playTone(988,0.08,'square',0.15,0);playTone(1319,0.15,'square',0.15,0.08);}
+function playSpinSound(){if(!settingSound)return;initAudio();playTone(220,0.1,'sawtooth',0.1,0);playTone(330,0.1,'sawtooth',0.1,0.1);playTone(440,0.15,'sawtooth',0.1,0.2);}
+function playRefuseSound(){if(!settingSound)return;initAudio();playTone(330,0.15,'sine',0.2,0);playTone(220,0.25,'sine',0.2,0.1);}
+function playLikeSound(){if(!settingSound)return;initAudio();playTone(880,0.1,'sine',0.2,0);playTone(1175,0.15,'sine',0.2,0.08);}
 
 // ══════════════════════════════════════
 // ACHIEVEMENTS
 // ══════════════════════════════════════
-const ACHIEVEMENTS = [
-  {id:'first_kiss', name:'Перший поцілунок', desc:'Поцілуйтесь вперше', icon:'💋', reward:20, check:s=>s.k>=1},
-  {id:'heartbreaker', name:'Серцеїд', desc:'10 поцілунків', icon:'🔥', reward:50, check:s=>s.k>=10},
-  {id:'generous', name:'Щедрий', desc:'5 подарунків', icon:'🎁', reward:30, check:s=>s.g>=5},
-  {id:'dj', name:'Діджей', desc:'10 разів музика', icon:'🎵', reward:40, check:s=>s.m>=10},
-  {id:'king', name:'Король вечірки', desc:'50 поцілунків', icon:'👑', reward:100, check:s=>s.k>=50},
-  {id:'untouchable', name:'Недоступний', desc:'10 відмов', icon:'😇', reward:30, check:s=>s.n>=10},
-  {id:'millionaire', name:'Мільйонер', desc:'1000 монет', icon:'💰', reward:50, check:()=>(coins[myName]||0)>=1000},
-  {id:'social', name:'Соціальний', desc:'20 повідомлень', icon:'💬', reward:25, check:()=>chatMsgCount>=20},
-  {id:'collector', name:'Колекціонер', desc:'5 рамок', icon:'🖼', reward:60, check:()=>getOwned('frames').length>=5},
+const ACHIEVEMENTS=[
+  {id:'first_kiss',name:'Перший поцілунок',desc:'Поцілуйтесь вперше',icon:'💋',reward:20,check:s=>s.k>=1},
+  {id:'heartbreaker',name:'Серцеїд',desc:'10 поцілунків',icon:'🔥',reward:50,check:s=>s.k>=10},
+  {id:'generous',name:'Щедрий',desc:'5 подарунків',icon:'🎁',reward:30,check:s=>s.g>=5},
+  {id:'dj',name:'Діджей',desc:'10 разів музика',icon:'🎵',reward:40,check:s=>s.m>=10},
+  {id:'king',name:'Король вечірки',desc:'50 поцілунків',icon:'👑',reward:100,check:s=>s.k>=50},
+  {id:'untouchable',name:'Недоступний',desc:'10 відмов',icon:'😇',reward:30,check:s=>s.n>=10},
+  {id:'millionaire',name:'Мільйонер',desc:'1000 монет',icon:'💰',reward:50,check:()=>(coins[myName]||0)>=1000},
+  {id:'social',name:'Соціальний',desc:'20 повідомлень',icon:'💬',reward:25,check:()=>chatMsgCount>=20},
+  {id:'collector',name:'Колекціонер',desc:'5 рамок',icon:'🖼',reward:60,check:()=>getOwned('frames').length>=5},
 ];
+let myAchievements=[];
+let chatMsgCount=0;
 
-let myAchievements = [];
-let chatMsgCount = 0;
-
-function loadAchievements(){
-  try{
-    const s = localStorage.getItem('km_ach_'+myTgId);
-    if(s) myAchievements = JSON.parse(s);
-  }catch(e){}
-}
-
-function saveAchievements(){
-  try{localStorage.setItem('km_ach_'+myTgId, JSON.stringify(myAchievements));}catch(e){}
-}
+function loadAchievements(){try{const s=localStorage.getItem('km_ach_'+myTgId);if(s)myAchievements=JSON.parse(s);}catch(e){}}
+function saveAchievements(){try{localStorage.setItem('km_ach_'+myTgId,JSON.stringify(myAchievements));}catch(e){}}
 
 function checkAchievements(){
-  const myStats = scores[myName] || {k:0,n:0,g:0,m:0};
-  let newUnlocked = false;
+  const myStats=scores[myName]||{k:0,n:0,g:0,m:0};
+  let newUnlocked=false;
   ACHIEVEMENTS.forEach(a=>{
-    if(!myAchievements.includes(a.id) && a.check(myStats)){
+    if(!myAchievements.includes(a.id)&&a.check(myStats)){
       myAchievements.push(a.id);
-      coins[myName] = (coins[myName]||0) + a.reward;
-      newUnlocked = true;
-      bar(`🎖 Досягнення: ${a.name}! +${a.reward}🪙`, 'ok');
+      coins[myName]=(coins[myName]||0)+a.reward;
+      newUnlocked=true;
+      playAchievementSound();
+      bar(`🎖 Досягнення: ${a.name}! +${a.reward}🪙`,'ok');
       spawnConfetti();
-      syncToBot('achievement', {id:a.id, reward:a.reward});
+      syncToBot('achievement',{id:a.id,reward:a.reward});
     }
   });
   if(newUnlocked){
     saveAchievements();
-    document.getElementById('myCoins').textContent = coins[myName];
-    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+    document.getElementById('myCoins').textContent=coins[myName];
+    try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
   }
 }
 
 function renderAchievements(){
-  const grid = document.getElementById('achGrid');
-  if(!grid) return;
-  grid.innerHTML = ACHIEVEMENTS.map(a=>{
-    const unlocked = myAchievements.includes(a.id);
+  const grid=document.getElementById('achGrid');
+  if(!grid)return;
+  grid.innerHTML=ACHIEVEMENTS.map(a=>{
+    const unlocked=myAchievements.includes(a.id);
     return `<div class="ach-item ${unlocked?'unlocked':'locked'}">
       <div class="ach-icon">${a.icon}</div>
       <div class="ach-name">${a.name}</div>
       <div class="ach-desc">${a.desc}</div>
-      <div style="font-size:.6rem;color:${unlocked?'var(--gold)':'var(--muted)'};margin-top:4px">
-        ${unlocked?'✅ Отримано':'🪙 '+a.reward}
-      </div>
+      <div style="font-size:.6rem;color:${unlocked?'var(--gold)':'var(--muted)'};margin-top:4px">${unlocked?'✅ Отримано':'🪙 '+a.reward}</div>
     </div>`;
   }).join('');
 }
@@ -695,349 +677,224 @@ function renderAchievements(){
 // ══════════════════════════════════════
 // DAILY BONUS
 // ══════════════════════════════════════
-let dailyData = {day:0, lastClaim:0, streak:0};
-
-function loadDaily(){
-  try{
-    const s = localStorage.getItem('km_daily_'+myTgId);
-    if(s) dailyData = JSON.parse(s);
-  }catch(e){}
-}
-
-function saveDaily(){
-  try{localStorage.setItem('km_daily_'+myTgId, JSON.stringify(dailyData));}catch(e){}
-}
+let dailyData={day:0,lastClaim:0,streak:0};
+function loadDaily(){try{const s=localStorage.getItem('km_daily_'+myTgId);if(s)dailyData=JSON.parse(s);}catch(e){}}
+function saveDaily(){try{localStorage.setItem('km_daily_'+myTgId,JSON.stringify(dailyData));}catch(e){}}
 
 function checkDaily(){
   loadDaily();
-  const now = Date.now();
-  const dayMs = 24*60*60*1000;
-  const lastDay = Math.floor(dailyData.lastClaim / dayMs);
-  const today = Math.floor(now / dayMs);
-  
-  if(today > lastDay){
-    if(today - lastDay === 1){
-      dailyData.streak = (dailyData.streak||0) + 1;
-    } else {
-      dailyData.streak = 1;
-    }
-    dailyData.day = today;
-    const reward = Math.min(10 + dailyData.streak * 5, 100);
-    document.getElementById('dailyDay').textContent = dailyData.streak;
-    document.getElementById('dailyReward').textContent = reward;
-    document.getElementById('dailyStreak').textContent = dailyData.streak >= 7 ? '🔥' : '✨';
+  const now=Date.now();
+  const dayMs=24*60*60*1000;
+  const lastDay=Math.floor(dailyData.lastClaim/dayMs);
+  const today=Math.floor(now/dayMs);
+  if(today>lastDay){
+    if(today-lastDay===1){dailyData.streak=(dailyData.streak||0)+1;}
+    else{dailyData.streak=1;}
+    dailyData.day=today;
+    const reward=Math.min(10+dailyData.streak*5,100);
+    document.getElementById('dailyDay').textContent=dailyData.streak;
+    document.getElementById('dailyReward').textContent=reward;
+    document.getElementById('dailyStreak').textContent=dailyData.streak>=7?'🔥':'✨';
     document.getElementById('oDaily').classList.add('on');
   }
 }
 
 function claimDaily(){
-  const reward = Math.min(10 + dailyData.streak * 5, 100);
-  coins[myName] = (coins[myName]||0) + reward;
-  dailyData.lastClaim = Date.now();
+  playCoinSound();
+  const reward=Math.min(10+dailyData.streak*5,100);
+  coins[myName]=(coins[myName]||0)+reward;
+  dailyData.lastClaim=Date.now();
   saveDaily();
-  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
-  document.getElementById('myCoins').textContent = coins[myName];
+  try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
+  document.getElementById('myCoins').textContent=coins[myName];
   document.getElementById('oDaily').classList.remove('on');
-  bar(`+${reward} 🪙 отримано!`, 'ok');
+  bar(`+${reward} 🪙 отримано!`,'ok');
   spawnConfetti();
-  syncToBot('daily', {streak:dailyData.streak, reward});
+  syncToBot('daily',{streak:dailyData.streak,reward});
 }
 
 // ══════════════════════════════════════
 // XP SYSTEM
 // ══════════════════════════════════════
-let myXP = 0;
-let myLevel = 1;
-
+let myXP=0;
+let myLevel=1;
 function loadXP(){
-  try{
-    const s = localStorage.getItem('km_xp_'+myTgId);
-    if(s){
-      const d = JSON.parse(s);
-      myXP = d.xp || 0;
-      myLevel = d.level || 1;
-    }
-  }catch(e){}
+  if(!myTgId)return;
+  try{const s=localStorage.getItem('km_xp_'+myTgId);if(s){const d=JSON.parse(s);myXP=d.xp||0;myLevel=d.level||1;}}catch(e){}
+  updateXPBar();
 }
-
-function saveXP(){
-  try{localStorage.setItem('km_xp_'+myTgId, JSON.stringify({xp:myXP, level:myLevel}));}catch(e){}
-}
-
-function xpForLevel(l){ return l * 100; }
-
+function saveXP(){try{localStorage.setItem('km_xp_'+myTgId,JSON.stringify({xp:myXP,level:myLevel}));}catch(e){}}
+function xpForLevel(l){return l*100;}
 function addXP(amount){
-  myXP += amount;
-  while(myXP >= xpForLevel(myLevel)){
-    myXP -= xpForLevel(myLevel);
+  myXP+=amount;
+  while(myXP>=xpForLevel(myLevel)){
+    myXP-=xpForLevel(myLevel);
     myLevel++;
-    bar(`🎉 Рівень ${myLevel}!`, 'ok');
+    playCoinSound();
+    bar(`🎉 Рівень ${myLevel}!`,'ok');
     spawnConfetti();
-    coins[myName] = (coins[myName]||0) + 50;
-    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+    coins[myName]=(coins[myName]||0)+50;
+    try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
   }
   saveXP();
   updateXPBar();
 }
-
 function updateXPBar(){
-  const need = xpForLevel(myLevel);
-  const pct = Math.min(100, (myXP / need) * 100);
-  const fill = document.getElementById('xpFill');
-  const lvl = document.getElementById('xpLevel');
-  const txt = document.getElementById('xpText');
-  if(fill) fill.style.width = pct + '%';
-  if(lvl) lvl.textContent = 'Рівень ' + myLevel;
-  if(txt) txt.textContent = myXP + ' / ' + need + ' XP';
+  const need=xpForLevel(myLevel);
+  const pct=Math.min(100,(myXP/need)*100);
+  const fill=document.getElementById('xpFill');
+  const lvl=document.getElementById('xpLevel');
+  const txt=document.getElementById('xpText');
+  if(fill)fill.style.width=pct+'%';
+  if(lvl)lvl.textContent='Рівень '+myLevel;
+  if(txt)txt.textContent=myXP+' / '+need+' XP';
 }
 
 // ══════════════════════════════════════
 // POWER-UPS
 // ══════════════════════════════════════
-let powerups = {lucky:0, shield:0, peek:0};
-
-function loadPowerups(){
-  try{
-    const s = localStorage.getItem('km_pwr_'+myTgId);
-    if(s) powerups = JSON.parse(s);
-  }catch(e){}
-}
-
-function savePowerups(){
-  try{localStorage.setItem('km_pwr_'+myTgId, JSON.stringify(powerups));}catch(e){}
-}
-
+let powerups={lucky:0,shield:0,peek:0};
+function loadPowerups(){try{const s=localStorage.getItem('km_pwr_'+myTgId);if(s)powerups=JSON.parse(s);}catch(e){}}
+function savePowerups(){try{localStorage.setItem('km_pwr_'+myTgId,JSON.stringify(powerups));}catch(e){}}
 function updatePowerupUI(){
-  document.getElementById('pwrLucky').textContent = powerups.lucky;
-  document.getElementById('pwrShield').textContent = powerups.shield;
-  document.getElementById('pwrPeek').textContent = powerups.peek;
+  document.getElementById('pwrLucky').textContent=powerups.lucky;
+  document.getElementById('pwrShield').textContent=powerups.shield;
+  document.getElementById('pwrPeek').textContent=powerups.peek;
 }
 
 function usePowerup(type){
-  const costs = {lucky:20, shield:15, peek:10};
-  const cost = costs[type];
-  const myC = coins[myName]||0;
-  if(myC < cost){
-    bar('Недостатньо монет! 🪙'+myC+' / '+cost, 'err');
-    return;
-  }
-  if(myName !== players[spinnerIdx]){
-    bar('Тільки у свій хід!', 'err');
-    return;
-  }
-  if(spinning) return;
-  
-  coins[myName] -= cost;
-  document.getElementById('myCoins').textContent = coins[myName];
-  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
-  
-  if(type === 'lucky'){
-    // Вказує на того хто тобі найбільше подобається (випадково з тих хто лайкнув тебе, або просто випадково)
-    let targets = players.filter(p=>p!==myName);
-    if(likedByMe.length > 0){
-      const liked = likedByMe.filter(p=>players.includes(p));
-      if(liked.length > 0) targets = liked;
-    }
-    const ti = players.indexOf(targets[Math.floor(Math.random()*targets.length)]);
+  const costs={lucky:20,shield:15,peek:10};
+  const cost=costs[type];
+  const myC=coins[myName]||0;
+  if(myC<cost){bar('Недостатньо монет! 🪙'+myC+' / '+cost,'err');return;}
+  if(myName!==players[spinnerIdx]){bar('Тільки у свій хід!','err');return;}
+  if(spinning)return;
+  coins[myName]-=cost;
+  playCoinSound();
+  document.getElementById('myCoins').textContent=coins[myName];
+  try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
+  if(type==='lucky'){
+    let targets=players.filter(p=>p!==myName);
+    if(likedByMe.length>0){const liked=likedByMe.filter(p=>players.includes(p));if(liked.length>0)targets=liked;}
+    const ti=players.indexOf(targets[Math.floor(Math.random()*targets.length)]);
     doSpinToTarget(ti);
-    bar('🍀 Щаслива пляшка!', 'ok');
-  } else if(type === 'shield'){
-    powerups.shield++;
-    savePowerups();
-    updatePowerupUI();
-    bar('🛡️ Щит активовано на 1 відмову', 'ok');
-  } else if(type === 'peek'){
-    // Підглянути куди вказує пляшка
-    let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
-    const target = players[ti];
-    bar(`👀 Пляшка вкаже на: ${target}`, 'info');
+    bar('🍀 Щаслива пляшка!','ok');
+  }else if(type==='shield'){
+    powerups.shield++;savePowerups();updatePowerupUI();
+    bar('🛡️ Щит активовано на 1 відмову','ok');
+  }else if(type==='peek'){
+    let ti;do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
+    const target=players[ti];
+    bar(`👀 Пляшка вкаже на: ${target}`,'info');
     addChatEvent(`👀 ${myName} підглядає майбутнє...`);
   }
 }
 
 function doSpinToTarget(ti){
-  clearAutoSpin();
-  spinning = true;
-  document.getElementById('btnSpin').disabled = true;
-  document.getElementById('gHint').textContent = '🌀 Крутиться...';
-  
-  const n = players.length;
-  const BOTTLE_OFFSET = 90;
-  const targetDeg = BOTTLE_OFFSET + (ti / n) * 360;
-  const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
-  let delta = targetDeg - normalizedCurrent;
-  if(delta <= 0) delta += 360;
-  const spins = 4 + Math.floor(Math.random()*3);
-  const fa = currentBottleAngle + spins*360 + delta;
-  const dur = 2200 + Math.floor(Math.random()*800);
-  
-  const msg = {type:'spin_result', si:spinnerIdx, ti, fa, dur, startAngle:currentBottleAngle, _from:myPeerId};
-  animBottle(fa, dur, ti, ()=>showVoteCard(msg));
+  clearAutoSpin();spinning=true;
+  document.getElementById('btnSpin').disabled=true;
+  document.getElementById('gHint').textContent='🌀 Крутиться...';
+  const n=players.length;
+  const BOTTLE_OFFSET=90;
+  const targetDeg=BOTTLE_OFFSET+(ti/n)*360;
+  const normalizedCurrent=((currentBottleAngle%360)+360)%360;
+  let delta=targetDeg-normalizedCurrent;
+  if(delta<=0)delta+=360;
+  const spins=4+Math.floor(Math.random()*3);
+  const fa=currentBottleAngle+spins*360+delta;
+  const dur=2200+Math.floor(Math.random()*800);
+  const msg={type:'spin_result',si:spinnerIdx,ti,fa,dur,startAngle:currentBottleAngle,_from:myPeerId};
+  animBottle(fa,dur,ti,()=>showVoteCard(msg));
   bcastMsg(msg);
 }
 
 // ══════════════════════════════════════
-// LIKES SYSTEM
+// LIKES
 // ══════════════════════════════════════
-let likedByMe = [];
-let likesReceived = [];
+let likedByMe=[];
+let likesReceived=[];
+function loadLikes(){try{const s=localStorage.getItem('km_likes_'+myTgId);if(s){const d=JSON.parse(s);likedByMe=d.me||[];likesReceived=d.received||[];}}catch(e){}}
+function saveLikes(){try{localStorage.setItem('km_likes_'+myTgId,JSON.stringify({me:likedByMe,received:likesReceived}));}catch(e){}}
 
-function loadLikes(){
-  try{
-    const s = localStorage.getItem('km_likes_'+myTgId);
-    if(s){
-      const d = JSON.parse(s);
-      likedByMe = d.me || [];
-      likesReceived = d.received || [];
-    }
-  }catch(e){}
-}
-
-function saveLikes(){
-  try{localStorage.setItem('km_likes_'+myTgId, JSON.stringify({me:likedByMe, received:likesReceived}));}catch(e){}
-}
-
-function toggleLike(name, evt){
-  if(evt) evt.stopPropagation();
-  if(name === myName) return;
-  const idx = likedByMe.indexOf(name);
-  if(idx >= 0){
-    likedByMe.splice(idx, 1);
-    bar(`Лайк прибраний`, 'info');
-  } else {
+function toggleLike(name,evt){
+  if(evt)evt.stopPropagation();
+  if(name===myName)return;
+  const idx=likedByMe.indexOf(name);
+  if(idx>=0){
+    likedByMe.splice(idx,1);
+    bar(`Лайк прибраний`,'info');
+  }else{
+    playLikeSound();
     likedByMe.push(name);
-    bar(`❤️ Лайк ${name}!`, 'ok');
-    // Перевіряємо взаємність
+    bar(`❤️ Лайк ${name}!`,'ok');
     if(likesReceived.includes(name)){
-      bar(`💘 Взаємна симпатія з ${name}!`, 'ok');
+      bar(`💘 Взаємна симпатія з ${name}!`,'ok');
       spawnConfetti();
-      coins[myName] = (coins[myName]||0) + 25;
-      document.getElementById('myCoins').textContent = coins[myName];
-      try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+      coins[myName]=(coins[myName]||0)+25;
+      document.getElementById('myCoins').textContent=coins[myName];
+      try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
       addChatEvent(`💘 ${myName} та ${name} — взаємна симпатія!`);
     }
-    bcastMsg({type:'like', from:myName, to:name});
+    bcastMsg({type:'like',from:myName,to:name});
   }
   saveLikes();
   buildPRing();
 }
 
 // ══════════════════════════════════════
-// TASK CARDS
-// ══════════════════════════════════════
-const TASKS = [
-  {emoji:'🎭', title:'Актор', text:'Покажи свій найкращий акторський талант'},
-  {emoji:'💃', title:'Танцюрист', text:'Станцюй 10 секунд'},
-  {emoji:'🎤', title:'Співак', text:'Заспівай прислів улюбленої пісні'},
-  {emoji:'🤔', title:'Правда', text:'Розкажи найсмішнішу історію з життя'},
-  {emoji:'🎪', title:'Жонглер', text:'Розкажи 3 жарти поспіль'},
-  {emoji:'📸', title:'Модель', text:'Зроби 3 різні вирази обличчя'},
-];
-
-let currentTask = null;
-
-function showTaskCard(){
-  if(Math.random() > 0.3) return; // 30% шанс
-  currentTask = TASKS[Math.floor(Math.random()*TASKS.length)];
-  document.getElementById('taskEmoji').textContent = currentTask.emoji;
-  document.getElementById('taskTitle').textContent = currentTask.title;
-  document.getElementById('taskText').textContent = currentTask.text;
-  document.getElementById('oTask').classList.add('on');
-}
-
-function completeTask(){
-  coins[myName] = (coins[myName]||0) + 20;
-  document.getElementById('myCoins').textContent = coins[myName];
-  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
-  document.getElementById('oTask').classList.remove('on');
-  bar('+20 🪙 за завдання!', 'ok');
-  addXP(15);
-  spawnConfetti();
-  currentTask = null;
-}
-
-function skipTask(){
-  document.getElementById('oTask').classList.remove('on');
-  currentTask = null;
-}
-
-// ══════════════════════════════════════
 // CONFETTI
 // ══════════════════════════════════════
 function spawnConfetti(){
-  if(!settingAnim) return;
-  const colors = ['#ff4d7e','#f0b429','#00f5ff','#b388ff','#ff69b4'];
+  if(!settingAnim)return;
+  const colors=['#ff4d7e','#f0b429','#00f5ff','#b388ff','#ff69b4'];
   for(let i=0;i<30;i++){
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random()*100 + 'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration = (2+Math.random()*2) + 's';
-    c.style.animationDelay = Math.random()*0.5 + 's';
-    c.style.width = (6+Math.random()*8) + 'px';
-    c.style.height = (6+Math.random()*8) + 'px';
-    c.style.borderRadius = Math.random()>0.5 ? '50%' : '0';
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration=(2+Math.random()*2)+'s';
+    c.style.animationDelay=Math.random()*0.5+'s';
+    c.style.width=(6+Math.random()*8)+'px';
+    c.style.height=(6+Math.random()*8)+'px';
+    c.style.borderRadius=Math.random()>0.5?'50%':'0';
     document.body.appendChild(c);
-    setTimeout(()=>c.remove(), 4000);
+    setTimeout(()=>c.remove(),4000);
   }
 }
 
 // ══════════════════════════════════════
-// BLITZ MODE
+// BLITZ
 // ══════════════════════════════════════
-let isBlitz = false;
-
+let isBlitz=false;
 function enterBlitz(){
-  isBlitz = true;
-  settingTimer = 5;
-  settingRounds = 10;
-  bar('⚡ Бліц-режим активовано!', 'info');
+  isBlitz=true;settingTimer=5;settingRounds=10;
+  bar('⚡ Бліц-режим активовано!','info');
   enterGame();
 }
 
 // ══════════════════════════════════════
 // MUSIC
 // ══════════════════════════════════════
-let localTracks=[], audio=null, curTrack=-1, vol=0.6;
-let globalMusicPlaying=false, globalMusicOwner='';
-
-function buildTracks(){ renderTrackList(); }
-
+let localTracks=[],audio=null,curTrack=-1,vol=0.6;
+let globalMusicPlaying=false,globalMusicOwner='';
+function buildTracks(){renderTrackList();}
 function addLocalTracks(input){
-  Array.from(input.files).forEach(f=>{
-    localTracks.push({name:f.name.replace(/\.[^/.]+$/,'').slice(0,28), file:f, url:URL.createObjectURL(f)});
-  });
-  renderTrackList();
-  input.value='';
+  Array.from(input.files).forEach(f=>{localTracks.push({name:f.name.replace(/\.[^/.]+$/,'').slice(0,28),file:f,url:URL.createObjectURL(f)});});
+  renderTrackList();input.value='';
 }
-
 function renderTrackList(){
   const el=document.getElementById('trackList');
-  const blocked = globalMusicPlaying && globalMusicOwner!==myName;
-  if(!localTracks.length){
-    el.innerHTML=`<div style="font-size:.72rem;color:var(--muted);text-align:center;padding:6px 0">Немає треків — додай з телефону 👇</div>`;
-    return;
-  }
-  if(blocked){
-    el.innerHTML=`<div style="font-size:.72rem;color:var(--rg);text-align:center;padding:6px 0">🎵 Зараз грає ${globalMusicOwner}</div>`;
-    return;
-  }
-  el.innerHTML='<div class="music-tracks">'+localTracks.map((t,i)=>`
-    <div class="track${curTrack===i?' playing':''}" onclick="playTrack(${i})">
-      <span class="track-icon">🎵</span>
-      <span class="track-name">${t.name}</span>
-      ${curTrack===i?'<span class="track-eq">♫</span>':''}
-    </div>`).join('')+'</div>';
+  const blocked=globalMusicPlaying&&globalMusicOwner!==myName;
+  if(!localTracks.length){el.innerHTML=`<div style="font-size:.72rem;color:var(--muted);text-align:center;padding:6px 0">Немає треків — додай з телефону 👇</div>`;return;}
+  if(blocked){el.innerHTML=`<div style="font-size:.72rem;color:var(--rg);text-align:center;padding:6px 0">🎵 Зараз грає ${globalMusicOwner}</div>`;return;}
+  el.innerHTML='<div class="music-tracks">'+localTracks.map((t,i)=>`<div class="track${curTrack===i?' playing':''}" onclick="playTrack(${i})"><span class="track-icon">🎵</span><span class="track-name">${t.name}</span>${curTrack===i?'<span class="track-eq">♫</span>':''}</div>`).join('')+'</div>';
 }
 
-function playTrack(i, giftMode=false){
-  if(globalMusicPlaying && globalMusicOwner!==myName){
-    bar(`🎵 Зараз грає ${globalMusicOwner}`, 'info'); return;
-  }
+function playTrack(i,giftMode=false){
+  if(globalMusicPlaying&&globalMusicOwner!==myName){bar(`🎵 Зараз грає ${globalMusicOwner}`,'info');return;}
   if(audio){audio.pause();audio=null;}
-  if(curTrack===i && !giftMode){
-    curTrack=-1;
-    setMusicState(false,'');
+  if(curTrack===i&&!giftMode){
+    curTrack=-1;setMusicState(false,'');
     bcast({type:'music_stop',from:myName,_from:myPeerId});
     renderTrackList();
     document.getElementById('nowPlaying').textContent='';
@@ -1046,87 +903,65 @@ function playTrack(i, giftMode=false){
   curTrack=i;
   const t=localTracks[i];
   audio=new Audio(t.url);
-  audio.volume=vol;
-  audio.loop=false;
+  audio.volume=vol;audio.loop=false;
   audio.onended=()=>{
-    curTrack=-1; audio=null;
-    setMusicState(false,'');
+    curTrack=-1;audio=null;setMusicState(false,'');
     bcast({type:'music_stop',from:myName,_from:myPeerId});
     renderTrackList();
     document.getElementById('nowPlaying').textContent='';
   };
   audio.play().catch(()=>bar('Помилка відтворення','err'));
-  setMusicState(true, myName);
+  setMusicState(true,myName);
   renderTrackList();
   document.getElementById('nowPlaying').textContent='▶ '+t.name;
-  addChatEvent(giftMode ? `🎁🎵 ${myName} дарує пісню "${t.name}"` : `🎵 ${myName} вмикає: ${t.name}`);
-  
-  if(!scores[myName]) scores[myName]={k:0,n:0,g:0,m:0};
+  addChatEvent(giftMode?`🎁🎵 ${myName} дарує пісню "${t.name}"`:`🎵 ${myName} вмикає: ${t.name}`);
+  if(!scores[myName])scores[myName]={k:0,n:0,g:0,m:0};
   scores[myName].m=(scores[myName].m||0)+1;
   bcastMsg({type:'music_play',name:myName,_from:myPeerId});
-  updateLeaderboard('music', 1);
+  updateLeaderboard('music',1);
   addXP(5);
   checkAchievements();
-
-  const connCount = isHost ? Object.keys(guestConns).length : (hostConn ? 1 : 0);
-  if(connCount === 0) return;
+  const connCount=isHost?Object.keys(guestConns).length:(hostConn?1:0);
+  if(connCount===0)return;
   bar('Надсилаємо музику...','info');
   const reader=new FileReader();
   reader.onload=e=>{
     const b64=e.target.result;
     const CHUNK=12000;
     const total=Math.ceil(b64.length/CHUNK);
-    const header={type:'music_header', from:myName, trackName:t.name, total, _from:myPeerId};
-    if(isHost) bcast(header); else hostConn.send(header);
+    const header={type:'music_header',from:myName,trackName:t.name,total,_from:myPeerId};
+    if(isHost)bcast(header);else hostConn.send(header);
     let idx=0;
     function sendNext(){
-      if(idx>=total) return;
-      const chunk={type:'music_chunk', idx, data:b64.slice(idx*CHUNK,(idx+1)*CHUNK), _from:myPeerId};
-      if(isHost) bcast(chunk); else hostConn.send(chunk);
-      idx++;
-      setTimeout(sendNext, 20);
+      if(idx>=total)return;
+      const chunk={type:'music_chunk',idx,data:b64.slice(idx*CHUNK,(idx+1)*CHUNK),_from:myPeerId};
+      if(isHost)bcast(chunk);else hostConn.send(chunk);
+      idx++;setTimeout(sendNext,20);
     }
     sendNext();
     const prog=setInterval(()=>{
       const pct=Math.min(100,Math.round(idx/total*100));
       bar(`📤 Надсилаємо... ${pct}%`,'info');
-      if(pct>=100){ clearInterval(prog); bar('✅ Надіслано','ok'); }
+      if(pct>=100){clearInterval(prog);bar('✅ Надіслано','ok');}
     },400);
   };
   reader.readAsDataURL(t.file);
 }
 
-function setMusicState(playing, owner){
-  globalMusicPlaying=playing;
-  globalMusicOwner=owner;
-}
+function setMusicState(playing,owner){globalMusicPlaying=playing;globalMusicOwner=owner;}
+let musicBuf={chunks:[],total:0,name:'',from:''};
 
-let musicBuf={chunks:[], total:0, name:'', from:''};
-
-function playRemoteAudio(b64, name, from){
+function playRemoteAudio(b64,name,from){
   if(audio){audio.pause();audio=null;}
-  setMusicState(true, from);
-  renderTrackList();
+  setMusicState(true,from);renderTrackList();
   document.getElementById('nowPlaying').textContent='⏳ Завантажуємо...';
-  audio=new Audio(b64);
-  audio.volume=vol;
-  audio.loop=false;
-  audio.onended=()=>{
-    audio=null;
-    setMusicState(false,'');
-    renderTrackList();
-    document.getElementById('nowPlaying').textContent='';
-  };
+  audio=new Audio(b64);audio.volume=vol;audio.loop=false;
+  audio.onended=()=>{audio=null;setMusicState(false,'');renderTrackList();document.getElementById('nowPlaying').textContent='';};
   const tryPlay=()=>{
     audio.play().catch(()=>{
       document.getElementById('nowPlaying').textContent='▶ Натисни для звуку: '+name;
       document.getElementById('nowPlaying').style.cursor='pointer';
-      document.getElementById('nowPlaying').onclick=()=>{
-        audio?.play();
-        document.getElementById('nowPlaying').textContent='▶ '+name;
-        document.getElementById('nowPlaying').onclick=null;
-        document.getElementById('nowPlaying').style.cursor='default';
-      };
+      document.getElementById('nowPlaying').onclick=()=>{audio?.play();document.getElementById('nowPlaying').textContent='▶ '+name;document.getElementById('nowPlaying').onclick=null;document.getElementById('nowPlaying').style.cursor='default';};
       return;
     });
     document.getElementById('nowPlaying').textContent='▶ '+name;
@@ -1135,7 +970,6 @@ function playRemoteAudio(b64, name, from){
 }
 
 function setVol(v){vol=v/100;if(audio)audio.volume=vol;}
-
 function toggleMusic(){
   document.getElementById('musicPanel').classList.toggle('open');
   document.getElementById('musicBtn').classList.toggle('on');
@@ -1146,70 +980,52 @@ function giftSong(toName){
   closeGiftPopup();
   if(!localTracks.length){bar('Немає треків','err');return;}
   if(globalMusicPlaying&&globalMusicOwner!==myName){bar(`Зараз грає ${globalMusicOwner}`,'info');return;}
-  const myC=coins[myName]||0;
-  const cost=15;
+  const myC=coins[myName]||0;const cost=15;
   if(myC<cost){bar(`Не вистачає монет! Потрібно 🪙${cost}`,'err');return;}
   coins[myName]-=cost;
   document.getElementById('myCoins').textContent=coins[myName];
-  playTrack(0, true);
+  playTrack(0,true);
   addChatEvent(`🎁🎵 ${myName} → ${toName}: пісня у подарунок!`);
 }
 
 // ══════════════════════════════════════
 // GLOBAL VARS
 // ══════════════════════════════════════
-let myName='', myPhoto='', myPeerId='', isHost=false;
-let peer=null, hostConn=null, guestConns={};
+let myName='',myPhoto='',myPeerId='',isHost=false;
+let peer=null,hostConn=null,guestConns={};
 let roomCode='';
-let players=[], photos={}, scores={}, coins={}, gifts={};
-let frames={};
-let themes={};
-let spinnerIdx=0, round=1, totalK=0, totalN=0;
+let players=[],photos={},scores={},coins={},gifts={};
+let frames={},themes={};
+let spinnerIdx=0,round=1,totalK=0,totalN=0;
 let spinning=false;
 let curVote={spinner:null,target:null,si:0,ti:0};
-let cleanTimer=null, voted=false;
+let cleanTimer=null,voted=false;
 let viewingProfile='';
-let myFrame='', myTheme='';
+let myFrame='',myTheme='';
+let gameStats={};
 
 const SHOP_FRAMES=[
-  {id:'frame-gold', name:'Золота', icon:'💛', price:50},
-  {id:'frame-hearts', name:'Серця', icon:'💋', price:80},
-  {id:'frame-fire', name:'Вогонь', icon:'🔥', price:120},
-  {id:'frame-vip', name:'VIP', icon:'💜', price:200},
-  {id:'frame-rainbow', name:'Веселка', icon:'🌈', price:300},
-  {id:'frame-galaxy', name:'Галактика', icon:'🌌', price:250},
-  {id:'frame-flame', name:'Полум\'я', icon:'🔥', price:180},
-  {id:'frame-diamond', name:'Діамант', icon:'💎', price:350},
-  {id:'frame-sakura', name:'Сакура', icon:'🌸', price:220},
+  {id:'frame-gold',name:'Золота',icon:'💛',price:50},
+  {id:'frame-hearts',name:'Серця',icon:'💋',price:80},
+  {id:'frame-fire',name:'Вогонь',icon:'🔥',price:120},
+  {id:'frame-vip',name:'VIP',icon:'💜',price:200},
+  {id:'frame-rainbow',name:'Веселка',icon:'🌈',price:300},
+  {id:'frame-galaxy',name:'Галактика',icon:'🌌',price:250},
+  {id:'frame-flame',name:'Полум\'я',icon:'🔥',price:180},
+  {id:'frame-diamond',name:'Діамант',icon:'💎',price:350},
+  {id:'frame-sakura',name:'Сакура',icon:'🌸',price:220},
 ];
 
-function loadMyStyle(){
-  try{
-    const s=localStorage.getItem('km_style_'+myTgId);
-    if(s){const j=JSON.parse(s);myFrame=j.frame||'';myTheme=j.theme||'';}
-  }catch(e){}
-  applyTheme(myTheme);
-}
-
-function saveMyStyle(){
-  try{localStorage.setItem('km_style_'+myTgId, JSON.stringify({frame:myFrame,theme:myTheme}));}catch(e){}
-  syncToBot('set_style',{frame:myFrame,theme:myTheme});
-}
+function loadMyStyle(){try{const s=localStorage.getItem('km_style_'+myTgId);if(s){const j=JSON.parse(s);myFrame=j.frame||'';myTheme=j.theme||'';}}catch(e){}applyTheme(myTheme);}
+function saveMyStyle(){try{localStorage.setItem('km_style_'+myTgId,JSON.stringify({frame:myFrame,theme:myTheme}));}catch(e){}syncToBot('set_style',{frame:myFrame,theme:myTheme});}
 
 function applyTheme(t){
-  document.body.classList.remove('theme-pink','theme-purple','theme-sunset','theme-cyber','theme-forest','theme-candy','theme-ocean');
-  if(t) document.body.classList.add(t);
+  document.body.classList.remove('theme-pink','theme-purple','theme-sunset','theme-cyber','theme-forest','theme-candy','theme-ocean','theme-neon','theme-goldnight','theme-aurora');
+  if(t)document.body.classList.add(t);
 }
 
-function openShop(){
-  document.getElementById('shopCoins').textContent=coins[myName]||0;
-  renderShopGrid();
-  document.getElementById('shopOverlay').classList.add('on');
-}
-
-function closeShop(){
-  document.getElementById('shopOverlay').classList.remove('on');
-}
+function openShop(){document.getElementById('shopCoins').textContent=coins[myName]||0;renderShopGrid();document.getElementById('shopOverlay').classList.add('on');}
+function closeShop(){document.getElementById('shopOverlay').classList.remove('on');}
 
 function renderShopGrid(){
   const grid=document.getElementById('shopGrid');
@@ -1226,120 +1042,86 @@ function renderShopGrid(){
   }).join('');
 }
 
-function getOwned(type){
-  try{
-    const s=localStorage.getItem('km_owned_'+myTgId);
-    if(s){const j=JSON.parse(s);return j[type]||[];}
-  }catch(e){}
-  return [];
-}
+function getOwned(type){try{const s=localStorage.getItem('km_owned_'+myTgId);if(s){const j=JSON.parse(s);return j[type]||[];}}catch(e){}return [];}
+function saveOwned(type,id){try{const s=localStorage.getItem('km_owned_'+myTgId);const j=s?JSON.parse(s):{frames:[],themes:[]};if(!j[type])j[type]=[];if(!j[type].includes(id))j[type].push(id);localStorage.setItem('km_owned_'+myTgId,JSON.stringify(j));}catch(e){}}
 
-function saveOwned(type, id){
-  try{
-    const s=localStorage.getItem('km_owned_'+myTgId);
-    const j=s?JSON.parse(s):{frames:[],themes:[]};
-    if(!j[type]) j[type]=[];
-    if(!j[type].includes(id)) j[type].push(id);
-    localStorage.setItem('km_owned_'+myTgId, JSON.stringify(j));
-  }catch(e){}
-}
-
-function shopBuy(id, price){
+function shopBuy(id,price){
   const myCoins=coins[myName]||0;
   const owned=getOwned('frames').includes(id);
-  if(!owned && price>0){
+  if(!owned&&price>0){
     if(myCoins<price){bar('Недостатньо монет! 🪙'+myCoins+' / '+price,'err');return;}
     coins[myName]-=price;
+    playCoinSound();
     document.getElementById('myCoins').textContent=coins[myName];
     document.getElementById('shopCoins').textContent=coins[myName];
     try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
-    saveOwned('frames', id);
+    saveOwned('frames',id);
     syncToBot('buy_item',{item_id:id,item_type:'frame',coins:-price});
     addXP(10);
     checkAchievements();
   }
-  myFrame=id;
-  frames[myName]=id;
-  buildPRing();
+  myFrame=id;frames[myName]=id;buildPRing();
   bcastMsg({type:'style_update',name:myName,frame:id,theme:myTheme,_from:myPeerId});
   saveMyStyle();
   bar(owned?'Одягнено!':'Куплено! 🎉','ok');
   renderShopGrid();
 }
 
-let settingSound=true, settingAnim=true, settingLang='uk';
-let settingRounds=5, settingTimer=15, settingMode='classic';
+let settingSound=true,settingAnim=true,settingLang='uk';
+let settingRounds=5,settingTimer=15,settingMode='classic';
 
-function setThemeBtn(theme, el){
+function setThemeBtn(theme,el){
   document.querySelectorAll('#themeRow .sel-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  myTheme=theme;
-  applyTheme(theme);
-  saveMyStyle();
-  saveSettings();
+  myTheme=theme;applyTheme(theme);saveMyStyle();saveSettings();
 }
 
-function menuTab(tab, el){
-  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.menu-page').forEach(p=>p.classList.remove('on'));
-  const pageId='mp'+tab.charAt(0).toUpperCase()+tab.slice(1);
-  const page=document.getElementById(pageId);
-  if(page) page.classList.add('on');
-  if(tab==='shop') initMenuShop();
-  if(tab==='play') scanRooms();
-  if(tab==='leaderboard') loadLeaderboard();
-  if(tab==='achievements') renderAchievements();
-}
-
-function toggleSetting(key, el){
-  el.classList.toggle('on');
-  if(key==='sound') settingSound=el.classList.contains('on');
-  if(key==='anim'){
-    settingAnim=el.classList.contains('on');
-    document.querySelectorAll('.hrt').forEach(h=>h.style.display=settingAnim?'':'none');
+function menuTab(tab,el){
+  const currentPage=document.querySelector('.menu-page.on');
+  if(currentPage){
+    currentPage.style.transition='opacity .2s ease, transform .2s ease';
+    currentPage.style.opacity='0';
+    currentPage.style.transform='translateY(-10px) scale(.98)';
   }
+  setTimeout(()=>{
+    document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.menu-page').forEach(p=>{p.classList.remove('on');p.style.opacity='';p.style.transform='';});
+    const pageId='mp'+tab.charAt(0).toUpperCase()+tab.slice(1);
+    const page=document.getElementById(pageId);
+    if(page)page.classList.add('on');
+    if(tab==='shop')initMenuShop();
+    if(tab==='play')scanRooms();
+    if(tab==='leaderboard')loadLeaderboard();
+    if(tab==='achievements')renderAchievements();
+  },200);
+}
+
+function toggleSetting(key,el){
+  el.classList.toggle('on');
+  if(key==='sound')settingSound=el.classList.contains('on');
+  if(key==='anim'){settingAnim=el.classList.contains('on');document.querySelectorAll('.hrt').forEach(h=>h.style.display=settingAnim?'':'none');}
   saveSettings();
 }
 
-function setRounds(n, el){
-  document.querySelectorAll('[id^="rnd"]').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  settingRounds=n;
-  saveSettings();
-}
+function setRounds(n,el){document.querySelectorAll('[id^="rnd"]').forEach(b=>b.classList.remove('active'));el.classList.add('active');settingRounds=n;saveSettings();}
+function setTimer(n,el){document.querySelectorAll('[id^="t"]').forEach(b=>b.classList.remove('active'));el.classList.add('active');settingTimer=n;saveSettings();}
 
-function setTimer(n, el){
-  document.querySelectorAll('[id^="t"]').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  settingTimer=n;
-  saveSettings();
-}
-
-function saveSettings(){
-  try{localStorage.setItem('km_settings', JSON.stringify({
-    sound:settingSound, anim:settingAnim, lang:settingLang,
-    rounds:settingRounds, timer:settingTimer, mode:settingMode
-  }));}catch(e){}
-}
+function saveSettings(){try{localStorage.setItem('km_settings',JSON.stringify({sound:settingSound,anim:settingAnim,lang:settingLang,rounds:settingRounds,timer:settingTimer,mode:settingMode}));}catch(e){}}
 
 function loadSettings(){
   try{
-    const s=localStorage.getItem('km_settings');
-    if(!s) return;
+    const s=localStorage.getItem('km_settings');if(!s)return;
     const j=JSON.parse(s);
-    settingSound=j.sound!==false;
-    settingAnim=j.anim!==false;
-    settingRounds=j.rounds||5;
-    settingTimer=j.timer||15;
-    settingMode=j.mode||'classic';
-    if(!settingSound) document.getElementById('togSound')?.classList.remove('on');
-    if(!settingAnim)  document.getElementById('togAnim')?.classList.remove('on');
+    settingSound=j.sound!==false;settingAnim=j.anim!==false;
+    settingRounds=j.rounds||5;settingTimer=j.timer||15;settingMode=j.mode||'classic';
+    if(!settingSound)document.getElementById('togSound')?.classList.remove('on');
+    if(!settingAnim)document.getElementById('togAnim')?.classList.remove('on');
     document.getElementById('t'+settingTimer)?.classList.add('active');
     const themeId='th-'+(myTheme||'');
     document.querySelectorAll('#themeRow .sel-btn').forEach(b=>b.classList.remove('active'));
     const thBtn=document.getElementById(themeId);
-    if(thBtn) thBtn.classList.add('active');
+    if(thBtn)thBtn.classList.add('active');
   }catch(e){}
 }
 
@@ -1347,122 +1129,87 @@ function loadSettings(){
 // LEADERBOARD
 // ══════════════════════════════════════
 let currentLbTab='kisses';
-
-function lbTab(tab, el){
+function lbTab(tab,el){
   document.querySelectorAll('.lb-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  currentLbTab=tab;
-  loadLeaderboard();
+  currentLbTab=tab;loadLeaderboard();
 }
 
 async function loadLeaderboard(){
   const list=document.getElementById('lbList');
   list.innerHTML='<div class="lb-loading">🔍 Завантаження...</div>';
-  if(!db){ try{await loadFirebase();}catch(e){list.innerHTML='<div class="lb-loading">❌ Firebase не завантажився</div>';return;} }
-  if(!db){ list.innerHTML='<div class="lb-loading">❌ Firebase недоступний</div>';return; }
+  if(!db){try{await loadFirebase();}catch(e){list.innerHTML='<div class="lb-loading">❌ Firebase не завантажився</div>';return;}}
+  if(!db){list.innerHTML='<div class="lb-loading">❌ Firebase недоступний</div>';return;}
   try{
     const snap=await db.ref('kiss_leaderboard').once('value');
     const val=snap.val();
-    if(!val){ list.innerHTML='<div class="lb-loading">🏆 Поки що порожньо. Будь першим!</div>';return; }
+    if(!val){list.innerHTML='<div class="lb-loading">🏆 Поки що порожньо. Будь першим!</div>';return;}
     const arr=Object.entries(val).map(([uid,d])=>({uid,...d}));
     arr.sort((a,b)=>(b[currentLbTab]||0)-(a[currentLbTab]||0));
     const top=arr.slice(0,20);
     const medals=['🥇','🥈','🥉'];
     list.innerHTML=top.map((p,i)=>{
-      const stat=currentLbTab==='kisses'?`💋 ${p.kisses||0}`:
-                 currentLbTab==='gifts'?`🎁 ${p.gifts||0}`:`🎵 ${p.music||0}`;
-      const avHtml=p.photo?
-        `<img src="${p.photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div class=av-ph>${(p.name||'?')[0]}</div>'">`:
-        `<div class="av-ph">${(p.name||'?')[0]}</div>`;
-      return `<div class="lb-item" style="animation-delay:${i*.05}s">
-        <div class="lb-rank">${medals[i]||`${i+1}.`}</div>
-        ${avHtml}
-        <div class="lb-name">${p.name||'Анонім'}</div>
-        <div class="lb-stat">${stat}</div>
-      </div>`;
+      const stat=currentLbTab==='kisses'?`💋 ${p.kisses||0}`:currentLbTab==='gifts'?`🎁 ${p.gifts||0}`:`🎵 ${p.music||0}`;
+      const avHtml=p.photo?`<img src="${p.photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div class=av-ph>${(p.name||'?')[0]}</div>'">`:`<div class="av-ph">${(p.name||'?')[0]}</div>`;
+      return `<div class="lb-item" style="animation-delay:${i*.05}s"><div class="lb-rank">${medals[i]||`${i+1}.`}</div>${avHtml}<div class="lb-name">${p.name||'Анонім'}</div><div class="lb-stat">${stat}</div></div>`;
     }).join('');
-  }catch(e){
-    console.error('Leaderboard error:', e);
-    list.innerHTML=`<div class="lb-loading">❌ Помилка: ${e.message||'невідома'}</div>`;
-  }
+  }catch(e){console.error('Leaderboard error:',e);list.innerHTML=`<div class="lb-loading">❌ Помилка: ${e.message||'невідома'}</div>`;}
 }
 
-async function updateLeaderboard(stat, amount){
-  if(!db || !myTgId || !myName) return;
+async function updateLeaderboard(stat,amount){
+  if(!db||!myTgId||!myName)return;
   try{
     const ref=db.ref('kiss_leaderboard/'+myTgId);
     const updates={};
     updates[stat]=firebase.database.ServerValue.increment(amount);
-    updates.name=myName;
-    updates.photo=myPhoto||'';
-    updates.ts=Date.now();
+    updates.name=myName;updates.photo=myPhoto||'';updates.ts=Date.now();
     await ref.update(updates);
-  }catch(e){ console.error('Update leaderboard error:', e); }
+  }catch(e){console.error('Update leaderboard error:',e);}
 }
 
-// ЧАСТИНА 3/3 БУДЕ ПРОДОВЖЕННЯМ — напишіть "далі" щоб отримати
-  // ══════════════════════════════════════
-// ROOMS (Firebase)
 // ══════════════════════════════════════
-const ROOM_TTL = 5 * 60 * 1000;
-
-async function roomsRegister(code, hostName, count){
-  if(!db) return;
-  try{ await db.ref('kiss_rooms/'+code).set({code, hostName, count, ts:Date.now()}); }catch(e){}
-}
-
-async function roomsUnregister(code){
-  if(!db) return;
-  try{ await db.ref('kiss_rooms/'+code).remove(); }catch(e){}
-}
-
+// ROOMS
+// ══════════════════════════════════════
+const ROOM_TTL=5*60*1000;
+async function roomsRegister(code,hostName,count){if(!db)return;try{await db.ref('kiss_rooms/'+code).set({code,hostName,count,ts:Date.now()});}catch(e){}}
+async function roomsUnregister(code){if(!db)return;try{await db.ref('kiss_rooms/'+code).remove();}catch(e){}}
 async function roomsGetActive(){
-  if(!db) return [];
+  if(!db)return[];
   try{
-    const snap = await db.ref('kiss_rooms').once('value');
-    const val = snap.val();
-    if(!val) return [];
-    const now = Date.now();
-    const active = Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
-    Object.entries(val).forEach(([code,r])=>{
-      if((now-r.ts)>=ROOM_TTL) db.ref('kiss_rooms/'+code).remove().catch(()=>{});
-    });
+    const snap=await db.ref('kiss_rooms').once('value');
+    const val=snap.val();if(!val)return[];
+    const now=Date.now();
+    const active=Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
+    Object.entries(val).forEach(([code,r])=>{if((now-r.ts)>=ROOM_TTL)db.ref('kiss_rooms/'+code).remove().catch(()=>{});});
     return active;
-  }catch(e){ return []; }
+  }catch(e){return [];}
 }
 
 async function scanRooms(){
-  const list = document.getElementById('roomsList');
-  if(!list) return;
-  list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">🔍 Скануємо...</div>';
-  if(!db) await loadFirebase();
-  const active = await roomsGetActive();
-  if(active.length === 0){
-    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Активних кімнат немає · Натисни Знайти гру</div>';
-  } else {
-    list.innerHTML = active.map(r=>`
-      <div class="room-card" onclick="quickJoin('${r.code}')">
-        <div class="room-dot"></div>
-        <div style="flex:1">
-          <div class="room-code">${r.code}</div>
-          <div class="room-info">Хост: ${r.hostName} · ${r.count} гравців</div>
-        </div>
-        <div style="font-size:.7rem;color:var(--rg)">Приєднатись →</div>
-      </div>`).join('');
+  const list=document.getElementById('roomsList');
+  if(!list)return;
+  list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">🔍 Скануємо...</div>';
+  if(!db)await loadFirebase();
+  const active=await roomsGetActive();
+  if(active.length===0){
+    list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Активних кімнат немає · Натисни Знайти гру</div>';
+  }else{
+    list.innerHTML=active.map(r=>`<div class="room-card" onclick="quickJoin('${r.code}')"><div class="room-dot"></div><div style="flex:1"><div class="room-code">${r.code}</div><div class="room-info">Хост: ${r.hostName} · ${r.count} гравців</div></div><div style="font-size:.7rem;color:var(--rg)">Приєднатись →</div></div>`).join('');
   }
 }
 
 async function quickJoin(code){
   const n=document.getElementById('nameInp').value.trim();
   if(!n){bar('Введи ім\'я','err');menuTab('play',document.querySelector('.mtab'));return;}
-  myName=n; if(!coins[myName])coins[myName]=0;
+  myName=n;if(!coins[myName])coins[myName]=0;
+  loadXP();loadAchievements();loadPowerups();loadLikes();
   ss('sLoad');
   try{
     setLoad('Завантажуємо...','');
-    await loadProfileFromBot(); loadMyStyle(); frames[myName]=myFrame;
+    await loadProfileFromBot();loadMyStyle();frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
-    if(peer){try{peer.destroy();}catch(e){} peer=null;}
+    if(peer){try{peer.destroy();}catch(e){}peer=null;}
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
     const ok=await tryConnect(code,null,8000);
@@ -1471,8 +1218,7 @@ async function quickJoin(code){
 }
 
 function initMenuShop(){
-  document.getElementById('menuShopCoins').textContent=
-    (myName&&coins[myName])||localStorage.getItem('km_coins_'+myTgId)||0;
+  document.getElementById('menuShopCoins').textContent=(myName&&coins[myName])||localStorage.getItem('km_coins_'+myTgId)||0;
   renderMenuShopGrid();
 }
 
@@ -1491,13 +1237,13 @@ function renderMenuShopGrid(){
   }).join('');
 }
 
-const BOT_WEBHOOK = '';
-let myTgId = '';
+const BOT_WEBHOOK='';
+let myTgId='';
 
-function syncToBot(event, payload){
-  if(!BOT_WEBHOOK || !myTgId) return;
-  const body = JSON.stringify({event, uid:myTgId, name:myName, ...payload});
-  fetch(BOT_WEBHOOK, {method:'POST', headers:{'Content-Type':'application/json'}, body}).catch(()=>{});
+function syncToBot(event,payload){
+  if(!BOT_WEBHOOK||!myTgId)return;
+  const body=JSON.stringify({event,uid:myTgId,name:myName,...payload});
+  fetch(BOT_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body}).catch(()=>{});
 }
 
 // ══════════════════════════════════════
@@ -1505,12 +1251,8 @@ function syncToBot(event, payload){
 // ══════════════════════════════════════
 (function(){
   const urlUid=new URLSearchParams(window.location.search).get('uid');
-  if(urlUid) myTgId=urlUid;
-  loadSettings();
-  loadAchievements();
-  loadXP();
-  loadPowerups();
-  loadLikes();
+  if(urlUid)myTgId=urlUid;
+  loadSettings();loadAchievements();loadXP();loadPowerups();loadLikes();
   try{
     const tg=window.Telegram?.WebApp;
     const u=tg?.initDataUnsafe?.user;
@@ -1519,25 +1261,24 @@ function syncToBot(event, payload){
       const ln=(u.last_name||'').trim();
       const full=(fn+' '+ln).trim()||u.username||'';
       myPhoto=u.photo_url||'';
-      if(u.id) myTgId=String(u.id);
+      if(u.id)myTgId=String(u.id);
       if(full){
         document.getElementById('nameInp').value=full.slice(0,16);
         const av=document.getElementById('menuAv');
-        if(myPhoto) av.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
+        if(myPhoto)av.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
         else av.textContent=full[0];
         const tp=document.getElementById('menuTgProfile');
         if(tp){
           tp.style.display='flex';
           document.getElementById('menuTgName').textContent=full;
           const tav=document.getElementById('menuTgAv');
-          if(myPhoto) tav.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
+          if(myPhoto)tav.innerHTML=`<img src="${myPhoto}" style="width:100%;height:100%;object-fit:cover">`;
           const savedCoins=localStorage.getItem('km_coins_'+myTgId);
           document.getElementById('menuTgStats').textContent='🪙 '+(savedCoins||0)+' монет';
         }
         document.getElementById('nameCard').style.display='none';
         updateXPBar();
-        // Перевірка щоденного бонусу
-        setTimeout(checkDaily, 1500);
+        setTimeout(checkDaily,1500);
       }
     }
   }catch(e){}
@@ -1550,46 +1291,37 @@ let unread=0;
 function toggleChat(){
   const p=document.getElementById('chatPanel');
   p.classList.toggle('open');
-  if(p.classList.contains('open')){
-    unread=0; updateChatBadge();
-    setTimeout(()=>{const m=document.getElementById('chatMsgs');m.scrollTop=m.scrollHeight;},80);
-  }
+  if(p.classList.contains('open')){unread=0;updateChatBadge();setTimeout(()=>{const m=document.getElementById('chatMsgs');m.scrollTop=m.scrollHeight;},80);}
   document.getElementById('musicPanel').classList.remove('open');
   document.getElementById('musicBtn').classList.remove('on');
 }
-function updateChatBadge(){
-  const b=document.getElementById('chatBtn');
-  b.innerHTML=unread>0?`💬<span class="notif">${unread}</span>`:'💬';
-}
+function updateChatBadge(){const b=document.getElementById('chatBtn');b.innerHTML=unread>0?`💬<span class="notif">${unread}</span>`:'💬';}
 document.getElementById('chatInp').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
+
 function sendChat(){
   const inp=document.getElementById('chatInp');
-  const text=inp.value.trim(); if(!text) return;
-  inp.value='';
-  chatMsgCount++;
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';chatMsgCount++;
   const msg={type:'chat',name:myName,photo:myPhoto,text};
-  renderChatMsg(msg,true);
-  bcastMsg(msg);
-  addXP(1);
-  checkAchievements();
+  renderChatMsg(msg,true);bcastMsg(msg);addXP(1);checkAchievements();
 }
+
 function renderChatMsg(d,isMe){
   const box=document.getElementById('chatMsgs');
   const div=document.createElement('div');
   div.className='cmsg '+(isMe?'me':'them');
-  const avHtml=d.photo
-    ?`<img class="cmsg-av" src="${d.photo}" onerror="this.outerHTML='<div class=cmsg-av-ph>${(d.name||'?')[0]}</div>'">`
-    :`<div class="cmsg-av-ph">${(d.name||'?')[0]}</div>`;
+  const avHtml=d.photo?`<img class="cmsg-av" src="${d.photo}" onerror="this.outerHTML='<div class=cmsg-av-ph>${(d.name||'?')[0]}</div>'">`:`<div class="cmsg-av-ph">${(d.name||'?')[0]}</div>`;
   div.innerHTML=`${avHtml}<div class="cmsg-body"><div class="cmsg-name">${isMe?'Ти':d.name}</div><div class="cmsg-bubble">${d.text.replace(/</g,'&lt;')}</div></div>`;
-  box.appendChild(div); box.scrollTop=box.scrollHeight;
+  box.appendChild(div);box.scrollTop=box.scrollHeight;
   if(!isMe&&!document.getElementById('chatPanel').classList.contains('open')){unread++;updateChatBadge();}
 }
+
 function addChatEvent(text){
   const box=document.getElementById('chatMsgs');
   const div=document.createElement('div');
   div.className='cmsg-event';
   div.innerHTML=`<span class="ev-chip">${text}</span>`;
-  box.appendChild(div); box.scrollTop=box.scrollHeight;
+  box.appendChild(div);box.scrollTop=box.scrollHeight;
   if(!document.getElementById('chatPanel').classList.contains('open')){unread++;updateChatBadge();}
 }
 
@@ -1599,51 +1331,36 @@ function addChatEvent(text){
 let currentGiftTarget='';
 let gpTimeout=null;
 
-function openGiftPopup(name, evt){
-  if(evt) evt.stopPropagation();
-  if(!name||name===myName) return;
+function openGiftPopup(name,evt){
+  if(evt)evt.stopPropagation();
+  if(!name||name===myName)return;
   currentGiftTarget=name;
   const popup=document.getElementById('giftPopup');
   const s=scores[name]||{k:0,g:0};
-  popup.style.left='50%';
-  popup.style.top='50%';
-  popup.style.transform='translate(-50%,-50%)';
+  popup.style.left='50%';popup.style.top='50%';popup.style.transform='translate(-50%,-50%)';
   const ph=photos[name]||'';
-  document.getElementById('gpAv').innerHTML=ph
-    ?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`
-    :`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem">${name[0]}</div>`;
+  document.getElementById('gpAv').innerHTML=ph?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem">${name[0]}</div>`;
   document.getElementById('gpName').textContent=name;
   document.getElementById('gpK').textContent=s.k||0;
   document.getElementById('gpG').textContent=s.g||0;
   document.getElementById('gpMyCoins').textContent=coins[myName]||0;
-  document.getElementById('gpGifts').innerHTML=GIFTS.map((g,i)=>`
-    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
-      <span style="font-size:1.4rem">${g.icon}</span>
-      <span style="font-size:.55rem;color:var(--gold)">🪙${g.cost}</span>
-    </div>`).join('');
+  document.getElementById('gpGifts').innerHTML=GIFTS.map((g,i)=>`<div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><span style="font-size:1.4rem">${g.icon}</span><span style="font-size:.55rem;color:var(--gold)">🪙${g.cost}</span></div>`).join('');
   popup.style.display='block';
   clearTimeout(gpTimeout);
-  gpTimeout=setTimeout(closeGiftPopup, 10000);
+  gpTimeout=setTimeout(closeGiftPopup,10000);
 }
 
-function closeGiftPopup(){
-  clearTimeout(gpTimeout);
-  document.getElementById('giftPopup').style.display='none';
-}
-
-function sendGiftTo(name, gIdx){
-  closeGiftPopup();
-  viewingProfile=name;
-  sendGift(gIdx);
-}
+function closeGiftPopup(){clearTimeout(gpTimeout);document.getElementById('giftPopup').style.display='none';}
+function sendGiftTo(name,gIdx){closeGiftPopup();viewingProfile=name;sendGift(gIdx);}
 
 // ══════════════════════════════════════
 // PROFILE
 // ══════════════════════════════════════
 function openProfile(name){
-  if(!name||!players.includes(name)) return;
+  if(!name||!players.includes(name))return;
   viewingProfile=name;
   const s=scores[name]||{k:0,n:0,g:0,m:0};
+  const gs=gameStats[name]||{k:0,n:0,g:0,coins:0};
   const isSelf=name===myName;
   const avEl=document.getElementById('profAv');
   const ph=photos[name]||'';
@@ -1659,41 +1376,53 @@ function openProfile(name){
     fc==='frame-diamond'?'0 0 0 3px #e0e0e0,0 0 16px rgba(224,224,224,.8),0 0 24px rgba(192,192,192,.6),inset 0 0 10px rgba(255,255,255,.3)':
     fc==='frame-sakura'?'0 0 0 3px #ffb7c5,0 0 14px rgba(255,183,197,.7),0 0 20px rgba(255,105,180,.5)':''
   };border-radius:50%"`:'';
-  if(ph) avEl.innerHTML=`<img class="av-lg" src="${ph}" ${avStyle} onerror="this.outerHTML='<div class=av-ph-lg>${name[0]}</div>'">`;
+  if(ph)avEl.innerHTML=`<img class="av-lg" src="${ph}" ${avStyle} onerror="this.outerHTML='<div class=av-ph-lg>${name[0]}</div>'">`;
   else avEl.innerHTML=`<div class="av-ph-lg" ${avStyle}>${name[0]}</div>`;
   document.getElementById('profName').textContent=name+(isSelf?' (Ти)':'');
   document.getElementById('profK').textContent=s.k||0;
   document.getElementById('profN').textContent=s.n||0;
   document.getElementById('profG').textContent=s.g||0;
   document.getElementById('profM').textContent=s.m||0;
+  
+  // Блок статистики поточної гри
+  const profSheet=document.querySelector('.profile-sheet');
+  let gameStatsEl=document.getElementById('profGameStats');
+  if(!gameStatsEl){
+    gameStatsEl=document.createElement('div');
+    gameStatsEl.id='profGameStats';
+    gameStatsEl.style.cssText='background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.3);border-radius:14px;padding:12px;margin-bottom:14px;';
+    profSheet.insertBefore(gameStatsEl,profSheet.querySelector('.gifts-received'));
+  }
+  gameStatsEl.innerHTML=`
+    <div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;text-align:center">🎮 Результат у цій грі</div>
+    <div style="display:flex;justify-content:space-around;text-align:center">
+      <div><div style="font-size:1.1rem;font-weight:700;color:var(--rg)">${gs.k}</div><div style="font-size:.6rem;color:var(--muted)">💋 Поціл.</div></div>
+      <div><div style="font-size:1.1rem;font-weight:700;color:var(--muted)">${gs.n}</div><div style="font-size:.6rem;color:var(--muted)">🙈 Відмов</div></div>
+      <div><div style="font-size:1.1rem;font-weight:700;color:var(--gold)">${gs.g}</div><div style="font-size:.6rem;color:var(--muted)">🎁 Подар.</div></div>
+      <div><div style="font-size:1.1rem;font-weight:700;color:var(--gold)">${gs.coins>=0?'+':''}${gs.coins}</div><div style="font-size:.6rem;color:var(--muted)">🪙 Монет</div></div>
+    </div>
+  `;
+  
   const badges=[];
-  if((s.k||0)>=1) badges.push('💋');
-  if((s.k||0)>=3) badges.push('🔥');
-  if((s.k||0)>=5) badges.push('👑');
-  if((s.g||0)>=3) badges.push('🎁');
-  if((s.m||0)>=2) badges.push('🎵');
-  if((s.n||0)===0 && (s.k||0)>0) badges.push('😇');
-  if(isSelf && (coins[myName]||0)>=100) badges.push('💰');
+  if((s.k||0)>=1)badges.push('💋');
+  if((s.k||0)>=3)badges.push('🔥');
+  if((s.k||0)>=5)badges.push('👑');
+  if((s.g||0)>=3)badges.push('🎁');
+  if((s.m||0)>=2)badges.push('🎵');
+  if((s.n||0)===0&&(s.k||0)>0)badges.push('😇');
+  if(isSelf&&(coins[myName]||0)>=100)badges.push('💰');
   const badgeEl=document.getElementById('profBadges');
-  if(badgeEl) badgeEl.textContent=badges.join(' ')||'';
+  if(badgeEl)badgeEl.textContent=badges.join(' ')||'';
   const gl=gifts[name]||[];
-  document.getElementById('profGiftsText').textContent=
-    gl.length ? gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  ') : 'Ще немає подарунків';
+  document.getElementById('profGiftsText').textContent=gl.length?gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  '):'Ще немає подарунків';
   const giftSec=document.getElementById('giftSendSection');
   giftSec.style.display=isSelf?'none':'block';
   document.getElementById('sendCoins').textContent=coins[myName]||0;
-  document.getElementById('giftsGrid').innerHTML=GIFTS.map((g,i)=>`
-    <div class="gift-btn" onclick="sendGift(${i})">
-      <div class="gift-icon">${g.icon}</div>
-      <div class="gift-name">${g.name}</div>
-      <div class="gift-cost">🪙${g.cost}</div>
-    </div>`).join('');
+  document.getElementById('giftsGrid').innerHTML=GIFTS.map((g,i)=>`<div class="gift-btn" onclick="sendGift(${i})"><div class="gift-icon">${g.icon}</div><div class="gift-name">${g.name}</div><div class="gift-cost">🪙${g.cost}</div></div>`).join('');
   document.getElementById('oProfile').classList.add('on');
 }
-function closeProfile(e){
-  if(e&&e.target!==document.getElementById('oProfile')) return;
-  document.getElementById('oProfile').classList.remove('on');
-}
+
+function closeProfile(e){if(e&&e.target!==document.getElementById('oProfile'))return;document.getElementById('oProfile').classList.remove('on');}
 
 function sendGift(gIdx){
   const g=GIFTS[gIdx];
@@ -1704,40 +1433,36 @@ function sendGift(gIdx){
   document.getElementById('myCoins').textContent=coins[myName];
   document.getElementById('sendCoins').textContent=coins[myName];
   const msg={type:'gift',from:myName,to:viewingProfile,gift:g};
-  applyGift(msg);
-  bcastMsg(msg);
-  floatGift(g.icon);
+  applyGift(msg);bcastMsg(msg);floatGift(g.icon);
   bar(`Надіслав ${g.icon} для ${viewingProfile}!`,'ok');
-  updateLeaderboard('gifts', 1);
-  addXP(5);
-  checkAchievements();
+  updateLeaderboard('gifts',1);addXP(5);checkAchievements();
 }
 
 function applyGift(d){
+  playGiftSound();
   const {from,to,gift}=d;
-  if(!gifts[to]) gifts[to]=[];
+  if(!gameStats[from])gameStats[from]={k:0,n:0,g:0,coins:0};
+  gameStats[from].g++;
+  gameStats[from].coins-=gift.cost;
+  if(!gifts[to])gifts[to]=[];
   gifts[to].push({icon:gift.icon,from});
-  if(!scores[to]) scores[to]={k:0,n:0,g:0,m:0};
+  if(!scores[to])scores[to]={k:0,n:0,g:0,m:0};
   scores[to].g=(scores[to].g||0)+1;
   if(viewingProfile===to&&document.getElementById('oProfile').classList.contains('on')){
     const gl=gifts[to];
     document.getElementById('profGiftsText').textContent=gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  ');
     document.getElementById('profG').textContent=scores[to].g;
   }
-  if(myName===from){
-    syncToBot('gift_sent', {coins: -gift.cost, gift_name: gift.name, gift_icon: gift.icon, to_name: to});
-  } else if(myName===to){
-    syncToBot('gift_received', {gifts: 1, gift_name: gift.name, gift_icon: gift.icon, from_name: from});
-  }
+  if(myName===from){syncToBot('gift_sent',{coins:-gift.cost,gift_name:gift.name,gift_icon:gift.icon,to_name:to});}
+  else if(myName===to){syncToBot('gift_received',{gifts:1,gift_name:gift.name,gift_icon:gift.icon,from_name:from});}
   addChatEvent(`${gift.icon} ${from} дарує ${gift.name} для ${to}`);
   floatGift(gift.icon);
 }
 
 function floatGift(icon){
-  if(!settingAnim) return;
+  if(!settingAnim)return;
   const el=document.createElement('div');
-  el.className='gift-float';
-  el.textContent=icon;
+  el.className='gift-float';el.textContent=icon;
   el.style.left=(20+Math.random()*60)+'vw';
   el.style.bottom='30vh';
   document.body.appendChild(el);
@@ -1745,33 +1470,23 @@ function floatGift(icon){
 }
 
 // ══════════════════════════════════════
-// LOAD PROFILE FROM BOT
+// LOAD PROFILE
 // ══════════════════════════════════════
 async function loadProfileFromBot(){
-  if(!myName) return;
+  if(!myName)return;
+  try{const saved=localStorage.getItem('km_coins_'+myTgId);if(saved!==null)coins[myName]=parseInt(saved)||0;}catch(e){}
+  if(!BOT_WEBHOOK||!myTgId)return;
   try{
-    const saved = localStorage.getItem('km_coins_'+myTgId);
-    if(saved !== null) coins[myName] = parseInt(saved)||0;
-  }catch(e){}
-  if(!BOT_WEBHOOK || !myTgId) return;
-  try{
-    const r = await fetch(BOT_WEBHOOK, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({event:'get_profile', uid:myTgId, name:myName})
-    });
-    const json = await r.json();
-    const p = json?.profile || json?.json?.profile;
+    const r=await fetch(BOT_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'get_profile',uid:myTgId,name:myName})});
+    const json=await r.json();
+    const p=json?.profile||json?.json?.profile;
     if(p){
-      if(p.coins !== undefined){
-        coins[myName] = p.coins;
-        try{localStorage.setItem('km_coins_'+myTgId, String(p.coins));}catch(e){}
-      }
-      if(p.kisses !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0,m:0}), k: p.kisses};
-      if(p.refuses !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0,m:0}), n: p.refuses};
-      if(p.gifts !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0,m:0}), g: p.gifts};
-      if(p.music !== undefined) scores[myName] = {...(scores[myName]||{k:0,n:0,g:0,m:0}), m: p.music};
-      document.getElementById('myCoins').textContent = coins[myName]||0;
+      if(p.coins!==undefined){coins[myName]=p.coins;try{localStorage.setItem('km_coins_'+myTgId,String(p.coins));}catch(e){}}
+      if(p.kisses!==undefined)scores[myName]={...(scores[myName]||{k:0,n:0,g:0,m:0}),k:p.kisses};
+      if(p.refuses!==undefined)scores[myName]={...(scores[myName]||{k:0,n:0,g:0,m:0}),n:p.refuses};
+      if(p.gifts!==undefined)scores[myName]={...(scores[myName]||{k:0,n:0,g:0,m:0}),g:p.gifts};
+      if(p.music!==undefined)scores[myName]={...(scores[myName]||{k:0,n:0,g:0,m:0}),m:p.music};
+      document.getElementById('myCoins').textContent=coins[myName]||0;
     }
   }catch(e){}
 }
@@ -1786,22 +1501,19 @@ async function enterGame(){
   const n=document.getElementById('nameInp').value.trim();
   if(!n){bar('Введи ім\'я','err');return;}
   myName=n;
-  if(!coins[myName]) coins[myName]=0;
+  if(!coins[myName])coins[myName]=0;
+  loadXP();loadAchievements();loadPowerups();loadLikes();
   ss('sLoad');
   try{
     setLoad('Профіль...','');
     await loadProfileFromBot();
-    loadMyStyle(); frames[myName]=myFrame;
+    loadMyStyle();frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
-    if(peer){try{peer.destroy();}catch(e){} peer=null;}
+    if(peer){try{peer.destroy();}catch(e){}peer=null;}
     setLoad('Шукаємо кімнату...','');
     await matchmake();
-  }catch(e){
-    setLoad('Помилка',e.message);
-    bar(e.message,'err');
-    setTimeout(()=>ss('sName'),2500);
-  }
+  }catch(e){setLoad('Помилка',e.message);bar(e.message,'err');setTimeout(()=>ss('sName'),2500);}
 }
 
 async function joinByCode(){
@@ -1810,38 +1522,29 @@ async function joinByCode(){
   const n=document.getElementById('nameInp').value.trim();
   if(!n){bar('Введи ім\'я','err');return;}
   myName=n;
-  if(!coins[myName]) coins[myName]=0;
+  if(!coins[myName])coins[myName]=0;
+  loadXP();loadAchievements();loadPowerups();loadLikes();
   ss('sLoad');
   try{
     setLoad('Профіль...','');
     await loadProfileFromBot();
-    loadMyStyle(); frames[myName]=myFrame;
+    loadMyStyle();frames[myName]=myFrame;
     setLoad('Завантажуємо PeerJS...','');
     await waitPeer();
-    if(peer){try{peer.destroy();}catch(e){} peer=null;}
+    if(peer){try{peer.destroy();}catch(e){}peer=null;}
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
     const ok=await tryConnect(code,null,12000);
-    if(!ok){
-      bar('Кімнату '+code+' не знайдено','err');
-      setTimeout(()=>ss('sName'),2000);
-    }
-  }catch(e){
-    setLoad('Помилка',e.message);
-    bar(e.message,'err');
-    setTimeout(()=>ss('sName'),2500);
-  }
+    if(!ok){bar('Кімнату '+code+' не знайдено','err');setTimeout(()=>ss('sName'),2000);}
+  }catch(e){setLoad('Помилка',e.message);bar(e.message,'err');setTimeout(()=>ss('sName'),2500);}
 }
 
 function shareRoom(){
   const code=roomCode||document.getElementById('roomCodeEl').textContent;
-  if(!code||code==='----') return;
+  if(!code||code==='----')return;
   const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий @KissMeetBot і натисни Грати, потім впиши код!';
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>bar('📋 Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));
-  } else {
-    bar('Код кімнати: '+code,'ok');
-  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>bar('📋 Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));}
+  else{bar('Код кімнати: '+code,'ok');}
 }
 
 function waitPeer(ms=9000){
@@ -1866,82 +1569,68 @@ function initPeer(){
 // ══════════════════════════════════════
 // MATCHMAKING
 // ══════════════════════════════════════
-const ROOM_PREFIX = 'km-room-';
-
-function uid4(){
-  return Math.random().toString(36).substr(2,4).toUpperCase();
-}
+const ROOM_PREFIX='km-room-';
+function uid4(){return Math.random().toString(36).substr(2,4).toUpperCase();}
 
 async function createRoom(){
-  isHost=true;
-  roomCode=uid4();
-  players=[myName]; scores[myName]={k:0,n:0,g:0,m:0};
-  photos[myName]=myPhoto; coins[myName]=coins[myName]||0; gifts[myName]=[];
+  isHost=true;roomCode=uid4();
+  players=[myName];scores[myName]={k:0,n:0,g:0,m:0};
+  photos[myName]=myPhoto;coins[myName]=coins[myName]||0;gifts[myName]=[];
   frames[myName]=myFrame;
-  if(peer){ try{peer.destroy();}catch(e){} peer=null; }
+  if(peer){try{peer.destroy();}catch(e){}peer=null;}
   await new Promise((res,rej)=>{
-    peer = new Peer(ROOM_PREFIX+roomCode, {debug:0});
+    peer=new Peer(ROOM_PREFIX+roomCode,{debug:0});
     const t=setTimeout(()=>rej(new Error('PeerJS timeout')),10000);
-    peer.on('open', id=>{
-      myPeerId=id; clearTimeout(t);
-      peer.on('connection', conn=>{
+    peer.on('open',id=>{
+      myPeerId=id;clearTimeout(t);
+      peer.on('connection',conn=>{
         conn.on('open',()=>{
           guestConns[conn.peer]=conn;
           conn.on('data',d=>handleMsg(d,conn));
-          conn.on('close',()=>{
-            delete guestConns[conn.peer];
-            renderPwList();
-            roomsRegister(roomCode,myName,players.length);
-          });
+          conn.on('close',()=>{delete guestConns[conn.peer];renderPwList();roomsRegister(roomCode,myName,players.length);});
         });
       });
       res();
     });
-    peer.on('error', e=>{
+    peer.on('error',e=>{
       clearTimeout(t);
       if(e.type==='unavailable-id'){
-        roomCode=uid4();
-        peer.destroy();
+        roomCode=uid4();peer.destroy();
         peer=new Peer(ROOM_PREFIX+roomCode,{debug:0});
         peer.on('open',id=>{myPeerId=id;res();});
         peer.on('error',e2=>rej(new Error('PeerJS: '+e2.type)));
-      } else {
-        rej(new Error('PeerJS: '+e.type));
-      }
+      }else{rej(new Error('PeerJS: '+e.type));}
     });
   });
   document.getElementById('roomCodeEl').textContent=roomCode;
   try{document.getElementById('gameRoomCode').textContent=roomCode;}catch(e){}
   document.getElementById('lobbyRole').textContent='Ти хост 👑';
-  renderPwList(); ss('sLobby');
+  renderPwList();ss('sLobby');
   bar('Кімнату створено: '+roomCode,'ok');
   roomsRegister(roomCode,myName,1);
   cleanTimer=setInterval(()=>roomsRegister(roomCode,myName,players.length),60000);
 }
 
-async function tryConnect(code, _unused, timeout=12000){
+async function tryConnect(code,_unused,timeout=12000){
+  if(!peer){try{await initPeer();}catch(e){return false;}}
   return new Promise(res=>{
     const hostId=ROOM_PREFIX+code.toUpperCase();
     let done=false;
     const conn=peer.connect(hostId,{metadata:myName,reliable:true});
-    const t=setTimeout(()=>{
-      if(done)return; done=true;
-      try{conn.close();}catch(e){} res(false);
-    },timeout);
+    const t=setTimeout(()=>{if(done)return;done=true;try{conn.close();}catch(e){}res(false);},timeout);
     conn.on('open',()=>{
-      if(done)return; done=true; clearTimeout(t);
-      hostConn=conn; roomCode=code.toUpperCase();
+      if(done)return;done=true;clearTimeout(t);
+      hostConn=conn;roomCode=code.toUpperCase();
       conn.on('data',d=>handleMsg(d,conn));
       conn.on('close',()=>{bar('Хост відключився','err');setTimeout(()=>resetAll(),1500);});
       conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId,frame:myFrame});
-      players=[myName]; scores[myName]={k:0,n:0,g:0,m:0};
-      coins[myName]=coins[myName]||0; gifts[myName]=[];
-      photos[myName]=myPhoto; frames[myName]=myFrame;
+      players=[myName];scores[myName]={k:0,n:0,g:0,m:0};
+      coins[myName]=coins[myName]||0;gifts[myName]=[];
+      photos[myName]=myPhoto;frames[myName]=myFrame;
       renderPwList();
       document.getElementById('roomCodeEl').textContent=roomCode;
       document.getElementById('lobbyRole').textContent='Ти гість 🎉';
-      ss('sLobby');
-      bar('Приєднався до '+roomCode,'ok');
+      ss('sLobby');bar('Приєднався до '+roomCode,'ok');
       res(true);
     });
     conn.on('error',()=>{if(done)return;done=true;clearTimeout(t);res(false);});
@@ -1950,16 +1639,15 @@ async function tryConnect(code, _unused, timeout=12000){
 
 async function matchmake(){
   setLoad('Шукаємо кімнату...','Підключаємо Firebase...');
-  if(!db){
-    await loadFirebase();
-    await new Promise(r=>setTimeout(r,500));
-  }
+  if(!db){await loadFirebase();await new Promise(r=>setTimeout(r,500));}
   setLoad('Шукаємо кімнату...','Перевіряємо список');
-  const active = await roomsGetActive();
+  const active=await roomsGetActive();
+  if(peer){try{peer.destroy();}catch(e){}peer=null;}
+  await initPeer();
   for(const room of active){
     setLoad(`Знайдено: ${room.code}`,'Підключаємось...');
-    const ok = await tryConnect(room.code, null, 6000);
-    if(ok) return;
+    const ok=await tryConnect(room.code,null,6000);
+    if(ok)return;
   }
   setLoad('Створюємо кімнату...','Ти будеш хостом');
   await createRoom();
@@ -1969,141 +1657,52 @@ async function matchmake(){
 // MESSAGES
 // ══════════════════════════════════════
 function bcast(msg){Object.values(guestConns).forEach(c=>{try{c.send(msg);}catch(e){}});}
-function bcastMsg(msg){
-  const m={...msg,_from:myPeerId};
-  if(isHost)bcast(m);
-  else if(hostConn)try{hostConn.send(m);}catch(e){}
-}
+function bcastMsg(msg){const m={...msg,_from:myPeerId};if(isHost)bcast(m);else if(hostConn)try{hostConn.send(m);}catch(e){}}
 
 function handleMsg(d,conn){
   if(!d?.type)return;
-
   if(d.type==='hello'&&isHost){
     const name=d.name||'Гість';
     const isNew=!players.includes(name);
     if(isNew){players.push(name);scores[name]={k:0,n:0,g:0,m:0};coins[name]=0;gifts[name]=[];}
     photos[name]=d.photo||'';
-    if(d.frame!==undefined) frames[name]=d.frame;
+    if(d.frame!==undefined)frames[name]=d.frame;
     conn.metadata=name;
     const gameStarted=document.getElementById('sGame').classList.contains('on');
     if(gameStarted){
-      if(isNew) buildPRing();
+      if(isNew)buildPRing();
       conn.send({type:'join_running',players,scores,photos,coins,gifts,spinnerIdx,round,totalK,totalN});
-    } else {
+    }else{
       renderPwList();
       const startBtn=document.getElementById('btnStartGame');
-      if(startBtn) startBtn.style.display=players.length>=2?'block':'none';
+      if(startBtn)startBtn.style.display=players.length>=2?'block':'none';
     }
     bcast({type:'sync',players,scores,photos,coins,gifts});
     bar(name+' приєднався 👋','ok');
-    if(isHost) roomsRegister(roomCode,myName,players.length);
+    if(isHost)roomsRegister(roomCode,myName,players.length);
     return;
   }
   if(d.type==='sync'){
-    players=d.players; scores=d.scores||{}; photos=d.photos||{}; coins=d.coins||{}; gifts=d.gifts||{};
+    players=d.players;scores=d.scores||{};photos=d.photos||{};coins=d.coins||{};gifts=d.gifts||{};
     players.forEach(p=>{if(!scores[p])scores[p]={k:0,n:0,g:0,m:0};if(!coins[p])coins[p]=0;if(!gifts[p])gifts[p]=[];});
     renderPwList();
     document.getElementById('myCoins').textContent=coins[myName]||0;
     return;
   }
   if(d.type==='start'){if(isHost)bcast(d);initGame(d);return;}
-  if(d.type==='spin_result'){
-    if(isHost)bcast(d);
-    if(d.startAngle !== undefined) currentBottleAngle = d.startAngle;
-    animBottle(d.fa,d.dur,d.ti,()=>showVoteCard(d));
-    return;
-  }
-  if(d.type==='vote_msg'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId)applyVoteMsg(d);
-    return;
-  }
-  if(d.type==='vote_result'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId)applyVoteResult(d);
-    return;
-  }
-  if(d.type==='next_turn'){
-    if(isHost) bcast(d);
-    applyNextTurn(d);
-    return;
-  }
-  if(d.type==='style_update'){
-    if(isHost) bcast(d);
-    if(d.name){
-      if(d.frame!==undefined) frames[d.name]=d.frame;
-      if(d.name===myName && d.theme!==undefined){applyTheme(d.theme);myTheme=d.theme;}
-      buildPRing();
-    }
-    return;
-  }
-  if(d.type==='gift'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId)applyGift(d);
-    return;
-  }
-  if(d.type==='like'){
-    if(isHost)bcast(d);
-    if(d.to===myName && !likesReceived.includes(d.from)){
-      likesReceived.push(d.from);
-      saveLikes();
-      bar(`❤️ ${d.from} вподобав тебе!`, 'info');
-    }
-    return;
-  }
-  if(d.type==='music_play'){
-    if(isHost)bcast(d);
-    if(d._from!==myPeerId && d.name){
-      if(!scores[d.name]) scores[d.name]={k:0,n:0,g:0,m:0};
-      scores[d.name].m=(scores[d.name].m||0)+1;
-    }
-    return;
-  }
-  if(d.type==='music_header'){
-    if(isHost) bcast(d);
-    if(d._from!==myPeerId){
-      addChatEvent(`🎵 ${d.from} вмикає: ${d.trackName}`);
-      musicBuf={chunks:new Array(d.total), total:d.total, name:d.trackName, from:d.from, received:0};
-      setMusicState(true, d.from);
-      renderTrackList();
-      document.getElementById('nowPlaying').textContent=`⏳ Отримуємо "${d.trackName}"... 0%`;
-    }
-    return;
-  }
-  if(d.type==='music_chunk'){
-    if(isHost) bcast(d);
-    if(d._from!==myPeerId && musicBuf.total>0){
-      musicBuf.chunks[d.idx]=d.data;
-      musicBuf.received++;
-      const pct=Math.round(musicBuf.received/musicBuf.total*100);
-      document.getElementById('nowPlaying').textContent=`⏳ "${musicBuf.name}"... ${pct}%`;
-      if(musicBuf.received>=musicBuf.total){
-        const full=musicBuf.chunks.join('');
-        const tName=musicBuf.name;
-        const tFrom=musicBuf.from;
-        musicBuf={chunks:[],total:0,name:'',from:'',received:0};
-        playRemoteAudio(full, tName, tFrom);
-      }
-    }
-    return;
-  }
-  if(d.type==='music_stop'){
-    if(isHost) bcast(d);
-    if(d._from!==myPeerId){
-      if(audio){audio.pause();audio=null;}
-      setMusicState(false,'');
-      musicBuf={chunks:[],total:0,name:'',from:'',received:0};
-      renderTrackList();
-      document.getElementById('nowPlaying').textContent='';
-      addChatEvent(`⏹ ${d.from||'хтось'} зупинив музику`);
-    }
-    return;
-  }
+  if(d.type==='spin_result'){if(isHost)bcast(d);if(d.startAngle!==undefined)currentBottleAngle=d.startAngle;animBottle(d.fa,d.dur,d.ti,()=>showVoteCard(d));return;}
+  if(d.type==='vote_msg'){if(isHost)bcast(d);if(d._from!==myPeerId)applyVoteMsg(d);return;}
+  if(d.type==='vote_result'){if(isHost)bcast(d);if(d._from!==myPeerId)applyVoteResult(d);return;}
+  if(d.type==='next_turn'){if(isHost)bcast(d);applyNextTurn(d);return;}
+  if(d.type==='style_update'){if(isHost)bcast(d);if(d.name){if(d.frame!==undefined)frames[d.name]=d.frame;if(d.name===myName&&d.theme!==undefined){applyTheme(d.theme);myTheme=d.theme;}buildPRing();}return;}
+  if(d.type==='gift'){if(isHost)bcast(d);if(d._from!==myPeerId)applyGift(d);return;}
+  if(d.type==='like'){if(isHost)bcast(d);if(d.to===myName&&!likesReceived.includes(d.from)){likesReceived.push(d.from);saveLikes();bar(`❤️ ${d.from} вподобав тебе!`,'info');}return;}
+  if(d.type==='music_play'){if(isHost)bcast(d);if(d._from!==myPeerId&&d.name){if(!scores[d.name])scores[d.name]={k:0,n:0,g:0,m:0};scores[d.name].m=(scores[d.name].m||0)+1;}return;}
+  if(d.type==='music_header'){if(isHost)bcast(d);if(d._from!==myPeerId){addChatEvent(`🎵 ${d.from} вмикає: ${d.trackName}`);musicBuf={chunks:new Array(d.total),total:d.total,name:d.trackName,from:d.from,received:0};setMusicState(true,d.from);renderTrackList();document.getElementById('nowPlaying').textContent=`⏳ Отримуємо "${d.trackName}"... 0%`;}return;}
+  if(d.type==='music_chunk'){if(isHost)bcast(d);if(d._from!==myPeerId&&musicBuf.total>0){musicBuf.chunks[d.idx]=d.data;musicBuf.received++;const pct=Math.round(musicBuf.received/musicBuf.total*100);document.getElementById('nowPlaying').textContent=`⏳ "${musicBuf.name}"... ${pct}%`;if(musicBuf.received>=musicBuf.total){const full=musicBuf.chunks.join('');const tName=musicBuf.name;const tFrom=musicBuf.from;musicBuf={chunks:[],total:0,name:'',from:'',received:0};playRemoteAudio(full,tName,tFrom);}}return;}
+  if(d.type==='music_stop'){if(isHost)bcast(d);if(d._from!==myPeerId){if(audio){audio.pause();audio=null;}setMusicState(false,'');musicBuf={chunks:[],total:0,name:'',from:'',received:0};renderTrackList();document.getElementById('nowPlaying').textContent='';addChatEvent(`⏹ ${d.from||'хтось'} зупинив музику`);}return;}
   if(d.type==='music_event'){return;}
-  if(d.type==='join_running'&&!isHost){
-    players=d.players; scores=d.scores||{}; photos=d.photos||{}; coins=d.coins||{}; gifts=d.gifts||{};
-    initGame(d); return;
-  }
+  if(d.type==='join_running'&&!isHost){players=d.players;scores=d.scores||{};photos=d.photos||{};coins=d.coins||{};gifts=d.gifts||{};initGame(d);return;}
 }
 
 // ══════════════════════════════════════
@@ -2111,11 +1710,10 @@ function handleMsg(d,conn){
 // ══════════════════════════════════════
 function hostStartGame(){
   clearTimeout(cleanTimer);
-  spinnerIdx=0; round=1; totalK=0; totalN=0;
+  spinnerIdx=0;round=1;totalK=0;totalN=0;
   players.forEach(p=>{scores[p]={k:0,n:0,g:0,m:0};coins[p]=0;gifts[p]=[];});
   const payload={type:'start',players,scores,photos,coins,gifts,spinnerIdx,round};
-  bcast(payload);
-  initGame(payload);
+  bcast(payload);initGame(payload);
   peer.removeAllListeners?.('connection');
   peer.on('connection',conn=>{
     conn.on('open',()=>{
@@ -2127,19 +1725,19 @@ function hostStartGame(){
 }
 
 function initGame(d){
-  players=d.players; spinnerIdx=d.spinnerIdx; round=d.round;
-  if(d.scores)scores=d.scores; if(d.photos)photos=d.photos;
-  if(d.coins)coins=d.coins; if(d.gifts)gifts=d.gifts;
+  players=d.players;spinnerIdx=d.spinnerIdx;round=d.round;
+  if(d.scores)scores=d.scores;if(d.photos)photos=d.photos;
+  if(d.coins)coins=d.coins;if(d.gifts)gifts=d.gifts;
   if(d.totalK!=null){totalK=d.totalK;totalN=d.totalN;}
   players.forEach(p=>{if(!scores[p])scores[p]={k:0,n:0,g:0,m:0};if(!coins[p])coins[p]=0;if(!gifts[p])gifts[p]=[];});
-  if(myName && coins[myName]===0){
-    try{const s=localStorage.getItem('km_coins_'+myTgId);if(s)coins[myName]=parseInt(s)||0;}catch(e){}
-  }
-  buildPRing(); updateBar(); updateMyTurn(); ss('sGame');
+  if(myName&&coins[myName]===0){try{const s=localStorage.getItem('km_coins_'+myTgId);if(s)coins[myName]=parseInt(s)||0;}catch(e){}}
+  gameStats={};
+  players.forEach(p=>gameStats[p]={k:0,n:0,g:0,coins:0});
+  buildPRing();updateBar();updateMyTurn();ss('sGame');
   document.getElementById('myCoins').textContent=coins[myName]||0;
   document.getElementById('gameRoomCode').textContent=roomCode||'----';
   updatePowerupUI();
-  addXP(20); // XP за вход у гру
+  addXP(20);
 }
 
 // ══════════════════════════════════════
@@ -2148,25 +1746,16 @@ function initGame(d){
 function avHtml(name,size='sm'){
   const ph=photos[name]||'';
   const s=size==='sm'?'36px':'80px';
-  if(ph) return `<img src="${ph}" style="width:${s};height:${s};border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div style=width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700>${name[0]}</div>'">`;
-  return `<div style="width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700">${name[0]}</div>`;
+  if(ph)return`<img src="${ph}" style="width:${s};height:${s};border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div style=width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700>${name[0]}</div>'">`;
+  return`<div style="width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700">${name[0]}</div>`;
 }
 
 function renderPwList(){
   document.getElementById('pwCount').textContent=`${players.length} / ${MAX_P}`;
-  document.getElementById('pwList').innerHTML=players.map((p,i)=>`
-    <div class="pw-item" onclick="openProfile('${p}')" style="cursor:pointer">
-      ${avHtml(p,'sm')}
-      <div style="flex:1;font-size:.88rem">${p}${p===myName?' (ти)':''}</div>
-      ${i===0?'<div class="pw-badge">хост</div>':'<div class="pw-dot g"></div>'}
-    </div>`).join('');
+  document.getElementById('pwList').innerHTML=players.map((p,i)=>`<div class="pw-item" onclick="openProfile('${p}')" style="cursor:pointer">${avHtml(p,'sm')}<div style="flex:1;font-size:.88rem">${p}${p===myName?' (ти)':''}</div>${i===0?'<div class="pw-badge">хост</div>':'<div class="pw-dot g"></div>'}</div>`).join('');
   const startBtn=document.getElementById('btnStartGame');
   const waitHint=document.getElementById('waitingHint');
-  if(startBtn){
-    const show=isHost && players.length>=2;
-    startBtn.style.display=show?'block':'none';
-    if(waitHint) waitHint.style.display=show?'none':'block';
-  }
+  if(startBtn){const show=isHost&&players.length>=2;startBtn.style.display=show?'block':'none';if(waitHint)waitHint.style.display=show?'none':'block';}
 }
 
 function buildPRing(){
@@ -2174,16 +1763,13 @@ function buildPRing(){
   const n=players.length;
   ring.innerHTML=players.map((p,i)=>{
     const a=(i/n)*2*Math.PI-Math.PI/2;
-    const cx=50+44*Math.cos(a), cy=50+44*Math.sin(a);
+    const cx=50+44*Math.cos(a),cy=50+44*Math.sin(a);
     const ph=photos[p]||'';
     const fc=frames[p]||'';
     const liked=likedByMe.includes(p);
-    const avEl=ph
-      ?`<img class="pdot-av ${fc}" src="${ph}" onerror="this.outerHTML='<div class=\\'pdot-av-ph ${fc}\\'>${p[0]}</div>'">`
-      :`<div class="pdot-av-ph ${fc}">${p[0]}</div>`;
-    const likeBtn = p!==myName ? `<div class="like-btn ${liked?'liked':''}" onclick="toggleLike('${p}',event)">❤</div>` : '';
-    return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openGiftPopup('${p}',event)">
-      ${likeBtn}${avEl}<div class="pdot-n">${p}</div></div>`;
+    const avEl=ph?`<img class="pdot-av ${fc}" src="${ph}" onerror="this.outerHTML='<div class=\\'pdot-av-ph ${fc}\\'>${p[0]}</div>'">`:`<div class="pdot-av-ph ${fc}">${p[0]}</div>`;
+    const likeBtn=p!==myName?`<div class="like-btn ${liked?'liked':''}" onclick="toggleLike('${p}',event)">❤</div>`:'';
+    return`<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openGiftPopup('${p}',event)">${likeBtn}${avEl}<div class="pdot-n">${p}</div></div>`;
   }).join('');
   litDot(spinnerIdx);
 }
@@ -2198,17 +1784,14 @@ function updateBar(){
   litDot(spinnerIdx);
 }
 
-let autoSpinTimer=null, autoSpinInterval=null;
-function getAutoSpinSec(){ 
-  if(isBlitz) return 5;
-  return settingTimer>0 ? settingTimer : 9999; 
-}
+let autoSpinTimer=null,autoSpinInterval=null;
+function getAutoSpinSec(){if(isBlitz)return 5;return settingTimer>0?settingTimer:9999;}
 
 function updateMyTurn(){
   const mine=myName===players[spinnerIdx];
   document.getElementById('btnSpin').disabled=!mine||spinning;
   document.getElementById('gHint').textContent=mine?'👇 Твій хід — крути!':'⏳ Хід: '+players[spinnerIdx];
-  if(isHost) startAutoSpin();
+  if(isHost)startAutoSpin();
 }
 
 function startAutoSpin(){
@@ -2220,60 +1803,52 @@ function startAutoSpin(){
     const mine=myName===players[spinnerIdx];
     const hint=mine?`👇 Крути! (${left}с)`:`⏳ ${spinnerName} крутить... (${left}с)`;
     document.getElementById('gHint').textContent=hint;
-    if(left<=0) clearInterval(autoSpinInterval);
+    if(left<=0)clearInterval(autoSpinInterval);
   },1000);
-  autoSpinTimer=setTimeout(()=>{
-    if(!spinning) doSpin();
-  }, getAutoSpinSec()*1000);
+  autoSpinTimer=setTimeout(()=>{if(!spinning)doSpin();},getAutoSpinSec()*1000);
 }
 
-function clearAutoSpin(){
-  clearTimeout(autoSpinTimer);
-  clearInterval(autoSpinInterval);
-  autoSpinTimer=null; autoSpinInterval=null;
-}
+function clearAutoSpin(){clearTimeout(autoSpinTimer);clearInterval(autoSpinInterval);autoSpinTimer=null;autoSpinInterval=null;}
 
-let currentBottleAngle = 0;
-
+let currentBottleAngle=0;
 function onTap(){if(myName!==players[spinnerIdx]||spinning)return;doSpin();}
 
 function doSpin(){
-  clearAutoSpin();
-  spinning=true;
+  playSpinSound();
+  clearAutoSpin();spinning=true;
   document.getElementById('btnSpin').disabled=true;
   document.getElementById('gHint').textContent='🌀 Крутиться...';
-  let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
-  const n = players.length;
-  const BOTTLE_OFFSET = 90;
-  const targetDeg = BOTTLE_OFFSET + (ti / n) * 360;
-  const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
-  let delta = targetDeg - normalizedCurrent;
-  if(delta <= 0) delta += 360;
-  const spins = 4 + Math.floor(Math.random()*3);
-  const fa = currentBottleAngle + spins*360 + delta;
-  const dur = 2200 + Math.floor(Math.random()*800);
+  let ti;do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
+  const n=players.length;
+  const BOTTLE_OFFSET=90;
+  const targetDeg=BOTTLE_OFFSET+(ti/n)*360;
+  const normalizedCurrent=((currentBottleAngle%360)+360)%360;
+  let delta=targetDeg-normalizedCurrent;
+  if(delta<=0)delta+=360;
+  const spins=4+Math.floor(Math.random()*3);
+  const fa=currentBottleAngle+spins*360+delta;
+  const dur=2200+Math.floor(Math.random()*800);
   const msg={type:'spin_result',si:spinnerIdx,ti,fa,dur,startAngle:currentBottleAngle,_from:myPeerId};
   animBottle(fa,dur,ti,()=>showVoteCard(msg));
   bcastMsg(msg);
 }
 
 function animBottle(fa,dur,ti,onDone){
-  clearAutoSpin();
-  spinning=true;
+  clearAutoSpin();spinning=true;
   document.getElementById('btnSpin').disabled=true;
   document.getElementById('gHint').textContent='🌀 Крутиться...';
   const bot=document.getElementById('bottleEl');
   bot.classList.add('go');
-  const startAngle = currentBottleAngle;
+  const startAngle=currentBottleAngle;
   const t0=performance.now();
   (function anim(now){
-    const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,4);
-    const angle = startAngle + (fa - startAngle)*e;
+    const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,4);
+    const angle=startAngle+(fa-startAngle)*e;
     bot.style.transform=`rotate(${angle}deg)`;
     if(p<1){requestAnimationFrame(anim);return;}
-    currentBottleAngle = fa;
+    currentBottleAngle=fa;
     bot.style.transform=`rotate(${fa}deg)`;
-    bot.classList.remove('go'); spinning=false;
+    bot.classList.remove('go');spinning=false;
     onDone();
   })(t0);
 }
@@ -2284,67 +1859,60 @@ function animBottle(fa,dur,ti,onDone){
 function showVoteCard(d){
   curVote={spinner:null,target:null,si:d.si,ti:d.ti};
   voted=false;
-  const n1=players[d.si], n2=players[d.ti];
+  const n1=players[d.si],n2=players[d.ti];
   document.getElementById('vP1').textContent=n1;
   document.getElementById('vP2').textContent=n2;
   const setVAv=(elId,name)=>{
     const el=document.getElementById(elId);
     const ph=photos[name]||'';
-    if(ph) el.outerHTML=`<img id="${elId}" src="${ph}" style="width:24px;height:24px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">`;
-    else{ el.className='vav-ph'; el.textContent=name[0]; }
+    if(ph)el.outerHTML=`<img id="${elId}" src="${ph}" style="width:24px;height:24px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">`;
+    else{el.className='vav-ph';el.textContent=name[0];}
   };
-  setVAv('vAv1',n1); setVAv('vAv2',n2);
+  setVAv('vAv1',n1);setVAv('vAv2',n2);
   document.getElementById('vEmoji').textContent='🍾';
   document.getElementById('vStatus').textContent='';
   document.getElementById('vType').textContent='';
-  const iAmSpin=myName===n1, iAmTarg=myName===n2;
+  const iAmSpin=myName===n1,iAmTarg=myName===n2;
   const involved=iAmSpin||iAmTarg;
   document.getElementById('vChoice').style.display=involved?'block':'none';
   document.getElementById('vWait').style.display=involved?'none':'block';
   document.getElementById('vResult').style.display='none';
-  if(involved) document.getElementById('vChoiceLbl').textContent=`Поцілувати ${iAmSpin?n2:n1}?`;
+  if(involved)document.getElementById('vChoiceLbl').textContent=`Поцілувати ${iAmSpin?n2:n1}?`;
   document.getElementById('oVote').classList.add('on');
-  const si=curVote.si, ti=curVote.ti;
-  startVoteCountdown(20, ()=>{
-    if(curVote.spinner===null) applyVoteMsg({role:'spinner',yes:false,si,ti,_from:'auto'});
-    if(curVote.target===null) applyVoteMsg({role:'target', yes:false,si,ti,_from:'auto'});
+  const si=curVote.si,ti=curVote.ti;
+  startVoteCountdown(20,()=>{
+    if(curVote.spinner===null)applyVoteMsg({role:'spinner',yes:false,si,ti,_from:'auto'});
+    if(curVote.target===null)applyVoteMsg({role:'target',yes:false,si,ti,_from:'auto'});
   });
 }
 
-let voteTimer=null, skipTimer=null;
+let voteTimer=null,skipTimer=null;
+function clearVoteTimers(){clearTimeout(voteTimer);clearTimeout(skipTimer);clearInterval(window._timerInterval);}
 
-function clearVoteTimers(){
-  clearTimeout(voteTimer); clearTimeout(skipTimer);
-  clearInterval(window._timerInterval);
-}
-
-function startVoteCountdown(sec, onDone){
+function startVoteCountdown(sec,onDone){
   clearVoteTimers();
   let left=sec;
   const fill=document.getElementById('vTimerFill');
   const skipSec=document.getElementById('vSkipSec');
-  if(fill) fill.style.width='100%';
+  if(fill)fill.style.width='100%';
   window._timerInterval=setInterval(()=>{
     left-=0.1;
     const pct=Math.max(0,(left/sec)*100);
-    if(fill) fill.style.width=pct+'%';
-    if(skipSec) skipSec.textContent=Math.ceil(left);
-    if(left<=0){ clearInterval(window._timerInterval); }
+    if(fill)fill.style.width=pct+'%';
+    if(skipSec)skipSec.textContent=Math.ceil(left);
+    if(left<=0){clearInterval(window._timerInterval);}
   },100);
-  voteTimer=setTimeout(onDone, sec*1000);
+  voteTimer=setTimeout(onDone,sec*1000);
 }
 
 function castVote(yes){
-  if(voted)return; voted=true;
+  if(voted)return;voted=true;
   const iAmSpin=myName===players[curVote.si];
   const role=iAmSpin?'spinner':'target';
-  // Щит від відмови
-  if(!yes && role==='target' && powerups.shield>0){
-    powerups.shield--;
-    savePowerups();
-    updatePowerupUI();
-    bar('🛡️ Щит використано — відмова заблокована!', 'info');
-    yes = true;
+  if(!yes&&role==='target'&&powerups.shield>0){
+    powerups.shield--;savePowerups();updatePowerupUI();
+    bar('🛡️ Щит використано — відмова заблокована!','info');
+    yes=true;
   }
   const msg={type:'vote_msg',role,yes,si:curVote.si,ti:curVote.ti};
   applyVoteMsg({...msg,_from:myPeerId});
@@ -2354,15 +1922,14 @@ function castVote(yes){
 function applyVoteMsg(d){
   if(d.si!==curVote.si||d.ti!==curVote.ti)return;
   curVote[d.role]=d.yes;
-  const sn=players[curVote.si], tn=players[curVote.ti];
-  const sv=curVote.spinner, tv=curVote.target;
-  const iAmSpin=myName===sn, iAmTarg=myName===tn;
+  const sn=players[curVote.si],tn=players[curVote.ti];
+  const sv=curVote.spinner,tv=curVote.target;
+  const iAmSpin=myName===sn,iAmTarg=myName===tn;
   if((iAmSpin&&d.role==='spinner')||(iAmTarg&&d.role==='target')){
     document.getElementById('vChoice').style.display='none';
     document.getElementById('vWait').style.display='block';
   }
-  document.getElementById('vStatus').textContent=
-    `${sn}: ${sv===null?'⏳':sv?'💋':'🙈'}  ·  ${tn}: ${tv===null?'⏳':tv?'💋':'🙈'}`;
+  document.getElementById('vStatus').textContent=`${sn}: ${sv===null?'⏳':sv?'💋':'🙈'}  ·  ${tn}: ${tv===null?'⏳':tv?'💋':'🙈'}`;
   if(sv!==null&&tv!==null){
     const bothYes=sv&&tv;
     const msg={type:'vote_result',si:curVote.si,ti:curVote.ti,bothYes,sv,tv};
@@ -2374,52 +1941,53 @@ function applyVoteMsg(d){
 function applyVoteResult(d){
   if(document.getElementById('vResult').style.display==='block')return;
   const {bothYes,si,ti,sv,tv}=d;
-  const sn=players[si], tn=players[ti];
-  const isOriginator = !d._from || d._from===myPeerId;
+  const sn=players[si],tn=players[ti];
+  const isOriginator=!d._from||d._from===myPeerId;
   if(bothYes){
+    playKissSound();
     totalK++;
     scores[sn].k=(scores[sn].k||0)+1;
     scores[tn].k=(scores[tn].k||0)+1;
-    const bonus = isBlitz ? KISS_COINS*2 : KISS_COINS;
+    if(!gameStats[sn])gameStats[sn]={k:0,n:0,g:0,coins:0};
+    if(!gameStats[tn])gameStats[tn]={k:0,n:0,g:0,coins:0};
+    gameStats[sn].k++;gameStats[tn].k++;
+    const bonus=isBlitz?KISS_COINS*2:KISS_COINS;
     coins[sn]=(coins[sn]||0)+bonus;
     coins[tn]=(coins[tn]||0)+bonus;
+    gameStats[sn].coins+=bonus;
+    gameStats[tn].coins+=bonus;
     document.getElementById('myCoins').textContent=coins[myName]||0;
-    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]||0));}catch(e){}
-    if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${bonus} кожному`);
-    if(myName===sn || myName===tn){
-      syncToBot('kiss', {kisses:1, coins:bonus, partner: myName===sn?tn:sn});
-      updateLeaderboard('kisses', 1);
+    try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]||0));}catch(e){}
+    if(isOriginator)addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${bonus} кожному`);
+    if(myName===sn||myName===tn){
+      syncToBot('kiss',{kisses:1,coins:bonus,partner:myName===sn?tn:sn});
+      updateLeaderboard('kisses',1);
       addXP(15);
       spawnConfetti();
       checkAchievements();
-      // Шанс показати завдання
-      setTimeout(showTaskCard, 1500);
     }
-  } else {
+  }else{
+    playRefuseSound();
     totalN++;
     const refuser=sv===false?sn:tn;
-    if(isOriginator) addChatEvent(`🙈 ${refuser} відмовив(ла)`);
-    if(myName===refuser){
-      syncToBot('refuse', {refuses:1});
-      addXP(2);
-      checkAchievements();
-    }
+    if(!gameStats[refuser])gameStats[refuser]={k:0,n:0,g:0,coins:0};
+    gameStats[refuser].n++;
+    if(isOriginator)addChatEvent(`🙈 ${refuser} відмовив(ла)`);
+    if(myName===refuser){syncToBot('refuse',{refuses:1});addXP(2);checkAchievements();}
   }
   document.getElementById('gK').textContent=totalK;
   document.getElementById('gN').textContent=totalN;
   document.getElementById('vEmoji').textContent=bothYes?'💋':'🙈';
   const t=document.getElementById('vType');
   t.className='v-type '+(bothYes?'yes':'no');
-  t.textContent=bothYes?'ПОЦІЛУНОК! 💋':
-    sv===false&&tv===false?'ОБИДВА ВІДМОВИЛИ 🙈':
-    sv===false?`${sn} відмовив(ла) 🙈`:`${tn} відмовив(ла) 🙈`;
+  t.textContent=bothYes?'ПОЦІЛУНОК! 💋':sv===false&&tv===false?'ОБИДВА ВІДМОВИЛИ 🙈':sv===false?`${sn} відмовив(ла) 🙈`:`${tn} відмовив(ла) 🙈`;
   document.getElementById('vChoice').style.display='none';
   document.getElementById('vWait').style.display='none';
   document.getElementById('vResult').style.display='block';
   document.getElementById('vStatus').textContent='';
   document.getElementById('vAutoSkip').style.display='block';
   clearVoteTimers();
-  startVoteCountdown(5, ()=>closeVote());
+  startVoteCountdown(5,()=>closeVote());
 }
 
 function closeVote(){
@@ -2428,49 +1996,34 @@ function closeVote(){
   if(isHost){
     const ni=(spinnerIdx+1)%players.length;
     const nr=ni===0?round+1:round;
-    // Перевірка чи гра закінчилась
-    if(settingRounds>0 && round>settingRounds){
-      endGame();
-      return;
-    }
+    if(settingRounds>0&&round>settingRounds){endGame();return;}
     const msg={type:'next_turn',spinnerIdx:ni,round:nr};
-    bcast(msg);
-    applyNextTurn(msg);
+    bcast(msg);applyNextTurn(msg);
   }
 }
 
-function endGame(){
-  bar('🏁 Гра закінчена!', 'ok');
-  setTimeout(()=>{
-    resetAll();
-  }, 2000);
-}
+function endGame(){bar('🏁 Гра закінчена!','ok');setTimeout(()=>{resetAll();},2000);}
 
 let lastTurnKey='';
 function applyNextTurn(d){
   const key=`${d.spinnerIdx}-${d.round}`;
-  if(key===lastTurnKey) return;
+  if(key===lastTurnKey)return;
   lastTurnKey=key;
-  spinnerIdx=d.spinnerIdx; round=d.round;
-  updateBar(); updateMyTurn();
+  spinnerIdx=d.spinnerIdx;round=d.round;
+  updateBar();updateMyTurn();
 }
 
 async function resetAll(){
-  if(isHost){
-    await roomsUnregister(roomCode);
-    clearInterval(cleanTimer);
-  }
-  peer?.destroy(); peer=null; guestConns={}; hostConn=null;
-  if(myName && coins[myName]!==undefined){
-    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
-  }
+  saveXP();savePowerups();saveLikes();saveAchievements();
+  if(isHost){await roomsUnregister(roomCode);clearInterval(cleanTimer);}
+  peer?.destroy();peer=null;guestConns={};hostConn=null;
+  if(myName&&coins[myName]!==undefined){try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}}
   const savedName=myName;
-  players=[]; scores={}; photos={}; coins={}; gifts={}; spinning=false;
-  currentBottleAngle=0;
-  myName=savedName;
-  isBlitz=false;
+  players=[];scores={};photos={};coins={};gifts={};spinning=false;
+  currentBottleAngle=0;gameStats={};
+  myName=savedName;isBlitz=false;
   ss('sName');
-  if(savedName) setTimeout(()=>enterGame(), 300);
+  if(savedName)setTimeout(()=>enterGame(),300);
 }
 
 // ══════════════════════════════════════
@@ -2481,15 +2034,41 @@ function setLoad(t,s){document.getElementById('loadT').textContent=t;document.ge
 let bT;
 function bar(m,t){const b=document.getElementById('cbar');b.textContent=m;b.className='cbar on '+t;clearTimeout(bT);bT=setTimeout(()=>b.classList.remove('on'),3200);}
 
-// Hearts
 (()=>{const e=['💋','❤️','🌹','✨'];for(let i=0;i<10;i++){const h=document.createElement('div');h.className='hrt';h.textContent=e[i%e.length];h.style.left=Math.random()*100+'%';h.style.animationDuration=(10+Math.random()*12)+'s';h.style.animationDelay=(Math.random()*8)+'s';document.body.appendChild(h);}})();
 
 buildTracks();
-document.addEventListener('click', e=>{
+document.addEventListener('click',e=>{
   const p=document.getElementById('giftPopup');
-  if(p.style.display!=='none' && !p.contains(e.target) && !e.target.closest('.pdot')) closeGiftPopup();
+  if(p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('.pdot'))closeGiftPopup();
 });
-try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();}catch(e){}
+
+// Ripple ефект на таби
+document.querySelectorAll('.mtab').forEach(tab=>{
+  tab.addEventListener('pointerdown',e=>{
+    const rect=tab.getBoundingClientRect();
+    tab.style.setProperty('--x',((e.clientX-rect.left)/rect.width*100)+'%');
+    tab.style.setProperty('--y',((e.clientY-rect.top)/rect.height*100)+'%');
+  });
+});
+
+try{
+  window.Telegram?.WebApp?.ready();
+  window.Telegram?.WebApp?.expand();
+  window.Telegram?.WebApp?.onEvent('close',()=>{
+    saveXP();savePowerups();saveLikes();saveAchievements();
+    if(myName&&coins[myName]!==undefined){try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}}
+  });
+  window.Telegram?.WebApp?.onEvent('visibilityChanged',(e)=>{
+    if(e.is_visible===false){
+      saveXP();savePowerups();saveLikes();saveAchievements();
+    }
+  });
+}catch(e){}
+
+window.addEventListener('beforeunload',()=>{
+  saveXP();savePowerups();saveLikes();saveAchievements();
+  if(myName&&coins[myName]!==undefined){try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}}
+});
 </script>
 </body>
 </html>
