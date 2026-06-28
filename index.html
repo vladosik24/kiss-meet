@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260405-0003 -->
+<!DOCTYPE html><!-- v3.0-ultimate -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -51,16 +51,10 @@ html,body{height:100%;overflow:hidden;}
 body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans-serif;
   background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(200,0,58,.15),transparent),
                    radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,77,126,.1),transparent);}
-
-.scr{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;
-  justify-content:center;padding:20px 16px;overflow-y:auto;animation:fup .3s ease;}
+.scr{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto;animation:fup .3s ease;}
 .scr.on{display:flex;}
 @keyframes fup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-.logo{font-family:Georgia,serif;font-size:clamp(1.9rem,8vw,3rem);font-weight:700;
-  background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  text-align:center;line-height:1.1;margin-bottom:4px;}
+.logo{font-family:Georgia,serif;font-size:clamp(1.9rem,8vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--r),var(--rg),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.1;margin-bottom:4px;}
 .sub{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:22px;}
 .card{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:14px;}
 .lbl{font-size:.66rem;letter-spacing:3px;text-transform:uppercase;color:var(--rg);margin-bottom:11px;font-weight:600;}
@@ -74,12 +68,10 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(255,255,255,.55);font-family:-apple-system,sans-serif;font-size:.83rem;font-style:normal;margin-top:8px;}
 .spin-anim{width:46px;height:46px;border:3px solid rgba(255,77,126,.2);border-top-color:var(--rg);border-radius:50%;animation:rot .8s linear infinite;margin:0 auto 16px;}
 @keyframes rot{to{transform:rotate(360deg)}}
-
 .av{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);flex-shrink:0;}
 .av-ph{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;flex-shrink:0;}
 .av-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2.5px solid var(--rg);}
 .av-ph-lg{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;}
-
 .code-box{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);border-radius:13px;padding:14px 20px;text-align:center;width:100%;max-width:420px;margin-bottom:14px;}
 .code{font-family:Georgia,serif;font-size:2.3rem;font-weight:700;color:var(--gold);letter-spacing:8px;}
 .code-hint{font-size:.66rem;color:var(--muted);margin-top:3px;}
@@ -91,8 +83,6 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .pw-dot.g{background:var(--rg);animation:blink 1.4s ease infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .pw-badge{font-size:.58rem;color:var(--gold);background:rgba(240,180,41,.15);border-radius:20px;padding:2px 8px;}
-.wait-note{font-size:.76rem;color:rgba(100,255,160,.8);text-align:center;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:10px;padding:9px 14px;width:100%;max-width:420px;margin-bottom:14px;}
-
 .game-wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;height:100vh;padding:6px 14px;overflow:hidden;}
 .top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;flex-shrink:0;}
 .turn-info .rnd{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
@@ -105,7 +95,6 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .sc-bar{display:flex;gap:8px;width:100%;justify-content:center;margin-bottom:4px;flex-shrink:0;}
 .sc-pill{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:3px 10px;font-size:.7rem;color:var(--muted);}
 .sc-pill b{color:#fff;}
-
 .b-outer{position:relative;width:310px;height:310px;flex-shrink:0;margin:8px 0 4px;display:flex;align-items:center;justify-content:center;}
 .b-area{position:relative;width:190px;height:190px;}
 .b-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(200,0,58,.12),rgba(255,77,126,.1),rgba(240,180,41,.07),rgba(200,0,58,.12));border:1px solid rgba(255,255,255,.05);animation:rot 9s linear infinite;}
@@ -120,7 +109,6 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .pdot.lit .pdot-n{color:var(--gold);}
 @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.3)}}
 .g-hint{color:var(--muted);font-size:.74rem;text-align:center;margin:3px 0;flex-shrink:0;}
-
 .pdot-av.frame-gold,.pdot-av-ph.frame-gold{border:2px solid #f0b429!important;box-shadow:0 0 6px rgba(240,180,41,.7);}
 .pdot-av.frame-hearts,.pdot-av-ph.frame-hearts{border:2px solid #ff4d7e!important;box-shadow:0 0 6px rgba(255,77,126,.8);}
 .pdot-av.frame-fire,.pdot-av-ph.frame-fire{border:2px solid #ff6a00!important;box-shadow:0 0 8px rgba(255,106,0,.8);}
@@ -131,19 +119,6 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 @keyframes flamePulse{from{box-shadow:0 0 10px rgba(255,69,0,.9),0 0 18px rgba(255,140,0,.6)}to{box-shadow:0 0 15px rgba(255,69,0,1),0 0 25px rgba(255,140,0,.8)}}
 .pdot-av.frame-diamond,.pdot-av-ph.frame-diamond{border:2px solid #e0e0e0!important;box-shadow:0 0 12px rgba(224,224,224,.9),0 0 20px rgba(192,192,192,.7),inset 0 0 8px rgba(255,255,255,.3);}
 .pdot-av.frame-sakura,.pdot-av-ph.frame-sakura{border:2px solid #ffb7c5!important;box-shadow:0 0 10px rgba(255,183,197,.8),0 0 16px rgba(255,105,180,.6);}
-
-.pav-wrap{position:relative;display:inline-block;}
-.pav-frame{position:absolute;inset:-3px;border-radius:50%;pointer-events:none;}
-.pav-frame.frame-gold{box-shadow:0 0 0 3px #f0b429,0 0 12px rgba(240,180,41,.6);}
-.pav-frame.frame-hearts{box-shadow:0 0 0 3px #ff4d7e,0 0 12px rgba(255,77,126,.7);}
-.pav-frame.frame-fire{box-shadow:0 0 0 3px #ff6a00,0 0 14px rgba(255,106,0,.8);}
-.pav-frame.frame-rainbow{box-shadow:0 0 0 2px #f00,0 0 0 4px #ff0,0 0 0 6px #0ff,0 0 16px rgba(255,0,255,.5);}
-.pav-frame.frame-vip{box-shadow:0 0 0 3px #b388ff,0 0 16px rgba(179,136,255,.8);}
-.pav-frame.frame-galaxy{box-shadow:0 0 0 3px #00d4ff,0 0 16px rgba(0,212,255,.7),0 0 24px rgba(138,43,226,.5);}
-.pav-frame.frame-flame{box-shadow:0 0 0 3px #ff4500,0 0 18px rgba(255,69,0,.8),0 0 28px rgba(255,140,0,.6);animation:flamePulse 1.5s ease infinite alternate;}
-.pav-frame.frame-diamond{box-shadow:0 0 0 3px #e0e0e0,0 0 16px rgba(224,224,224,.8),0 0 24px rgba(192,192,192,.6),inset 0 0 10px rgba(255,255,255,.3);}
-.pav-frame.frame-sakura{box-shadow:0 0 0 3px #ffb7c5,0 0 14px rgba(255,183,197,.7),0 0 20px rgba(255,105,180,.5);}
-
 body.theme-pink{--r:#c8003a;--rg:#ff69b4;--dark:#1a0011;background-color:#1a0011;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,105,180,.18),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,20,147,.12),transparent);}
 body.theme-purple{--r:#6a0dad;--rg:#b388ff;--dark:#0a0015;background-color:#0a0015;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(106,13,173,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(179,136,255,.12),transparent);}
 body.theme-sunset{--r:#ff6b35;--rg:#ff8c61;--dark:#1a0a00;background-color:#1a0a00;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,107,53,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,140,97,.15),transparent);}
@@ -151,13 +126,9 @@ body.theme-cyber{--r:#00f5ff;--rg:#b388ff;--dark:#000814;background-color:#00081
 body.theme-forest{--r:#2d6a4f;--rg:#52b788;--dark:#081c15;background-color:#081c15;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(45,106,79,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(82,183,136,.12),transparent);}
 body.theme-candy{--r:#ff69b4;--rg:#ffd700;--dark:#1a0020;background-color:#1a0020;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(255,105,180,.18),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(255,215,0,.12),transparent);}
 body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045e;background-image:radial-gradient(ellipse 70% 50% at 10% 60%,rgba(0,119,182,.2),transparent),radial-gradient(ellipse 55% 40% at 90% 20%,rgba(0,180,216,.15),transparent);}
-
 .shop-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);align-items:flex-end;justify-content:center;}
 .shop-overlay.on{display:flex;}
 .shop-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;max-height:85vh;overflow-y:auto;}
-.shop-tabs{display:flex;gap:8px;margin-bottom:16px;}
-.shop-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .2s;}
-.shop-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
 .shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .shop-item{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
 .shop-item:active{background:rgba(255,77,126,.12);}
@@ -174,7 +145,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:flex-end;justify-content:center;padding-bottom:0;}
 .overlay.on{display:flex;}
 .overlay.center{align-items:center;}
-
 .profile-sheet{background:linear-gradient(160deg,#120020,#1e002e);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 22px 36px;animation:slideUp .32s ease;max-height:90vh;overflow-y:auto;}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .profile-header{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:20px;}
@@ -184,7 +154,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .pstat-val{font-size:1.3rem;font-weight:700;}
 .pstat-lbl{font-size:.62rem;color:var(--muted);letter-spacing:1px;}
 .gifts-received{font-size:.76rem;color:var(--muted);text-align:center;min-height:20px;margin-bottom:14px;}
-
 .gifts-title{font-size:.66rem;letter-spacing:3px;text-transform:uppercase;color:var(--rg);margin-bottom:10px;}
 .gifts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
 .gift-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:background .2s,border-color .2s;}
@@ -194,7 +163,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .gift-name{font-size:.58rem;color:var(--muted);}
 .coins-display{text-align:center;font-size:.82rem;color:var(--gold);margin-bottom:16px;}
 .profile-close{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:50px;padding:12px;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;}
-
 .vcard-wrap{background:linear-gradient(145deg,#130020,#220030);border:1px solid rgba(255,77,126,.2);border-radius:24px;padding:28px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 0 50px rgba(200,0,58,.2),0 20px 50px rgba(0,0,0,.5);animation:cpop .36s cubic-bezier(.175,.885,.32,1.275);}
 @keyframes cpop{from{transform:scale(.65) rotate(-3deg);opacity:0}to{transform:scale(1);opacity:1}}
 .v-emoji{font-size:3rem;display:block;margin-bottom:7px;animation:bob .85s ease infinite alternate;}
@@ -212,8 +180,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .v-btns{display:flex;gap:9px;}
 .v-yes{flex:1;background:linear-gradient(135deg,var(--r),var(--rg));border:none;border-radius:50px;padding:12px;color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 4px 14px rgba(200,0,58,.4);}
 .v-no{flex:1;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:50px;padding:12px;color:rgba(255,255,255,.65);font-size:1rem;cursor:pointer;}
-.v-next{width:100%;background:linear-gradient(135deg,var(--r),#8a0028);border:none;border-radius:50px;padding:13px;color:#fff;font-family:Georgia,serif;font-size:1.05rem;font-style:italic;cursor:pointer;box-shadow:0 4px 16px rgba(200,0,58,.4);}
-
 .chat-panel{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(7,0,14,.97);border-top:1px solid var(--border);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s ease;max-height:60vh;}
 .chat-panel.open{transform:translateY(0);}
 .chat-header{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
@@ -236,7 +202,6 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .chat-inp{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:20px;padding:8px 13px;color:#fff;font-size:.88rem;outline:none;}
 .chat-inp:focus{border-color:var(--rg);}
 .chat-send{background:var(--r);border:none;border-radius:50%;width:34px;height:34px;color:#fff;font-size:.95rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-
 .music-panel{position:fixed;top:58px;right:10px;z-index:150;background:rgba(7,0,14,.97);border:1px solid var(--border);border-radius:16px;padding:13px;width:220px;transform:scale(.9) translateY(-8px);opacity:0;pointer-events:none;transition:all .2s ease;}
 .music-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
 .music-title{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
@@ -250,42 +215,28 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .music-vol{display:flex;align-items:center;gap:7px;}
 .music-vol span{font-size:.7rem;color:var(--muted);}
 .music-vol input{flex:1;accent-color:var(--rg);}
-
-.sc-list{width:100%;max-width:400px;display:flex;flex-direction:column;gap:7px;margin-bottom:20px;}
-.sc-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slr .4s ease both;}
-.sc-rank{font-size:1.05rem;width:26px;text-align:center;}
-.sc-name{flex:1;font-weight:500;font-size:.9rem;}
-.sc-k{color:var(--rg);font-size:.76rem;font-weight:600;}
-.sc-g{color:var(--gold);font-size:.76rem;font-weight:600;margin-left:6px;}
-.sc-m{color:#00f5ff;font-size:.76rem;font-weight:600;margin-left:6px;}
-
 .cbar{position:fixed;top:0;left:0;right:0;z-index:500;padding:7px 16px;font-size:.68rem;text-align:center;letter-spacing:1px;text-transform:uppercase;font-weight:600;transform:translateY(-100%);transition:transform .28s;}
 .cbar.on{transform:translateY(0);}
 .cbar.ok{background:rgba(0,180,80,.92);}
 .cbar.err{background:rgba(200,0,58,.92);}
 .cbar.info{background:rgba(0,120,200,.92);}
-
 .music-add-btn{display:block;width:100%;text-align:center;background:rgba(255,77,126,.12);border:1px dashed rgba(255,77,126,.4);border-radius:10px;padding:8px;font-size:.78rem;color:var(--rg);cursor:pointer;margin-top:6px;transition:background .2s;}
 .music-add-btn:active{background:rgba(255,77,126,.22);}
 .v-timer-bar{width:100%;height:3px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:12px;overflow:hidden;}
 .v-timer-fill{height:100%;background:linear-gradient(90deg,var(--r),var(--rg));border-radius:3px;transition:width .1s linear;}
 .gift-float{position:fixed;font-size:2rem;pointer-events:none;z-index:400;animation:giftFly 1.4s ease forwards;}
 @keyframes giftFly{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(1.6);opacity:0}}
-
 .menu-tabs{display:flex;width:100%;max-width:420px;background:rgba(255,255,255,.04);border-radius:16px;padding:4px;gap:4px;margin-bottom:16px;flex-shrink:0;}
 .mtab{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;border-radius:12px;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .mtab span{font-size:1.1rem;}
 .mtab.active{background:linear-gradient(135deg,var(--r),var(--rg));color:#fff;}
 .menu-page{display:none;width:100%;max-width:420px;flex-direction:column;align-items:center;gap:10px;flex:1;overflow-y:auto;}
 .menu-page.on{display:flex;}
-
 .room-card{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s;}
 .room-card:active{border-color:var(--rg);}
 .room-dot{width:8px;height:8px;border-radius:50%;background:#00e676;animation:blink 1.4s ease infinite;flex-shrink:0;}
 .room-code{font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:3px;}
 .room-info{flex:1;font-size:.72rem;color:var(--muted);}
-.room-count{font-size:.78rem;color:var(--rg);}
-
 .setting-row{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
 .setting-lbl{font-size:.88rem;}
 .setting-sub{font-size:.65rem;color:var(--muted);margin-top:2px;}
@@ -296,11 +247,8 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .sel-row{display:flex;gap:6px;flex-wrap:wrap;}
 .sel-btn{padding:5px 12px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
 .sel-btn.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
-
 .hrt{position:fixed;pointer-events:none;z-index:0;font-size:.9rem;opacity:0;animation:fhrt linear infinite;}
 @keyframes fhrt{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:.22}90%{opacity:.07}100%{transform:translateY(-5vh) rotate(360deg);opacity:0}}
-
-/* Leaderboard */
 .lb-tabs{display:flex;gap:6px;margin-bottom:14px;width:100%;max-width:400px;}
 .lb-tab{flex:1;padding:8px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;}
 .lb-tab.active{background:linear-gradient(135deg,var(--r),var(--rg));border-color:transparent;color:#fff;}
@@ -309,6 +257,39 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 .lb-name{flex:1;font-weight:500;font-size:.9rem;}
 .lb-stat{color:var(--rg);font-size:.76rem;font-weight:600;}
 .lb-loading{text-align:center;color:var(--muted);font-size:.8rem;padding:20px}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:400px;margin-bottom:16px;}
+.ach-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;transition:all .2s;cursor:pointer;}
+.ach-item.unlocked{border-color:var(--gold);background:rgba(240,180,41,.08);}
+.ach-icon{font-size:2rem;margin-bottom:6px;}
+.ach-name{font-size:.7rem;font-weight:600;margin-bottom:3px;}
+.ach-desc{font-size:.58rem;color:var(--muted);}
+.ach-item.locked{opacity:.4;}
+.daily-card{background:linear-gradient(135deg,rgba(240,180,41,.15),rgba(255,77,126,.1));border:2px solid var(--gold);border-radius:18px;padding:20px;text-align:center;width:100%;max-width:360px;margin-bottom:16px;}
+.daily-streak{font-size:3rem;margin-bottom:8px;}
+.daily-title{font-family:Georgia,serif;font-size:1.2rem;margin-bottom:6px;}
+.daily-reward{font-size:1.5rem;font-weight:700;color:var(--gold);margin:10px 0;}
+.daily-btn{background:linear-gradient(135deg,var(--gold),#d4a017);border:none;border-radius:50px;padding:12px 24px;color:#000;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(240,180,41,.5);}
+.task-card{background:linear-gradient(145deg,#1a0028,#2a0038);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;max-width:340px;width:100%;text-align:center;box-shadow:0 0 40px rgba(240,180,41,.3);animation:cpop .4s cubic-bezier(.175,.885,.32,1.275);}
+.task-emoji{font-size:3.5rem;margin-bottom:10px;}
+.task-title{font-family:Georgia,serif;font-size:1.3rem;margin-bottom:8px;color:var(--gold);}
+.task-text{font-size:.95rem;margin-bottom:16px;line-height:1.5;}
+.task-btns{display:flex;gap:10px;}
+.task-btn{flex:1;background:linear-gradient(135deg,var(--gold),#d4a017);border:none;border-radius:50px;padding:12px;color:#000;font-weight:700;cursor:pointer;}
+.task-btn.skip{background:rgba(255,255,255,.1);color:var(--muted);}
+.confetti{position:fixed;width:10px;height:10px;pointer-events:none;z-index:999;animation:confettiFall 3s ease-out forwards;}
+@keyframes confettiFall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+.powerup-bar{display:flex;gap:8px;width:100%;max-width:240px;margin-top:8px;}
+.powerup-btn{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.powerup-btn:active{background:rgba(255,77,126,.15);}
+.powerup-btn.disabled{opacity:.3;cursor:not-allowed;}
+.powerup-icon{font-size:1.3rem;}
+.powerup-cost{font-size:.55rem;color:var(--gold);margin-top:2px;}
+.powerup-count{position:absolute;top:-4px;right:-4px;background:var(--r);color:#fff;font-size:.5rem;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;}
+.xp-bar{width:100%;max-width:420px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:50px;padding:3px;margin-bottom:10px;}
+.xp-fill{height:8px;background:linear-gradient(90deg,var(--gold),var(--rg));border-radius:50px;transition:width .3s ease;}
+.xp-info{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px;}
+.like-btn{position:absolute;top:-4px;left:-4px;background:rgba(255,77,126,.9);border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.6rem;cursor:pointer;z-index:10;}
+.like-btn.liked{background:var(--gold);}
 </style>
 </head>
 <body>
@@ -327,6 +308,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
     <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
     <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
     <button class="mtab" onclick="menuTab('leaderboard',this)"><span>🏆</span>Рейтинг</button>
+    <button class="mtab" onclick="menuTab('achievements',this)"><span>🎖</span>Досяг.</button>
     <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
   </div>
 
@@ -335,12 +317,20 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
       <div id="menuTgAv" style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid var(--rg)"></div>
       <div id="menuTgName" style="font-size:.95rem;font-weight:600"></div>
       <div id="menuTgStats" style="font-size:.7rem;color:var(--muted)">🪙 0 · 💋 0</div>
+      <div class="xp-bar">
+        <div class="xp-info">
+          <span id="xpLevel">Рівень 1</span>
+          <span id="xpText">0 / 100 XP</span>
+        </div>
+        <div class="xp-fill" id="xpFill" style="width:0%"></div>
+      </div>
     </div>
     <div class="card" id="nameCard" style="width:100%">
       <div class="lbl">👤 Твоє ім'я</div>
       <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
     </div>
     <button class="btn red" onclick="enterGame()" style="width:100%">🔍 Знайти гру</button>
+    <button class="btn ghost" onclick="enterBlitz()" style="width:100%">⚡ Бліц-гра (швидка)</button>
 
     <div style="width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:4px">
       <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px">АКТИВНІ КІМНАТИ</div>
@@ -369,9 +359,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <div class="menu-page" id="mpShop">
     <div class="shop-balance" style="font-size:.9rem">🪙 <span id="menuShopCoins">0</span> монет</div>
     <div class="shop-grid" id="menuShopGrid" style="width:100%"></div>
-    <div style="font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
-      💡 Рамки видні всім у грі
-    </div>
+    <div style="font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">💡 Рамки видні всім у грі</div>
   </div>
 
   <div class="menu-page" id="mpLeaderboard">
@@ -382,9 +370,13 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
       <button class="lb-tab" onclick="lbTab('gifts',this)">🎁 Подарунки</button>
       <button class="lb-tab" onclick="lbTab('music',this)">🎵 Музика</button>
     </div>
-    <div class="sc-list" id="lbList">
-      <div class="lb-loading">Завантаження...</div>
-    </div>
+    <div class="sc-list" id="lbList"><div class="lb-loading">Завантаження...</div></div>
+  </div>
+
+  <div class="menu-page" id="mpAchievements">
+    <div style="font-family:Georgia,serif;font-size:1.4rem;font-style:italic;margin-bottom:4px">🎖 Досягнення</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:14px">Збирай бейджі та отримуй нагороди</div>
+    <div class="ach-grid" id="achGrid"></div>
   </div>
 
   <div class="menu-page" id="mpSettings">
@@ -427,8 +419,28 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
         <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
       </div>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">
-      v2.2 · 💋 Поцілунок-Знайомство
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.0 · 💋 Поцілунок-Знайомство</div>
+  </div>
+</div>
+
+<div class="overlay center" id="oDaily">
+  <div class="daily-card">
+    <div class="daily-streak" id="dailyStreak">🔥</div>
+    <div class="daily-title">Щоденний бонус!</div>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">День <span id="dailyDay">1</span> поспіль</div>
+    <div class="daily-reward">+<span id="dailyReward">10</span> 🪙</div>
+    <button class="daily-btn" onclick="claimDaily()">Забрати!</button>
+  </div>
+</div>
+
+<div class="overlay center" id="oTask">
+  <div class="task-card">
+    <div class="task-emoji" id="taskEmoji">🎭</div>
+    <div class="task-title" id="taskTitle">Завдання</div>
+    <div class="task-text" id="taskText">Виконай завдання!</div>
+    <div class="task-btns">
+      <button class="task-btn" onclick="completeTask()">✅ Виконано (+20🪙)</button>
+      <button class="task-btn skip" onclick="skipTask()">Пропустити</button>
     </div>
   </div>
 </div>
@@ -450,13 +462,8 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <div class="lbl" style="width:100%;max-width:420px;margin-bottom:6px;">📡 Гравці онлайн</div>
   <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:7px" id="pwCount">1 / 8</div>
   <div class="pw-list" id="pwList"></div>
-  <button id="btnStartGame" class="btn red" onclick="hostStartGame()"
-    style="display:none;width:100%;max-width:420px;margin-top:8px">
-    🎮 Почати гру!
-  </button>
-  <div id="waitingHint" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">
-    ⏳ Чекаємо на гравців...
-  </div>
+  <button id="btnStartGame" class="btn red" onclick="hostStartGame()" style="display:none;width:100%;max-width:420px;margin-top:8px">🎮 Почати гру!</button>
+  <div id="waitingHint" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">⏳ Чекаємо на гравців...</div>
 </div>
 
 <div class="scr" id="sGame" style="padding:0;justify-content:flex-start;">
@@ -493,15 +500,30 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   <div style="width:100%;max-width:240px;flex-shrink:0;">
     <button class="btn red" id="btnSpin" onclick="onTap()" disabled style="font-size:.98rem;padding:11px">Крутити 🔄</button>
   </div>
+  <div class="powerup-bar">
+    <div class="powerup-btn" onclick="usePowerup('lucky')">
+      <div class="powerup-icon">🍀</div>
+      <div class="powerup-cost">20🪙</div>
+      <div class="powerup-count" id="pwrLucky">0</div>
+    </div>
+    <div class="powerup-btn" onclick="usePowerup('shield')">
+      <div class="powerup-icon">🛡️</div>
+      <div class="powerup-cost">15🪙</div>
+      <div class="powerup-count" id="pwrShield">0</div>
+    </div>
+    <div class="powerup-btn" onclick="usePowerup('peek')">
+      <div class="powerup-icon">👀</div>
+      <div class="powerup-cost">10🪙</div>
+      <div class="powerup-count" id="pwrPeek">0</div>
+    </div>
+  </div>
 </div>
 </div>
 
 <div class="music-panel" id="musicPanel">
   <div class="music-title">🎵 Музика</div>
   <div id="trackList"></div>
-  <label class="music-add-btn" onclick="document.getElementById('musicFilePicker').click()">
-    ＋ Додати з телефону
-  </label>
+  <label class="music-add-btn" onclick="document.getElementById('musicFilePicker').click()">＋ Додати з телефону</label>
   <input type="file" id="musicFilePicker" accept="audio/*" multiple style="display:none" onchange="addLocalTracks(this)">
   <div class="music-vol" style="margin-top:10px"><span>🔈</span><input type="range" min="0" max="100" value="60" oninput="setVol(this.value)"><span>🔊</span></div>
   <div id="nowPlaying" style="font-size:.65rem;color:var(--muted);text-align:center;margin-top:6px;min-height:14px"></div>
@@ -531,7 +553,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
       <div class="v-choice-lbl" id="vChoiceLbl">Поцілувати?</div>
       <div class="v-btns">
         <button class="v-yes" onclick="castVote(true)">💋 Так!</button>
-        <button class="v-no"  onclick="castVote(false)">🙈 Ні</button>
+        <button class="v-no" onclick="castVote(false)">🙈 Ні</button>
       </div>
     </div>
     <div id="vWait" style="display:none;color:var(--muted);font-size:.82rem;padding:8px 0">⏳ Чекаємо рішення...</div>
@@ -562,9 +584,7 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
   </div>
   <div style="font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--rg);margin-bottom:8px">🎁 Подарунок</div>
   <div id="gpGifts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
-  <div onclick="giftSong(currentGiftTarget)" style="margin-top:8px;background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:10px;padding:9px;text-align:center;cursor:pointer;font-size:.82rem">
-    🎵 Подарувати пісню <span style="color:var(--gold);font-size:.7rem">🪙15</span>
-  </div>
+  <div onclick="giftSong(currentGiftTarget)" style="margin-top:8px;background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:10px;padding:9px;text-align:center;cursor:pointer;font-size:.82rem">🎵 Подарувати пісню <span style="color:var(--gold);font-size:.7rem">🪙15</span></div>
   <div style="text-align:center;margin-top:10px">
     <div onclick="openProfile(currentGiftTarget)" style="font-size:.72rem;color:var(--muted);cursor:pointer;text-decoration:underline">Повний профіль →</div>
   </div>
@@ -597,23 +617,389 @@ body.theme-ocean{--r:#0077b6;--rg:#00b4d8;--dark:#03045e;background-color:#03045
 </div>
 
 <script>
-const MAX_P = 8;
-
+// ЧАСТИНА 2/3 БУДЕ ПРОДОВЖЕННЯМ — напишіть "далі" щоб отримати
+  const MAX_P = 8;
 const GIFTS = [
-  {icon:'🌹', name:'Троянда',   cost:5},
-  {icon:'💌', name:'Листівка',  cost:8},
-  {icon:'🍫', name:'Шоколад',   cost:10},
-  {icon:'🧸', name:'Ведмедик',  cost:15},
-  {icon:'💍', name:'Кільце',    cost:30},
-  {icon:'🥂', name:'Шампань',   cost:20},
-  {icon:'🎂', name:'Торт',      cost:12},
-  {icon:'⭐', name:'Зірка',     cost:25},
+  {icon:'🌹', name:'Троянда', cost:5}, {icon:'💌', name:'Листівка', cost:8},
+  {icon:'🍫', name:'Шоколад', cost:10}, {icon:'🧸', name:'Ведмедик', cost:15},
+  {icon:'💍', name:'Кільце', cost:30}, {icon:'🥂', name:'Шампань', cost:20},
+  {icon:'🎂', name:'Торт', cost:12}, {icon:'⭐', name:'Зірка', cost:25},
 ];
 const KISS_COINS = 10;
 
+// ══════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════
+const ACHIEVEMENTS = [
+  {id:'first_kiss', name:'Перший поцілунок', desc:'Поцілуйтесь вперше', icon:'💋', reward:20, check:s=>s.k>=1},
+  {id:'heartbreaker', name:'Серцеїд', desc:'10 поцілунків', icon:'🔥', reward:50, check:s=>s.k>=10},
+  {id:'generous', name:'Щедрий', desc:'5 подарунків', icon:'🎁', reward:30, check:s=>s.g>=5},
+  {id:'dj', name:'Діджей', desc:'10 разів музика', icon:'🎵', reward:40, check:s=>s.m>=10},
+  {id:'king', name:'Король вечірки', desc:'50 поцілунків', icon:'👑', reward:100, check:s=>s.k>=50},
+  {id:'untouchable', name:'Недоступний', desc:'10 відмов', icon:'😇', reward:30, check:s=>s.n>=10},
+  {id:'millionaire', name:'Мільйонер', desc:'1000 монет', icon:'💰', reward:50, check:()=>(coins[myName]||0)>=1000},
+  {id:'social', name:'Соціальний', desc:'20 повідомлень', icon:'💬', reward:25, check:()=>chatMsgCount>=20},
+  {id:'collector', name:'Колекціонер', desc:'5 рамок', icon:'🖼', reward:60, check:()=>getOwned('frames').length>=5},
+];
+
+let myAchievements = [];
+let chatMsgCount = 0;
+
+function loadAchievements(){
+  try{
+    const s = localStorage.getItem('km_ach_'+myTgId);
+    if(s) myAchievements = JSON.parse(s);
+  }catch(e){}
+}
+
+function saveAchievements(){
+  try{localStorage.setItem('km_ach_'+myTgId, JSON.stringify(myAchievements));}catch(e){}
+}
+
+function checkAchievements(){
+  const myStats = scores[myName] || {k:0,n:0,g:0,m:0};
+  let newUnlocked = false;
+  ACHIEVEMENTS.forEach(a=>{
+    if(!myAchievements.includes(a.id) && a.check(myStats)){
+      myAchievements.push(a.id);
+      coins[myName] = (coins[myName]||0) + a.reward;
+      newUnlocked = true;
+      bar(`🎖 Досягнення: ${a.name}! +${a.reward}🪙`, 'ok');
+      spawnConfetti();
+      syncToBot('achievement', {id:a.id, reward:a.reward});
+    }
+  });
+  if(newUnlocked){
+    saveAchievements();
+    document.getElementById('myCoins').textContent = coins[myName];
+    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  }
+}
+
+function renderAchievements(){
+  const grid = document.getElementById('achGrid');
+  if(!grid) return;
+  grid.innerHTML = ACHIEVEMENTS.map(a=>{
+    const unlocked = myAchievements.includes(a.id);
+    return `<div class="ach-item ${unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+      <div style="font-size:.6rem;color:${unlocked?'var(--gold)':'var(--muted)'};margin-top:4px">
+        ${unlocked?'✅ Отримано':'🪙 '+a.reward}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// DAILY BONUS
+// ══════════════════════════════════════
+let dailyData = {day:0, lastClaim:0, streak:0};
+
+function loadDaily(){
+  try{
+    const s = localStorage.getItem('km_daily_'+myTgId);
+    if(s) dailyData = JSON.parse(s);
+  }catch(e){}
+}
+
+function saveDaily(){
+  try{localStorage.setItem('km_daily_'+myTgId, JSON.stringify(dailyData));}catch(e){}
+}
+
+function checkDaily(){
+  loadDaily();
+  const now = Date.now();
+  const dayMs = 24*60*60*1000;
+  const lastDay = Math.floor(dailyData.lastClaim / dayMs);
+  const today = Math.floor(now / dayMs);
+  
+  if(today > lastDay){
+    if(today - lastDay === 1){
+      dailyData.streak = (dailyData.streak||0) + 1;
+    } else {
+      dailyData.streak = 1;
+    }
+    dailyData.day = today;
+    const reward = Math.min(10 + dailyData.streak * 5, 100);
+    document.getElementById('dailyDay').textContent = dailyData.streak;
+    document.getElementById('dailyReward').textContent = reward;
+    document.getElementById('dailyStreak').textContent = dailyData.streak >= 7 ? '🔥' : '✨';
+    document.getElementById('oDaily').classList.add('on');
+  }
+}
+
+function claimDaily(){
+  const reward = Math.min(10 + dailyData.streak * 5, 100);
+  coins[myName] = (coins[myName]||0) + reward;
+  dailyData.lastClaim = Date.now();
+  saveDaily();
+  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  document.getElementById('myCoins').textContent = coins[myName];
+  document.getElementById('oDaily').classList.remove('on');
+  bar(`+${reward} 🪙 отримано!`, 'ok');
+  spawnConfetti();
+  syncToBot('daily', {streak:dailyData.streak, reward});
+}
+
+// ══════════════════════════════════════
+// XP SYSTEM
+// ══════════════════════════════════════
+let myXP = 0;
+let myLevel = 1;
+
+function loadXP(){
+  try{
+    const s = localStorage.getItem('km_xp_'+myTgId);
+    if(s){
+      const d = JSON.parse(s);
+      myXP = d.xp || 0;
+      myLevel = d.level || 1;
+    }
+  }catch(e){}
+}
+
+function saveXP(){
+  try{localStorage.setItem('km_xp_'+myTgId, JSON.stringify({xp:myXP, level:myLevel}));}catch(e){}
+}
+
+function xpForLevel(l){ return l * 100; }
+
+function addXP(amount){
+  myXP += amount;
+  while(myXP >= xpForLevel(myLevel)){
+    myXP -= xpForLevel(myLevel);
+    myLevel++;
+    bar(`🎉 Рівень ${myLevel}!`, 'ok');
+    spawnConfetti();
+    coins[myName] = (coins[myName]||0) + 50;
+    try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  }
+  saveXP();
+  updateXPBar();
+}
+
+function updateXPBar(){
+  const need = xpForLevel(myLevel);
+  const pct = Math.min(100, (myXP / need) * 100);
+  const fill = document.getElementById('xpFill');
+  const lvl = document.getElementById('xpLevel');
+  const txt = document.getElementById('xpText');
+  if(fill) fill.style.width = pct + '%';
+  if(lvl) lvl.textContent = 'Рівень ' + myLevel;
+  if(txt) txt.textContent = myXP + ' / ' + need + ' XP';
+}
+
+// ══════════════════════════════════════
+// POWER-UPS
+// ══════════════════════════════════════
+let powerups = {lucky:0, shield:0, peek:0};
+
+function loadPowerups(){
+  try{
+    const s = localStorage.getItem('km_pwr_'+myTgId);
+    if(s) powerups = JSON.parse(s);
+  }catch(e){}
+}
+
+function savePowerups(){
+  try{localStorage.setItem('km_pwr_'+myTgId, JSON.stringify(powerups));}catch(e){}
+}
+
+function updatePowerupUI(){
+  document.getElementById('pwrLucky').textContent = powerups.lucky;
+  document.getElementById('pwrShield').textContent = powerups.shield;
+  document.getElementById('pwrPeek').textContent = powerups.peek;
+}
+
+function usePowerup(type){
+  const costs = {lucky:20, shield:15, peek:10};
+  const cost = costs[type];
+  const myC = coins[myName]||0;
+  if(myC < cost){
+    bar('Недостатньо монет! 🪙'+myC+' / '+cost, 'err');
+    return;
+  }
+  if(myName !== players[spinnerIdx]){
+    bar('Тільки у свій хід!', 'err');
+    return;
+  }
+  if(spinning) return;
+  
+  coins[myName] -= cost;
+  document.getElementById('myCoins').textContent = coins[myName];
+  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  
+  if(type === 'lucky'){
+    // Вказує на того хто тобі найбільше подобається (випадково з тих хто лайкнув тебе, або просто випадково)
+    let targets = players.filter(p=>p!==myName);
+    if(likedByMe.length > 0){
+      const liked = likedByMe.filter(p=>players.includes(p));
+      if(liked.length > 0) targets = liked;
+    }
+    const ti = players.indexOf(targets[Math.floor(Math.random()*targets.length)]);
+    doSpinToTarget(ti);
+    bar('🍀 Щаслива пляшка!', 'ok');
+  } else if(type === 'shield'){
+    powerups.shield++;
+    savePowerups();
+    updatePowerupUI();
+    bar('🛡️ Щит активовано на 1 відмову', 'ok');
+  } else if(type === 'peek'){
+    // Підглянути куди вказує пляшка
+    let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
+    const target = players[ti];
+    bar(`👀 Пляшка вкаже на: ${target}`, 'info');
+    addChatEvent(`👀 ${myName} підглядає майбутнє...`);
+  }
+}
+
+function doSpinToTarget(ti){
+  clearAutoSpin();
+  spinning = true;
+  document.getElementById('btnSpin').disabled = true;
+  document.getElementById('gHint').textContent = '🌀 Крутиться...';
+  
+  const n = players.length;
+  const BOTTLE_OFFSET = 90;
+  const targetDeg = BOTTLE_OFFSET + (ti / n) * 360;
+  const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
+  let delta = targetDeg - normalizedCurrent;
+  if(delta <= 0) delta += 360;
+  const spins = 4 + Math.floor(Math.random()*3);
+  const fa = currentBottleAngle + spins*360 + delta;
+  const dur = 2200 + Math.floor(Math.random()*800);
+  
+  const msg = {type:'spin_result', si:spinnerIdx, ti, fa, dur, startAngle:currentBottleAngle, _from:myPeerId};
+  animBottle(fa, dur, ti, ()=>showVoteCard(msg));
+  bcastMsg(msg);
+}
+
+// ══════════════════════════════════════
+// LIKES SYSTEM
+// ══════════════════════════════════════
+let likedByMe = [];
+let likesReceived = [];
+
+function loadLikes(){
+  try{
+    const s = localStorage.getItem('km_likes_'+myTgId);
+    if(s){
+      const d = JSON.parse(s);
+      likedByMe = d.me || [];
+      likesReceived = d.received || [];
+    }
+  }catch(e){}
+}
+
+function saveLikes(){
+  try{localStorage.setItem('km_likes_'+myTgId, JSON.stringify({me:likedByMe, received:likesReceived}));}catch(e){}
+}
+
+function toggleLike(name, evt){
+  if(evt) evt.stopPropagation();
+  if(name === myName) return;
+  const idx = likedByMe.indexOf(name);
+  if(idx >= 0){
+    likedByMe.splice(idx, 1);
+    bar(`Лайк прибраний`, 'info');
+  } else {
+    likedByMe.push(name);
+    bar(`❤️ Лайк ${name}!`, 'ok');
+    // Перевіряємо взаємність
+    if(likesReceived.includes(name)){
+      bar(`💘 Взаємна симпатія з ${name}!`, 'ok');
+      spawnConfetti();
+      coins[myName] = (coins[myName]||0) + 25;
+      document.getElementById('myCoins').textContent = coins[myName];
+      try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+      addChatEvent(`💘 ${myName} та ${name} — взаємна симпатія!`);
+    }
+    bcastMsg({type:'like', from:myName, to:name});
+  }
+  saveLikes();
+  buildPRing();
+}
+
+// ══════════════════════════════════════
+// TASK CARDS
+// ══════════════════════════════════════
+const TASKS = [
+  {emoji:'🎭', title:'Актор', text:'Покажи свій найкращий акторський талант'},
+  {emoji:'💃', title:'Танцюрист', text:'Станцюй 10 секунд'},
+  {emoji:'🎤', title:'Співак', text:'Заспівай прислів улюбленої пісні'},
+  {emoji:'🤔', title:'Правда', text:'Розкажи найсмішнішу історію з життя'},
+  {emoji:'🎪', title:'Жонглер', text:'Розкажи 3 жарти поспіль'},
+  {emoji:'📸', title:'Модель', text:'Зроби 3 різні вирази обличчя'},
+];
+
+let currentTask = null;
+
+function showTaskCard(){
+  if(Math.random() > 0.3) return; // 30% шанс
+  currentTask = TASKS[Math.floor(Math.random()*TASKS.length)];
+  document.getElementById('taskEmoji').textContent = currentTask.emoji;
+  document.getElementById('taskTitle').textContent = currentTask.title;
+  document.getElementById('taskText').textContent = currentTask.text;
+  document.getElementById('oTask').classList.add('on');
+}
+
+function completeTask(){
+  coins[myName] = (coins[myName]||0) + 20;
+  document.getElementById('myCoins').textContent = coins[myName];
+  try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]));}catch(e){}
+  document.getElementById('oTask').classList.remove('on');
+  bar('+20 🪙 за завдання!', 'ok');
+  addXP(15);
+  spawnConfetti();
+  currentTask = null;
+}
+
+function skipTask(){
+  document.getElementById('oTask').classList.remove('on');
+  currentTask = null;
+}
+
+// ══════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════
+function spawnConfetti(){
+  if(!settingAnim) return;
+  const colors = ['#ff4d7e','#f0b429','#00f5ff','#b388ff','#ff69b4'];
+  for(let i=0;i<30;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2+Math.random()*2) + 's';
+    c.style.animationDelay = Math.random()*0.5 + 's';
+    c.style.width = (6+Math.random()*8) + 'px';
+    c.style.height = (6+Math.random()*8) + 'px';
+    c.style.borderRadius = Math.random()>0.5 ? '50%' : '0';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4000);
+  }
+}
+
+// ══════════════════════════════════════
+// BLITZ MODE
+// ══════════════════════════════════════
+let isBlitz = false;
+
+function enterBlitz(){
+  isBlitz = true;
+  settingTimer = 5;
+  settingRounds = 10;
+  bar('⚡ Бліц-режим активовано!', 'info');
+  enterGame();
+}
+
+// ══════════════════════════════════════
+// MUSIC
+// ══════════════════════════════════════
 let localTracks=[], audio=null, curTrack=-1, vol=0.6;
-let globalMusicPlaying=false;
-let globalMusicOwner='';
+let globalMusicPlaying=false, globalMusicOwner='';
 
 function buildTracks(){ renderTrackList(); }
 
@@ -678,9 +1064,9 @@ function playTrack(i, giftMode=false){
   if(!scores[myName]) scores[myName]={k:0,n:0,g:0,m:0};
   scores[myName].m=(scores[myName].m||0)+1;
   bcastMsg({type:'music_play',name:myName,_from:myPeerId});
-  
-  // Оновлюємо глобальний рейтинг
   updateLeaderboard('music', 1);
+  addXP(5);
+  checkAchievements();
 
   const connCount = isHost ? Object.keys(guestConns).length : (hostConn ? 1 : 0);
   if(connCount === 0) return;
@@ -758,7 +1144,7 @@ function toggleMusic(){
 
 function giftSong(toName){
   closeGiftPopup();
-  if(!localTracks.length){bar('Немає треків — спочатку додай музику','err');return;}
+  if(!localTracks.length){bar('Немає треків','err');return;}
   if(globalMusicPlaying&&globalMusicOwner!==myName){bar(`Зараз грає ${globalMusicOwner}`,'info');return;}
   const myC=coins[myName]||0;
   const cost=15;
@@ -769,6 +1155,9 @@ function giftSong(toName){
   addChatEvent(`🎁🎵 ${myName} → ${toName}: пісня у подарунок!`);
 }
 
+// ══════════════════════════════════════
+// GLOBAL VARS
+// ══════════════════════════════════════
 let myName='', myPhoto='', myPeerId='', isHost=false;
 let peer=null, hostConn=null, guestConns={};
 let roomCode='';
@@ -783,15 +1172,15 @@ let viewingProfile='';
 let myFrame='', myTheme='';
 
 const SHOP_FRAMES=[
-  {id:'frame-gold',    name:'Золота',   icon:'💛', price:50},
-  {id:'frame-hearts',  name:'Серця',    icon:'💋', price:80},
-  {id:'frame-fire',    name:'Вогонь',   icon:'🔥', price:120},
-  {id:'frame-vip',     name:'VIP',      icon:'💜', price:200},
-  {id:'frame-rainbow', name:'Веселка',  icon:'🌈', price:300},
-  {id:'frame-galaxy',  name:'Галактика',icon:'🌌', price:250},
-  {id:'frame-flame',   name:'Полум\'я', icon:'🔥', price:180},
-  {id:'frame-diamond', name:'Діамант',  icon:'💎', price:350},
-  {id:'frame-sakura',  name:'Сакура',   icon:'🌸', price:220},
+  {id:'frame-gold', name:'Золота', icon:'💛', price:50},
+  {id:'frame-hearts', name:'Серця', icon:'💋', price:80},
+  {id:'frame-fire', name:'Вогонь', icon:'🔥', price:120},
+  {id:'frame-vip', name:'VIP', icon:'💜', price:200},
+  {id:'frame-rainbow', name:'Веселка', icon:'🌈', price:300},
+  {id:'frame-galaxy', name:'Галактика', icon:'🌌', price:250},
+  {id:'frame-flame', name:'Полум\'я', icon:'🔥', price:180},
+  {id:'frame-diamond', name:'Діамант', icon:'💎', price:350},
+  {id:'frame-sakura', name:'Сакура', icon:'🌸', price:220},
 ];
 
 function loadMyStyle(){
@@ -812,10 +1201,6 @@ function applyTheme(t){
   if(t) document.body.classList.add(t);
 }
 
-function getFrameClass(name){
-  return frames[name]||'';
-}
-
 function openShop(){
   document.getElementById('shopCoins').textContent=coins[myName]||0;
   renderShopGrid();
@@ -828,9 +1213,7 @@ function closeShop(){
 
 function renderShopGrid(){
   const grid=document.getElementById('shopGrid');
-  const myCoins=coins[myName]||0;
   const ownedFrames=getOwned('frames');
-
   grid.innerHTML=SHOP_FRAMES.map(f=>{
     const owned=ownedFrames.includes(f.id)||f.price===0;
     const equipped=myFrame===f.id;
@@ -864,7 +1247,6 @@ function saveOwned(type, id){
 function shopBuy(id, price){
   const myCoins=coins[myName]||0;
   const owned=getOwned('frames').includes(id);
-
   if(!owned && price>0){
     if(myCoins<price){bar('Недостатньо монет! 🪙'+myCoins+' / '+price,'err');return;}
     coins[myName]-=price;
@@ -873,8 +1255,9 @@ function shopBuy(id, price){
     try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}
     saveOwned('frames', id);
     syncToBot('buy_item',{item_id:id,item_type:'frame',coins:-price});
+    addXP(10);
+    checkAchievements();
   }
-
   myFrame=id;
   frames[myName]=id;
   buildPRing();
@@ -906,6 +1289,7 @@ function menuTab(tab, el){
   if(tab==='shop') initMenuShop();
   if(tab==='play') scanRooms();
   if(tab==='leaderboard') loadLeaderboard();
+  if(tab==='achievements') renderAchievements();
 }
 
 function toggleSetting(key, el){
@@ -960,7 +1344,7 @@ function loadSettings(){
 }
 
 // ══════════════════════════════════════
-// LEADERBOARD (Глобальний рейтинг через Firebase)
+// LEADERBOARD
 // ══════════════════════════════════════
 let currentLbTab='kisses';
 
@@ -973,26 +1357,16 @@ function lbTab(tab, el){
 
 async function loadLeaderboard(){
   const list=document.getElementById('lbList');
-  list.innerHTML='<div class="lb-loading">🔍 Завантаження рейтингу...</div>';
-  
-  if(!db) await loadFirebase();
-  if(!db){
-    list.innerHTML='<div class="lb-loading">❌ Firebase недоступний</div>';
-    return;
-  }
-  
+  list.innerHTML='<div class="lb-loading">🔍 Завантаження...</div>';
+  if(!db){ try{await loadFirebase();}catch(e){list.innerHTML='<div class="lb-loading">❌ Firebase не завантажився</div>';return;} }
+  if(!db){ list.innerHTML='<div class="lb-loading">❌ Firebase недоступний</div>';return; }
   try{
-    const snap=await db.ref('kiss_leaderboard').orderByChild(currentLbTab).limitToLast(50).once('value');
+    const snap=await db.ref('kiss_leaderboard').once('value');
     const val=snap.val();
-    if(!val){
-      list.innerHTML='<div class="lb-loading">🏆 Поки що порожньо. Будь першим!</div>';
-      return;
-    }
-    
+    if(!val){ list.innerHTML='<div class="lb-loading">🏆 Поки що порожньо. Будь першим!</div>';return; }
     const arr=Object.entries(val).map(([uid,d])=>({uid,...d}));
     arr.sort((a,b)=>(b[currentLbTab]||0)-(a[currentLbTab]||0));
     const top=arr.slice(0,20);
-    
     const medals=['🥇','🥈','🥉'];
     list.innerHTML=top.map((p,i)=>{
       const stat=currentLbTab==='kisses'?`💋 ${p.kisses||0}`:
@@ -1008,7 +1382,8 @@ async function loadLeaderboard(){
       </div>`;
     }).join('');
   }catch(e){
-    list.innerHTML='<div class="lb-loading">❌ Помилка завантаження</div>';
+    console.error('Leaderboard error:', e);
+    list.innerHTML=`<div class="lb-loading">❌ Помилка: ${e.message||'невідома'}</div>`;
   }
 }
 
@@ -1022,16 +1397,18 @@ async function updateLeaderboard(stat, amount){
     updates.photo=myPhoto||'';
     updates.ts=Date.now();
     await ref.update(updates);
-  }catch(e){}
+  }catch(e){ console.error('Update leaderboard error:', e); }
 }
 
+// ЧАСТИНА 3/3 БУДЕ ПРОДОВЖЕННЯМ — напишіть "далі" щоб отримати
+  // ══════════════════════════════════════
+// ROOMS (Firebase)
+// ══════════════════════════════════════
 const ROOM_TTL = 5 * 60 * 1000;
 
 async function roomsRegister(code, hostName, count){
   if(!db) return;
-  try{
-    await db.ref('kiss_rooms/'+code).set({code, hostName, count, ts:Date.now()});
-  }catch(e){}
+  try{ await db.ref('kiss_rooms/'+code).set({code, hostName, count, ts:Date.now()}); }catch(e){}
 }
 
 async function roomsUnregister(code){
@@ -1058,11 +1435,8 @@ async function scanRooms(){
   const list = document.getElementById('roomsList');
   if(!list) return;
   list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">🔍 Скануємо...</div>';
-
   if(!db) await loadFirebase();
-
   const active = await roomsGetActive();
-
   if(active.length === 0){
     list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Активних кімнат немає · Натисни Знайти гру</div>';
   } else {
@@ -1092,7 +1466,7 @@ async function quickJoin(code){
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
     const ok=await tryConnect(code,null,8000);
-    if(!ok){bar('Кімнату '+code+' не знайдено або вона зайнята','err');ss('sName');}
+    if(!ok){bar('Кімнату '+code+' не знайдено','err');ss('sName');}
   }catch(e){bar(e.message,'err');ss('sName');}
 }
 
@@ -1123,17 +1497,20 @@ let myTgId = '';
 function syncToBot(event, payload){
   if(!BOT_WEBHOOK || !myTgId) return;
   const body = JSON.stringify({event, uid:myTgId, name:myName, ...payload});
-  fetch(BOT_WEBHOOK, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body
-  }).catch(()=>{});
+  fetch(BOT_WEBHOOK, {method:'POST', headers:{'Content-Type':'application/json'}, body}).catch(()=>{});
 }
 
+// ══════════════════════════════════════
+// TELEGRAM INIT
+// ══════════════════════════════════════
 (function(){
   const urlUid=new URLSearchParams(window.location.search).get('uid');
   if(urlUid) myTgId=urlUid;
   loadSettings();
+  loadAchievements();
+  loadXP();
+  loadPowerups();
+  loadLikes();
   try{
     const tg=window.Telegram?.WebApp;
     const u=tg?.initDataUnsafe?.user;
@@ -1158,11 +1535,17 @@ function syncToBot(event, payload){
           document.getElementById('menuTgStats').textContent='🪙 '+(savedCoins||0)+' монет';
         }
         document.getElementById('nameCard').style.display='none';
+        updateXPBar();
+        // Перевірка щоденного бонусу
+        setTimeout(checkDaily, 1500);
       }
     }
   }catch(e){}
 })();
 
+// ══════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════
 let unread=0;
 function toggleChat(){
   const p=document.getElementById('chatPanel');
@@ -1183,9 +1566,12 @@ function sendChat(){
   const inp=document.getElementById('chatInp');
   const text=inp.value.trim(); if(!text) return;
   inp.value='';
+  chatMsgCount++;
   const msg={type:'chat',name:myName,photo:myPhoto,text};
   renderChatMsg(msg,true);
   bcastMsg(msg);
+  addXP(1);
+  checkAchievements();
 }
 function renderChatMsg(d,isMe){
   const box=document.getElementById('chatMsgs');
@@ -1207,6 +1593,9 @@ function addChatEvent(text){
   if(!document.getElementById('chatPanel').classList.contains('open')){unread++;updateChatBadge();}
 }
 
+// ══════════════════════════════════════
+// GIFT POPUP
+// ══════════════════════════════════════
 let currentGiftTarget='';
 let gpTimeout=null;
 
@@ -1216,11 +1605,9 @@ function openGiftPopup(name, evt){
   currentGiftTarget=name;
   const popup=document.getElementById('giftPopup');
   const s=scores[name]||{k:0,g:0};
-
   popup.style.left='50%';
   popup.style.top='50%';
   popup.style.transform='translate(-50%,-50%)';
-
   const ph=photos[name]||'';
   document.getElementById('gpAv').innerHTML=ph
     ?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`
@@ -1229,13 +1616,11 @@ function openGiftPopup(name, evt){
   document.getElementById('gpK').textContent=s.k||0;
   document.getElementById('gpG').textContent=s.g||0;
   document.getElementById('gpMyCoins').textContent=coins[myName]||0;
-
   document.getElementById('gpGifts').innerHTML=GIFTS.map((g,i)=>`
-    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent" ontouchstart="this.style.background='rgba(255,77,126,.2)'" ontouchend="this.style.background='rgba(255,255,255,.06)'">
+    <div onclick="sendGiftTo('${name}',${i})" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
       <span style="font-size:1.4rem">${g.icon}</span>
       <span style="font-size:.55rem;color:var(--gold)">🪙${g.cost}</span>
     </div>`).join('');
-
   popup.style.display='block';
   clearTimeout(gpTimeout);
   gpTimeout=setTimeout(closeGiftPopup, 10000);
@@ -1252,12 +1637,14 @@ function sendGiftTo(name, gIdx){
   sendGift(gIdx);
 }
 
+// ══════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════
 function openProfile(name){
   if(!name||!players.includes(name)) return;
   viewingProfile=name;
   const s=scores[name]||{k:0,n:0,g:0,m:0};
   const isSelf=name===myName;
-
   const avEl=document.getElementById('profAv');
   const ph=photos[name]||'';
   const fc=frames[name]||'';
@@ -1274,39 +1661,33 @@ function openProfile(name){
   };border-radius:50%"`:'';
   if(ph) avEl.innerHTML=`<img class="av-lg" src="${ph}" ${avStyle} onerror="this.outerHTML='<div class=av-ph-lg>${name[0]}</div>'">`;
   else avEl.innerHTML=`<div class="av-ph-lg" ${avStyle}>${name[0]}</div>`;
-
   document.getElementById('profName').textContent=name+(isSelf?' (Ти)':'');
   document.getElementById('profK').textContent=s.k||0;
   document.getElementById('profN').textContent=s.n||0;
   document.getElementById('profG').textContent=s.g||0;
   document.getElementById('profM').textContent=s.m||0;
-
   const badges=[];
-  if((s.k||0)>=1)  badges.push('💋');
-  if((s.k||0)>=3)  badges.push('🔥');
-  if((s.k||0)>=5)  badges.push('👑');
-  if((s.g||0)>=3)  badges.push('🎁');
-  if((s.m||0)>=2)  badges.push('🎵');
+  if((s.k||0)>=1) badges.push('💋');
+  if((s.k||0)>=3) badges.push('🔥');
+  if((s.k||0)>=5) badges.push('👑');
+  if((s.g||0)>=3) badges.push('🎁');
+  if((s.m||0)>=2) badges.push('🎵');
   if((s.n||0)===0 && (s.k||0)>0) badges.push('😇');
   if(isSelf && (coins[myName]||0)>=100) badges.push('💰');
   const badgeEl=document.getElementById('profBadges');
   if(badgeEl) badgeEl.textContent=badges.join(' ')||'';
-
   const gl=gifts[name]||[];
   document.getElementById('profGiftsText').textContent=
     gl.length ? gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  ') : 'Ще немає подарунків';
-
   const giftSec=document.getElementById('giftSendSection');
   giftSec.style.display=isSelf?'none':'block';
   document.getElementById('sendCoins').textContent=coins[myName]||0;
-
   document.getElementById('giftsGrid').innerHTML=GIFTS.map((g,i)=>`
     <div class="gift-btn" onclick="sendGift(${i})">
       <div class="gift-icon">${g.icon}</div>
       <div class="gift-name">${g.name}</div>
       <div class="gift-cost">🪙${g.cost}</div>
     </div>`).join('');
-
   document.getElementById('oProfile').classList.add('on');
 }
 function closeProfile(e){
@@ -1318,21 +1699,18 @@ function sendGift(gIdx){
   const g=GIFTS[gIdx];
   const myC=coins[myName]||0;
   if(myC<g.cost){bar(`Не вистачає монет! Потрібно 🪙${g.cost}`,'err');return;}
-
   coins[myName]=(coins[myName]||0)-g.cost;
   document.getElementById('gK').textContent=totalK;
   document.getElementById('myCoins').textContent=coins[myName];
   document.getElementById('sendCoins').textContent=coins[myName];
-
   const msg={type:'gift',from:myName,to:viewingProfile,gift:g};
   applyGift(msg);
   bcastMsg(msg);
-
   floatGift(g.icon);
   bar(`Надіслав ${g.icon} для ${viewingProfile}!`,'ok');
-  
-  // Оновлюємо глобальний рейтинг
   updateLeaderboard('gifts', 1);
+  addXP(5);
+  checkAchievements();
 }
 
 function applyGift(d){
@@ -1341,24 +1719,22 @@ function applyGift(d){
   gifts[to].push({icon:gift.icon,from});
   if(!scores[to]) scores[to]={k:0,n:0,g:0,m:0};
   scores[to].g=(scores[to].g||0)+1;
-
   if(viewingProfile===to&&document.getElementById('oProfile').classList.contains('on')){
     const gl=gifts[to];
     document.getElementById('profGiftsText').textContent=gl.slice(-5).map(g=>`${g.icon} ${g.from}`).join('  ');
     document.getElementById('profG').textContent=scores[to].g;
   }
-
   if(myName===from){
     syncToBot('gift_sent', {coins: -gift.cost, gift_name: gift.name, gift_icon: gift.icon, to_name: to});
   } else if(myName===to){
     syncToBot('gift_received', {gifts: 1, gift_name: gift.name, gift_icon: gift.icon, from_name: from});
   }
-
   addChatEvent(`${gift.icon} ${from} дарує ${gift.name} для ${to}`);
   floatGift(gift.icon);
 }
 
 function floatGift(icon){
+  if(!settingAnim) return;
   const el=document.createElement('div');
   el.className='gift-float';
   el.textContent=icon;
@@ -1368,14 +1744,15 @@ function floatGift(icon){
   setTimeout(()=>el.remove(),1500);
 }
 
+// ══════════════════════════════════════
+// LOAD PROFILE FROM BOT
+// ══════════════════════════════════════
 async function loadProfileFromBot(){
   if(!myName) return;
-
   try{
     const saved = localStorage.getItem('km_coins_'+myTgId);
     if(saved !== null) coins[myName] = parseInt(saved)||0;
   }catch(e){}
-
   if(!BOT_WEBHOOK || !myTgId) return;
   try{
     const r = await fetch(BOT_WEBHOOK, {
@@ -1399,6 +1776,9 @@ async function loadProfileFromBot(){
   }catch(e){}
 }
 
+// ══════════════════════════════════════
+// ENTRY
+// ══════════════════════════════════════
 document.getElementById('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')enterGame();});
 document.getElementById('codeInp').addEventListener('keydown',e=>{if(e.key==='Enter')joinByCode();});
 
@@ -1458,15 +1838,12 @@ function shareRoom(){
   if(!code||code==='----') return;
   const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий @KissMeetBot і натисни Грати, потім впиши код!';
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>{
-      bar('📋 Скопійовано! Код: '+code,'ok');
-    }).catch(()=>{
-      bar('Код кімнати: '+code,'ok');
-    });
+    navigator.clipboard.writeText(text).then(()=>bar('📋 Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));
   } else {
     bar('Код кімнати: '+code,'ok');
   }
 }
+
 function waitPeer(ms=9000){
   return new Promise((res,rej)=>{
     if(window.Peer)return res();
@@ -1477,6 +1854,7 @@ function waitPeer(ms=9000){
     },100);
   });
 }
+
 function initPeer(){
   return new Promise((res,rej)=>{
     peer=new Peer(undefined,{debug:0});
@@ -1485,6 +1863,9 @@ function initPeer(){
   });
 }
 
+// ══════════════════════════════════════
+// MATCHMAKING
+// ══════════════════════════════════════
 const ROOM_PREFIX = 'km-room-';
 
 function uid4(){
@@ -1497,7 +1878,6 @@ async function createRoom(){
   players=[myName]; scores[myName]={k:0,n:0,g:0,m:0};
   photos[myName]=myPhoto; coins[myName]=coins[myName]||0; gifts[myName]=[];
   frames[myName]=myFrame;
-
   if(peer){ try{peer.destroy();}catch(e){} peer=null; }
   await new Promise((res,rej)=>{
     peer = new Peer(ROOM_PREFIX+roomCode, {debug:0});
@@ -1530,7 +1910,6 @@ async function createRoom(){
       }
     });
   });
-
   document.getElementById('roomCodeEl').textContent=roomCode;
   try{document.getElementById('gameRoomCode').textContent=roomCode;}catch(e){}
   document.getElementById('lobbyRole').textContent='Ти хост 👑';
@@ -1586,11 +1965,9 @@ async function matchmake(){
   await createRoom();
 }
 
-async function binGet(){return [];}
-async function binSet(){}
-async function binAdd(){}
-async function binUpdate(){}
-
+// ══════════════════════════════════════
+// MESSAGES
+// ══════════════════════════════════════
 function bcast(msg){Object.values(guestConns).forEach(c=>{try{c.send(msg);}catch(e){}});}
 function bcastMsg(msg){
   const m={...msg,_from:myPeerId};
@@ -1608,7 +1985,6 @@ function handleMsg(d,conn){
     photos[name]=d.photo||'';
     if(d.frame!==undefined) frames[name]=d.frame;
     conn.metadata=name;
-
     const gameStarted=document.getElementById('sGame').classList.contains('on');
     if(gameStarted){
       if(isNew) buildPRing();
@@ -1631,7 +2007,6 @@ function handleMsg(d,conn){
     return;
   }
   if(d.type==='start'){if(isHost)bcast(d);initGame(d);return;}
-
   if(d.type==='spin_result'){
     if(isHost)bcast(d);
     if(d.startAngle !== undefined) currentBottleAngle = d.startAngle;
@@ -1665,6 +2040,15 @@ function handleMsg(d,conn){
   if(d.type==='gift'){
     if(isHost)bcast(d);
     if(d._from!==myPeerId)applyGift(d);
+    return;
+  }
+  if(d.type==='like'){
+    if(isHost)bcast(d);
+    if(d.to===myName && !likesReceived.includes(d.from)){
+      likesReceived.push(d.from);
+      saveLikes();
+      bar(`❤️ ${d.from} вподобав тебе!`, 'info');
+    }
     return;
   }
   if(d.type==='music_play'){
@@ -1722,14 +2106,16 @@ function handleMsg(d,conn){
   }
 }
 
+// ══════════════════════════════════════
+// START GAME
+// ══════════════════════════════════════
 function hostStartGame(){
   clearTimeout(cleanTimer);
   spinnerIdx=0; round=1; totalK=0; totalN=0;
   players.forEach(p=>{scores[p]={k:0,n:0,g:0,m:0};coins[p]=0;gifts[p]=[];});
   const payload={type:'start',players,scores,photos,coins,gifts,spinnerIdx,round};
-  bcast(payload); binUpdate(roomCode,{started:true});
+  bcast(payload);
   initGame(payload);
-
   peer.removeAllListeners?.('connection');
   peer.on('connection',conn=>{
     conn.on('open',()=>{
@@ -1752,13 +2138,17 @@ function initGame(d){
   buildPRing(); updateBar(); updateMyTurn(); ss('sGame');
   document.getElementById('myCoins').textContent=coins[myName]||0;
   document.getElementById('gameRoomCode').textContent=roomCode||'----';
+  updatePowerupUI();
+  addXP(20); // XP за вход у гру
 }
 
+// ══════════════════════════════════════
+// GAME UI
+// ══════════════════════════════════════
 function avHtml(name,size='sm'){
   const ph=photos[name]||'';
   const s=size==='sm'?'36px':'80px';
-  const cl=size==='sm'?'av':'av-ph-lg';
-  if(ph) return `<img src="${ph}" style="width:${s};height:${s};border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div style=width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700>${name[0]}</div>'">`; 
+  if(ph) return `<img src="${ph}" style="width:${s};height:${s};border-radius:50%;object-fit:cover" onerror="this.outerHTML='<div style=width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700>${name[0]}</div>'">`;
   return `<div style="width:${s};height:${s};border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:${size==='sm'?'.9rem':'2rem'};font-weight:700">${name[0]}</div>`;
 }
 
@@ -1787,11 +2177,13 @@ function buildPRing(){
     const cx=50+44*Math.cos(a), cy=50+44*Math.sin(a);
     const ph=photos[p]||'';
     const fc=frames[p]||'';
+    const liked=likedByMe.includes(p);
     const avEl=ph
       ?`<img class="pdot-av ${fc}" src="${ph}" onerror="this.outerHTML='<div class=\\'pdot-av-ph ${fc}\\'>${p[0]}</div>'">`
       :`<div class="pdot-av-ph ${fc}">${p[0]}</div>`;
+    const likeBtn = p!==myName ? `<div class="like-btn ${liked?'liked':''}" onclick="toggleLike('${p}',event)">❤</div>` : '';
     return `<div class="pdot" id="pd${i}" style="left:${cx}%;top:${cy}%" onclick="openGiftPopup('${p}',event)">
-      ${avEl}<div class="pdot-n">${p}</div></div>`;
+      ${likeBtn}${avEl}<div class="pdot-n">${p}</div></div>`;
   }).join('');
   litDot(spinnerIdx);
 }
@@ -1805,8 +2197,12 @@ function updateBar(){
   document.getElementById('myCoins').textContent=coins[myName]||0;
   litDot(spinnerIdx);
 }
+
 let autoSpinTimer=null, autoSpinInterval=null;
-function getAutoSpinSec(){ return settingTimer>0 ? settingTimer : 9999; }
+function getAutoSpinSec(){ 
+  if(isBlitz) return 5;
+  return settingTimer>0 ? settingTimer : 9999; 
+}
 
 function updateMyTurn(){
   const mine=myName===players[spinnerIdx];
@@ -1846,20 +2242,16 @@ function doSpin(){
   spinning=true;
   document.getElementById('btnSpin').disabled=true;
   document.getElementById('gHint').textContent='🌀 Крутиться...';
-
   let ti; do{ti=Math.floor(Math.random()*players.length);}while(ti===spinnerIdx&&players.length>1);
-
   const n = players.length;
   const BOTTLE_OFFSET = 90;
   const targetDeg = BOTTLE_OFFSET + (ti / n) * 360;
-
   const normalizedCurrent = ((currentBottleAngle % 360) + 360) % 360;
   let delta = targetDeg - normalizedCurrent;
   if(delta <= 0) delta += 360;
   const spins = 4 + Math.floor(Math.random()*3);
   const fa = currentBottleAngle + spins*360 + delta;
   const dur = 2200 + Math.floor(Math.random()*800);
-
   const msg={type:'spin_result',si:spinnerIdx,ti,fa,dur,startAngle:currentBottleAngle,_from:myPeerId};
   animBottle(fa,dur,ti,()=>showVoteCard(msg));
   bcastMsg(msg);
@@ -1886,14 +2278,15 @@ function animBottle(fa,dur,ti,onDone){
   })(t0);
 }
 
+// ══════════════════════════════════════
+// VOTE
+// ══════════════════════════════════════
 function showVoteCard(d){
   curVote={spinner:null,target:null,si:d.si,ti:d.ti};
   voted=false;
-
   const n1=players[d.si], n2=players[d.ti];
   document.getElementById('vP1').textContent=n1;
   document.getElementById('vP2').textContent=n2;
-
   const setVAv=(elId,name)=>{
     const el=document.getElementById(elId);
     const ph=photos[name]||'';
@@ -1901,24 +2294,20 @@ function showVoteCard(d){
     else{ el.className='vav-ph'; el.textContent=name[0]; }
   };
   setVAv('vAv1',n1); setVAv('vAv2',n2);
-
   document.getElementById('vEmoji').textContent='🍾';
   document.getElementById('vStatus').textContent='';
   document.getElementById('vType').textContent='';
-
   const iAmSpin=myName===n1, iAmTarg=myName===n2;
   const involved=iAmSpin||iAmTarg;
   document.getElementById('vChoice').style.display=involved?'block':'none';
   document.getElementById('vWait').style.display=involved?'none':'block';
   document.getElementById('vResult').style.display='none';
   if(involved) document.getElementById('vChoiceLbl').textContent=`Поцілувати ${iAmSpin?n2:n1}?`;
-
   document.getElementById('oVote').classList.add('on');
-
   const si=curVote.si, ti=curVote.ti;
   startVoteCountdown(20, ()=>{
     if(curVote.spinner===null) applyVoteMsg({role:'spinner',yes:false,si,ti,_from:'auto'});
-    if(curVote.target===null)  applyVoteMsg({role:'target', yes:false,si,ti,_from:'auto'});
+    if(curVote.target===null) applyVoteMsg({role:'target', yes:false,si,ti,_from:'auto'});
   });
 }
 
@@ -1949,6 +2338,14 @@ function castVote(yes){
   if(voted)return; voted=true;
   const iAmSpin=myName===players[curVote.si];
   const role=iAmSpin?'spinner':'target';
+  // Щит від відмови
+  if(!yes && role==='target' && powerups.shield>0){
+    powerups.shield--;
+    savePowerups();
+    updatePowerupUI();
+    bar('🛡️ Щит використано — відмова заблокована!', 'info');
+    yes = true;
+  }
   const msg={type:'vote_msg',role,yes,si:curVote.si,ti:curVote.ti};
   applyVoteMsg({...msg,_from:myPeerId});
   bcastMsg(msg);
@@ -1959,7 +2356,6 @@ function applyVoteMsg(d){
   curVote[d.role]=d.yes;
   const sn=players[curVote.si], tn=players[curVote.ti];
   const sv=curVote.spinner, tv=curVote.target;
-
   const iAmSpin=myName===sn, iAmTarg=myName===tn;
   if((iAmSpin&&d.role==='spinner')||(iAmTarg&&d.role==='target')){
     document.getElementById('vChoice').style.display='none';
@@ -1967,7 +2363,6 @@ function applyVoteMsg(d){
   }
   document.getElementById('vStatus').textContent=
     `${sn}: ${sv===null?'⏳':sv?'💋':'🙈'}  ·  ${tn}: ${tv===null?'⏳':tv?'💋':'🙈'}`;
-
   if(sv!==null&&tv!==null){
     const bothYes=sv&&tv;
     const msg={type:'vote_result',si:curVote.si,ti:curVote.ti,bothYes,sv,tv};
@@ -1981,20 +2376,24 @@ function applyVoteResult(d){
   const {bothYes,si,ti,sv,tv}=d;
   const sn=players[si], tn=players[ti];
   const isOriginator = !d._from || d._from===myPeerId;
-
   if(bothYes){
     totalK++;
     scores[sn].k=(scores[sn].k||0)+1;
     scores[tn].k=(scores[tn].k||0)+1;
-    coins[sn]=(coins[sn]||0)+KISS_COINS;
-    coins[tn]=(coins[tn]||0)+KISS_COINS;
+    const bonus = isBlitz ? KISS_COINS*2 : KISS_COINS;
+    coins[sn]=(coins[sn]||0)+bonus;
+    coins[tn]=(coins[tn]||0)+bonus;
     document.getElementById('myCoins').textContent=coins[myName]||0;
     try{localStorage.setItem('km_coins_'+myTgId, String(coins[myName]||0));}catch(e){}
-    if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${KISS_COINS} кожному`);
+    if(isOriginator) addChatEvent(`💋 ${sn} і ${tn} поцілувались! +🪙${bonus} кожному`);
     if(myName===sn || myName===tn){
-      syncToBot('kiss', {kisses:1, coins:KISS_COINS, partner: myName===sn?tn:sn});
-      // Оновлюємо глобальний рейтинг
+      syncToBot('kiss', {kisses:1, coins:bonus, partner: myName===sn?tn:sn});
       updateLeaderboard('kisses', 1);
+      addXP(15);
+      spawnConfetti();
+      checkAchievements();
+      // Шанс показати завдання
+      setTimeout(showTaskCard, 1500);
     }
   } else {
     totalN++;
@@ -2002,18 +2401,18 @@ function applyVoteResult(d){
     if(isOriginator) addChatEvent(`🙈 ${refuser} відмовив(ла)`);
     if(myName===refuser){
       syncToBot('refuse', {refuses:1});
+      addXP(2);
+      checkAchievements();
     }
   }
   document.getElementById('gK').textContent=totalK;
   document.getElementById('gN').textContent=totalN;
-
   document.getElementById('vEmoji').textContent=bothYes?'💋':'🙈';
   const t=document.getElementById('vType');
   t.className='v-type '+(bothYes?'yes':'no');
   t.textContent=bothYes?'ПОЦІЛУНОК! 💋':
     sv===false&&tv===false?'ОБИДВА ВІДМОВИЛИ 🙈':
     sv===false?`${sn} відмовив(ла) 🙈`:`${tn} відмовив(ла) 🙈`;
-
   document.getElementById('vChoice').style.display='none';
   document.getElementById('vWait').style.display='none';
   document.getElementById('vResult').style.display='block';
@@ -2029,10 +2428,22 @@ function closeVote(){
   if(isHost){
     const ni=(spinnerIdx+1)%players.length;
     const nr=ni===0?round+1:round;
+    // Перевірка чи гра закінчилась
+    if(settingRounds>0 && round>settingRounds){
+      endGame();
+      return;
+    }
     const msg={type:'next_turn',spinnerIdx:ni,round:nr};
     bcast(msg);
     applyNextTurn(msg);
   }
+}
+
+function endGame(){
+  bar('🏁 Гра закінчена!', 'ok');
+  setTimeout(()=>{
+    resetAll();
+  }, 2000);
 }
 
 let lastTurnKey='';
@@ -2057,15 +2468,20 @@ async function resetAll(){
   players=[]; scores={}; photos={}; coins={}; gifts={}; spinning=false;
   currentBottleAngle=0;
   myName=savedName;
+  isBlitz=false;
   ss('sName');
   if(savedName) setTimeout(()=>enterGame(), 300);
 }
 
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
 function ss(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function setLoad(t,s){document.getElementById('loadT').textContent=t;document.getElementById('loadS').textContent=s;}
 let bT;
 function bar(m,t){const b=document.getElementById('cbar');b.textContent=m;b.className='cbar on '+t;clearTimeout(bT);bT=setTimeout(()=>b.classList.remove('on'),3200);}
 
+// Hearts
 (()=>{const e=['💋','❤️','🌹','✨'];for(let i=0;i<10;i++){const h=document.createElement('div');h.className='hrt';h.textContent=e[i%e.length];h.style.left=Math.random()*100+'%';h.style.animationDuration=(10+Math.random()*12)+'s';h.style.animationDelay=(Math.random()*8)+'s';document.body.appendChild(h);}})();
 
 buildTracks();
@@ -2076,4 +2492,4 @@ document.addEventListener('click', e=>{
 try{window.Telegram?.WebApp?.ready();window.Telegram?.WebApp?.expand();}catch(e){}
 </script>
 </body>
-  </html>
+</html>
