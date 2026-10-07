@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v3.1-ultimate -->
+<!DOCTYPE html><!-- v3.2.2-room-fix -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -65,22 +65,56 @@ body{background:var(--dark);color:#fff;font-family:-apple-system,'Segoe UI',sans
 .btn.red:active{transform:translateY(-2px);}
 .btn.red:disabled{opacity:.32;cursor:not-allowed;transform:none;animation:none;}
 .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(255,255,255,.55);font-family:-apple-system,sans-serif;font-size:.83rem;font-style:normal;margin-top:8px;}
+.btn.danger{background:rgba(200,0,58,.15);border:1px solid rgba(200,0,58,.4);color:var(--rg);font-family:-apple-system,sans-serif;font-size:.85rem;font-style:normal;margin-top:8px;}
+.btn.danger:active{background:rgba(200,0,58,.25);}
 .spin-anim{width:46px;height:46px;border:3px solid rgba(255,77,126,.2);border-top-color:var(--rg);border-radius:50%;animation:rot .8s linear infinite;margin:0 auto 16px;}
 @keyframes rot{to{transform:rotate(360deg)}}
 .av{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);flex-shrink:0;}
 .av-ph{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;flex-shrink:0;}
 .av-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2.5px solid var(--rg);}
 .av-ph-lg{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;}
-.code-box{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);border-radius:13px;padding:14px 20px;text-align:center;width:100%;max-width:420px;margin-bottom:14px;}
-.code{font-family:Georgia,serif;font-size:2.3rem;font-weight:700;color:var(--gold);letter-spacing:8px;}
-.code-hint{font-size:.66rem;color:var(--muted);margin-top:3px;}
-.pw-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
-.pw-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slideIn .4s cubic-bezier(.4,0,.2,1) backwards;}
-.pw-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.pw-dot.h{background:var(--gold);}
-.pw-dot.g{background:var(--rg);animation:blink 1.4s ease infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.pw-badge{font-size:.58rem;color:var(--gold);background:rgba(240,180,41,.15);border-radius:20px;padding:2px 8px;}
+/* ═══════ NEW LOBBY STYLE v3.2.1 ═══════ */
+.lobby-wrap{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:0;}
+.lobby-top{width:100%;text-align:center;margin-bottom:18px;}
+.lobby-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,77,126,.12);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:5px 14px;font-size:.72rem;color:var(--rg);margin-bottom:10px;letter-spacing:.5px;}
+.lobby-title{font-family:Georgia,serif;font-size:clamp(1.6rem,6vw,2.2rem);font-weight:700;background:linear-gradient(135deg,#fff 30%,var(--rg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.15;margin-bottom:4px;}
+.lobby-sub{font-size:.75rem;color:var(--muted);}
+
+.lobby-code-card{width:100%;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px 18px 18px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;backdrop-filter:blur(8px);}
+.lobby-code-card::after{content:'';position:absolute;top:-40%;left:-20%;width:140%;height:80%;background:radial-gradient(ellipse,rgba(240,180,41,.12),transparent 70%);pointer-events:none;}
+.lobby-code-label{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;position:relative;}
+.lobby-code{font-family:Georgia,serif;font-size:2.8rem;font-weight:700;color:var(--gold);letter-spacing:12px;text-shadow:0 0 28px rgba(240,180,41,.45);position:relative;line-height:1.1;}
+.lobby-code-actions{display:flex;gap:8px;margin-top:14px;justify-content:center;}
+.lobby-code-actions button{flex:1;max-width:140px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 8px;color:#fff;font-size:.78rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.lobby-code-actions button:active{background:rgba(255,77,126,.18);border-color:var(--rg);transform:scale(.97);}
+
+.lobby-players-card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px 14px 12px;margin-bottom:16px;}
+.lobby-players-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;}
+.lobby-players-head span{font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.lobby-count{font-size:.72rem;font-weight:600;color:var(--rg);background:rgba(255,77,126,.12);padding:3px 10px;border-radius:50px;}
+
+.pw-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;}
+.pw-item{background:rgba(255,255,255,.04);border:1px solid transparent;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:11px;transition:all .2s;cursor:pointer;}
+.pw-item:active{background:rgba(255,77,126,.1);border-color:rgba(255,77,126,.25);}
+.pw-item.host{background:linear-gradient(90deg,rgba(240,180,41,.1),transparent);border-color:rgba(240,180,41,.2);}
+.pw-item .pw-av{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.pw-item .pw-av-ph{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--rg));display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.pw-item .pw-info{flex:1;min-width:0;}
+.pw-item .pw-name{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pw-item .pw-role{font-size:.62rem;color:var(--gold);margin-top:1px;}
+.pw-item .pw-status{width:8px;height:8px;border-radius:50%;background:#00e676;box-shadow:0 0 6px rgba(0,230,118,.6);flex-shrink:0;animation:blink 1.6s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.empty-players{text-align:center;color:var(--muted);font-size:.8rem;padding:18px 10px;}
+
+.lobby-actions{width:100%;display:flex;flex-direction:column;gap:8px;}
+.lobby-actions .btn.red{margin:0;}
+.lobby-wait{font-size:.76rem;color:var(--muted);text-align:center;padding:6px 0;}
+.lobby-secondary{display:flex;gap:8px;}
+.lobby-secondary button{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 10px;color:rgba(255,255,255,.6);font-size:.8rem;cursor:pointer;transition:all .2s;}
+.lobby-secondary button:active{background:rgba(255,255,255,.1);}
+.lobby-secondary button.danger{color:var(--rg);border-color:rgba(200,0,58,.3);background:rgba(200,0,58,.08);}
+.lobby-secondary button.danger:active{background:rgba(200,0,58,.18);}
+
 .game-wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;height:100vh;padding:6px 14px;overflow:hidden;}
 .top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;flex-shrink:0;}
 .turn-info .rnd{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
@@ -419,7 +453,7 @@ body.theme-aurora .btn.red{background:linear-gradient(135deg,#00ff88,#00d9ff);co
         <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
       </div>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.1 · 💋 Поцілунок-Знайомство</div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.2.2 · 💋 Поцілунок-Знайомство</div>
   </div>
 </div>
 <div class="overlay center" id="oDaily">
@@ -437,18 +471,39 @@ body.theme-aurora .btn.red{background:linear-gradient(135deg,#00ff88,#00d9ff);co
   <div style="font-size:.8rem;color:var(--muted);text-align:center" id="loadS">Зачекай</div>
 </div>
 <div class="scr" id="sLobby">
-  <div class="logo" style="font-size:clamp(1.4rem,5vw,1.9rem)">Кімната готова!</div>
-  <div class="sub" id="lobbyRole">Ти хост</div>
-  <div class="code-box">
-    <div class="code" id="roomCodeEl">----</div>
-    <div class="code-hint">Поділись кодом з друзями</div>
-    <button onclick="shareRoom()" style="margin-top:8px;background:rgba(255,77,126,.15);border:1px solid rgba(255,77,126,.4);border-radius:50px;padding:6px 18px;color:var(--rg);font-size:.78rem;cursor:pointer">📤 Поділитись кімнатою</button>
+  <div class="lobby-wrap">
+    <div class="lobby-top">
+      <div class="lobby-badge" id="lobbyRole">👑 Ти хост</div>
+      <div class="lobby-title">Кімната готова</div>
+      <div class="lobby-sub">Запроси друзів і почніть гру</div>
+    </div>
+
+    <div class="lobby-code-card">
+      <div class="lobby-code-label">Код кімнати</div>
+      <div class="lobby-code" id="roomCodeEl">----</div>
+      <div class="lobby-code-actions">
+        <button onclick="shareRoom()">📤 Поділитись</button>
+        <button onclick="copyRoomCode()">📋 Копіювати</button>
+      </div>
+    </div>
+
+    <div class="lobby-players-card">
+      <div class="lobby-players-head">
+        <span>Гравці онлайн</span>
+        <div class="lobby-count" id="pwCount">1 / 8</div>
+      </div>
+      <div class="pw-list" id="pwList"></div>
+    </div>
+
+    <div class="lobby-actions">
+      <button id="btnStartGame" class="btn red" onclick="hostStartGame()" style="display:none;width:100%">🎮 Почати гру!</button>
+      <div id="waitingHint" class="lobby-wait">⏳ Чекаємо гравців · мінімум 2</div>
+      <div class="lobby-secondary">
+        <button id="btnDeleteRoom" class="danger" onclick="deleteMyRoom()" style="display:none">🗑 Видалити</button>
+        <button onclick="leaveRoom()">← Вийти</button>
+      </div>
+    </div>
   </div>
-  <div class="lbl" style="width:100%;max-width:420px;margin-bottom:6px;">📡 Гравці онлайн</div>
-  <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:7px" id="pwCount">1 / 8</div>
-  <div class="pw-list" id="pwList"></div>
-  <button id="btnStartGame" class="btn red" onclick="hostStartGame()" style="display:none;width:100%;max-width:420px;margin-top:8px">🎮 Почати гру!</button>
-  <div id="waitingHint" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">⏳ Чекаємо на гравців...</div>
 </div>
 <div class="scr" id="sGame" style="padding:0;justify-content:flex-start;">
 <div class="game-wrap">
@@ -1171,18 +1226,37 @@ async function updateLeaderboard(stat,amount){
 // ROOMS
 // ══════════════════════════════════════
 const ROOM_TTL=5*60*1000;
-async function roomsRegister(code,hostName,count){if(!db)return;try{await db.ref('kiss_rooms/'+code).set({code,hostName,count,ts:Date.now()});}catch(e){}}
-async function roomsUnregister(code){if(!db)return;try{await db.ref('kiss_rooms/'+code).remove();}catch(e){}}
+async function roomsRegister(code,hostName,count){
+  if(!db||!code)return;
+  try{
+    await db.ref('kiss_rooms/'+code).set({
+      code,hostName:hostName||'Host',count:count||1,ts:Date.now()
+    });
+  }catch(e){console.warn('roomsRegister',e);}
+}
+async function roomsUnregister(code){
+  if(!db||!code)return;
+  try{await db.ref('kiss_rooms/'+code).remove();}catch(e){}
+}
 async function roomsGetActive(){
   if(!db)return[];
   try{
     const snap=await db.ref('kiss_rooms').once('value');
     const val=snap.val();if(!val)return[];
     const now=Date.now();
-    const active=Object.values(val).filter(r=>(now-r.ts)<ROOM_TTL);
-    Object.entries(val).forEach(([code,r])=>{if((now-r.ts)>=ROOM_TTL)db.ref('kiss_rooms/'+code).remove().catch(()=>{});});
+    const active=[];
+    for(const [code,r] of Object.entries(val)){
+      if(!r||!r.ts)continue;
+      if((now-r.ts)<ROOM_TTL){
+        active.push({...r,code:r.code||code});
+      }else{
+        db.ref('kiss_rooms/'+code).remove().catch(()=>{});
+      }
+    }
+    // newest first
+    active.sort((a,b)=>(b.ts||0)-(a.ts||0));
     return active;
-  }catch(e){return [];}
+  }catch(e){console.warn('roomsGetActive',e);return [];}
 }
 
 async function scanRooms(){
@@ -1212,8 +1286,8 @@ async function quickJoin(code){
     if(peer){try{peer.destroy();}catch(e){}peer=null;}
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
-    const ok=await tryConnect(code,null,8000);
-    if(!ok){bar('Кімнату '+code+' не знайдено','err');ss('sName');}
+    const ok=await tryConnect(code,null,16000);
+    if(!ok){bar('Кімнату '+code+' не знайдено. Перевір код або попроси хоста оновити кімнату.','err');ss('sName');}
   }catch(e){bar(e.message,'err');ss('sName');}
 }
 
@@ -1384,7 +1458,6 @@ function openProfile(name){
   document.getElementById('profG').textContent=s.g||0;
   document.getElementById('profM').textContent=s.m||0;
   
-  // Блок статистики поточної гри
   const profSheet=document.querySelector('.profile-sheet');
   let gameStatsEl=document.getElementById('profGameStats');
   if(!gameStatsEl){
@@ -1534,8 +1607,8 @@ async function joinByCode(){
     if(peer){try{peer.destroy();}catch(e){}peer=null;}
     await initPeer();
     setLoad('Підключаємось до '+code+'...','');
-    const ok=await tryConnect(code,null,12000);
-    if(!ok){bar('Кімнату '+code+' не знайдено','err');setTimeout(()=>ss('sName'),2000);}
+    const ok=await tryConnect(code,null,18000);
+    if(!ok){bar('Кімнату '+code+' не знайдено. Перевір код або попроси хоста оновити кімнату.','err');setTimeout(()=>ss('sName'),2500);}
   }catch(e){setLoad('Помилка',e.message);bar(e.message,'err');setTimeout(()=>ss('sName'),2500);}
 }
 
@@ -1545,6 +1618,16 @@ function shareRoom(){
   const text='💋 Поцілунок-Знайомство\n\nКод кімнати: '+code+'\n\nВідкрий @KissMeetBot і натисни Грати, потім впиши код!';
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>bar('📋 Скопійовано! Код: '+code,'ok')).catch(()=>bar('Код кімнати: '+code,'ok'));}
   else{bar('Код кімнати: '+code,'ok');}
+}
+
+function copyRoomCode(){
+  const code=roomCode||document.getElementById('roomCodeEl').textContent;
+  if(!code||code==='----')return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>bar('📋 Код скопійовано: '+code,'ok')).catch(()=>bar('Код: '+code,'ok'));
+  }else{
+    bar('Код: '+code,'ok');
+  }
 }
 
 function waitPeer(ms=9000){
@@ -1558,11 +1641,55 @@ function waitPeer(ms=9000){
   });
 }
 
-function initPeer(){
+const PEER_OPTS={
+  debug:0,
+  config:{
+    iceServers:[
+      {urls:'stun:stun.l.google.com:19302'},
+      {urls:'stun:stun1.l.google.com:19302'},
+      {urls:'stun:stun2.l.google.com:19302'}
+    ]
+  }
+};
+
+function initPeer(id){
   return new Promise((res,rej)=>{
-    peer=new Peer(undefined,{debug:0});
-    peer.on('open',id=>{myPeerId=id;res();});
-    peer.on('error',e=>rej(new Error('PeerJS: '+e.type)));
+    if(peer){try{peer.destroy();}catch(e){}peer=null;}
+    peer=id?new Peer(id,PEER_OPTS):new Peer(undefined,PEER_OPTS);
+    const t=setTimeout(()=>rej(new Error('PeerJS timeout')),12000);
+    peer.on('open',pid=>{
+      clearTimeout(t);
+      myPeerId=pid;
+      res(pid);
+    });
+    peer.on('error',e=>{
+      clearTimeout(t);
+      rej(new Error('PeerJS: '+(e.type||e.message||'unknown')));
+    });
+  });
+}
+
+function setupHostConnections(){
+  if(!peer)return;
+  peer.removeAllListeners?.('connection');
+  peer.on('connection',conn=>{
+    conn.on('open',()=>{
+      guestConns[conn.peer]=conn;
+      conn.on('data',d=>handleMsg(d,conn));
+      conn.on('close',()=>{
+        delete guestConns[conn.peer];
+        // remove player if known
+        const leftName=conn.metadata;
+        if(leftName&&players.includes(leftName)&&leftName!==myName){
+          players=players.filter(p=>p!==leftName);
+          renderPwList();
+          bcast({type:'sync',players,scores,photos,coins,gifts});
+        }else{
+          renderPwList();
+        }
+        roomsRegister(roomCode,myName,players.length);
+      });
+    });
   });
 }
 
@@ -1573,84 +1700,178 @@ const ROOM_PREFIX='km-room-';
 function uid4(){return Math.random().toString(36).substr(2,4).toUpperCase();}
 
 async function createRoom(){
-  isHost=true;roomCode=uid4();
+  isHost=true;
+  roomCode=uid4();
   players=[myName];scores[myName]={k:0,n:0,g:0,m:0};
   photos[myName]=myPhoto;coins[myName]=coins[myName]||0;gifts[myName]=[];
   frames[myName]=myFrame;
-  if(peer){try{peer.destroy();}catch(e){}peer=null;}
-  await new Promise((res,rej)=>{
-    peer=new Peer(ROOM_PREFIX+roomCode,{debug:0});
-    const t=setTimeout(()=>rej(new Error('PeerJS timeout')),10000);
-    peer.on('open',id=>{
-      myPeerId=id;clearTimeout(t);
-      peer.on('connection',conn=>{
-        conn.on('open',()=>{
-          guestConns[conn.peer]=conn;
-          conn.on('data',d=>handleMsg(d,conn));
-          conn.on('close',()=>{delete guestConns[conn.peer];renderPwList();roomsRegister(roomCode,myName,players.length);});
-        });
-      });
-      res();
-    });
-    peer.on('error',e=>{
-      clearTimeout(t);
-      if(e.type==='unavailable-id'){
-        roomCode=uid4();peer.destroy();
-        peer=new Peer(ROOM_PREFIX+roomCode,{debug:0});
-        peer.on('open',id=>{myPeerId=id;res();});
-        peer.on('error',e2=>rej(new Error('PeerJS: '+e2.type)));
-      }else{rej(new Error('PeerJS: '+e.type));}
-    });
-  });
+  guestConns={};
+
+  let attempts=0;
+  while(attempts<5){
+    attempts++;
+    try{
+      await initPeer(ROOM_PREFIX+roomCode);
+      setupHostConnections();
+      break;
+    }catch(e){
+      if(String(e.message||'').includes('unavailable-id')||attempts<5){
+        roomCode=uid4();
+        continue;
+      }
+      throw e;
+    }
+  }
+
   document.getElementById('roomCodeEl').textContent=roomCode;
   try{document.getElementById('gameRoomCode').textContent=roomCode;}catch(e){}
-  document.getElementById('lobbyRole').textContent='Ти хост 👑';
-  renderPwList();ss('sLobby');
+  document.getElementById('lobbyRole').textContent='👑 Ти хост';
+  renderPwList();
+  ss('sLobby');
   bar('Кімнату створено: '+roomCode,'ok');
-  roomsRegister(roomCode,myName,1);
-  cleanTimer=setInterval(()=>roomsRegister(roomCode,myName,players.length),60000);
+  await roomsRegister(roomCode,myName,1);
+  // heartbeat every 20s so room stays visible
+  clearInterval(cleanTimer);
+  cleanTimer=setInterval(()=>roomsRegister(roomCode,myName,players.length),20000);
+  document.getElementById('btnDeleteRoom').style.display='block';
 }
 
-async function tryConnect(code,_unused,timeout=12000){
-  if(!peer){try{await initPeer();}catch(e){return false;}}
+async function tryConnectOnce(code,timeout){
+  const hostId=ROOM_PREFIX+code.toUpperCase();
   return new Promise(res=>{
-    const hostId=ROOM_PREFIX+code.toUpperCase();
     let done=false;
-    const conn=peer.connect(hostId,{metadata:myName,reliable:true});
-    const t=setTimeout(()=>{if(done)return;done=true;try{conn.close();}catch(e){}res(false);},timeout);
+    let conn;
+    try{
+      conn=peer.connect(hostId,{metadata:myName,reliable:true,serialization:'json'});
+    }catch(e){
+      res(false);
+      return;
+    }
+    const t=setTimeout(()=>{
+      if(done)return;
+      done=true;
+      try{conn.close();}catch(e){}
+      res(false);
+    },timeout);
     conn.on('open',()=>{
-      if(done)return;done=true;clearTimeout(t);
-      hostConn=conn;roomCode=code.toUpperCase();
+      if(done)return;
+      done=true;
+      clearTimeout(t);
+      hostConn=conn;
+      roomCode=code.toUpperCase();
+      isHost=false;
       conn.on('data',d=>handleMsg(d,conn));
-      conn.on('close',()=>{bar('Хост відключився','err');setTimeout(()=>resetAll(),1500);});
+      conn.on('close',()=>{bar('Хост відключився','err');setTimeout(()=>resetToMenu(),1500);});
       conn.send({type:'hello',name:myName,photo:myPhoto,from:myPeerId,frame:myFrame});
-      players=[myName];scores[myName]={k:0,n:0,g:0,m:0};
-      coins[myName]=coins[myName]||0;gifts[myName]=[];
-      photos[myName]=myPhoto;frames[myName]=myFrame;
+      players=[myName];
+      scores[myName]={k:0,n:0,g:0,m:0};
+      coins[myName]=coins[myName]||0;
+      gifts[myName]=[];
+      photos[myName]=myPhoto;
+      frames[myName]=myFrame;
       renderPwList();
       document.getElementById('roomCodeEl').textContent=roomCode;
-      document.getElementById('lobbyRole').textContent='Ти гість 🎉';
-      ss('sLobby');bar('Приєднався до '+roomCode,'ok');
+      document.getElementById('lobbyRole').textContent='🎉 Ти гість';
+      document.getElementById('btnDeleteRoom').style.display='none';
+      ss('sLobby');
+      bar('Приєднався до '+roomCode,'ok');
       res(true);
     });
-    conn.on('error',()=>{if(done)return;done=true;clearTimeout(t);res(false);});
+    conn.on('error',()=>{
+      if(done)return;
+      done=true;
+      clearTimeout(t);
+      res(false);
+    });
   });
+}
+
+async function tryConnect(code,_unused,timeout=14000){
+  // ensure we have a fresh guest peer
+  if(!peer||!myPeerId||(myPeerId&&String(myPeerId).startsWith(ROOM_PREFIX))){
+    try{await initPeer();}catch(e){return false;}
+  }
+  // small delay helps PeerJS register the peer on the signaling server
+  await new Promise(r=>setTimeout(r,350));
+
+  const attempts=3;
+  const perTry=Math.max(5000,Math.floor(timeout/attempts));
+  for(let i=0;i<attempts;i++){
+    if(i>0){
+      // recreate peer between retries (PeerJS can get stuck)
+      try{await initPeer();}catch(e){continue;}
+      await new Promise(r=>setTimeout(r,400));
+    }
+    const ok=await tryConnectOnce(code,perTry);
+    if(ok)return true;
+  }
+  return false;
 }
 
 async function matchmake(){
   setLoad('Шукаємо кімнату...','Підключаємо Firebase...');
-  if(!db){await loadFirebase();await new Promise(r=>setTimeout(r,500));}
+  if(!db){await loadFirebase();await new Promise(r=>setTimeout(r,600));}
   setLoad('Шукаємо кімнату...','Перевіряємо список');
   const active=await roomsGetActive();
-  if(peer){try{peer.destroy();}catch(e){}peer=null;}
-  await initPeer();
+  if(peer){try{peer.destroy();}catch(e){}peer=null;myPeerId='';}
+
+  // try to join existing rooms first
   for(const room of active){
     setLoad(`Знайдено: ${room.code}`,'Підключаємось...');
-    const ok=await tryConnect(room.code,null,6000);
-    if(ok)return;
+    try{
+      if(peer){try{peer.destroy();}catch(e){}peer=null;}
+      await initPeer();
+      const ok=await tryConnect(room.code,null,10000);
+      if(ok)return;
+    }catch(e){/* try next */}
   }
   setLoad('Створюємо кімнату...','Ти будеш хостом');
   await createRoom();
+}
+
+// ══════════════════════════════════════
+// LOBBY: DELETE / LEAVE ROOM
+// ══════════════════════════════════════
+function deleteMyRoom(){
+  if(!isHost)return;
+  if(!confirm('Видалити кімнату? Всі гравці будуть відключені.'))return;
+  bcast({type:'room_closed',reason:'host_deleted'});
+  roomsUnregister(roomCode);
+  clearInterval(cleanTimer);
+  bar('Кімнату видалено','ok');
+  resetToMenu();
+}
+
+function leaveRoom(){
+  if(isHost){
+    // Host leaving = delete room
+    deleteMyRoom();
+    return;
+  }
+  // Guest leaves
+  try{if(hostConn)hostConn.close();}catch(e){}
+  bar('Ти вийшов з кімнати','info');
+  resetToMenu();
+}
+
+function resetToMenu(){
+  saveXP();savePowerups();saveLikes();saveAchievements();
+  if(isHost){roomsUnregister(roomCode);clearInterval(cleanTimer);}
+  try{peer?.destroy();}catch(e){}
+  peer=null;guestConns={};hostConn=null;
+  if(myName&&coins[myName]!==undefined){try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}}
+  const savedName=myName;
+  players=[];scores={};photos={};coins={};gifts={};spinning=false;
+  currentBottleAngle=0;gameStats={};isHost=false;roomCode='';
+  isBlitz=false;
+  document.getElementById('btnDeleteRoom').style.display='none';
+  ss('sName');
+  // Restore name if was set
+  if(savedName){
+    myName=savedName;
+    document.getElementById('nameInp').value=savedName;
+  }
+  scanRooms();
 }
 
 // ══════════════════════════════════════
@@ -1689,6 +1910,11 @@ function handleMsg(d,conn){
     document.getElementById('myCoins').textContent=coins[myName]||0;
     return;
   }
+  if(d.type==='room_closed'){
+    bar('Хост видалив кімнату','err');
+    setTimeout(()=>resetToMenu(),1200);
+    return;
+  }
   if(d.type==='start'){if(isHost)bcast(d);initGame(d);return;}
   if(d.type==='spin_result'){if(isHost)bcast(d);if(d.startAngle!==undefined)currentBottleAngle=d.startAngle;animBottle(d.fa,d.dur,d.ti,()=>showVoteCard(d));return;}
   if(d.type==='vote_msg'){if(isHost)bcast(d);if(d._from!==myPeerId)applyVoteMsg(d);return;}
@@ -1709,19 +1935,14 @@ function handleMsg(d,conn){
 // START GAME
 // ══════════════════════════════════════
 function hostStartGame(){
-  clearTimeout(cleanTimer);
+  clearInterval(cleanTimer);
+  // keep room listed a bit longer after start so late joiners can still see it briefly
+  roomsRegister(roomCode,myName,players.length);
   spinnerIdx=0;round=1;totalK=0;totalN=0;
-  players.forEach(p=>{scores[p]={k:0,n:0,g:0,m:0};coins[p]=0;gifts[p]=[];});
+  players.forEach(p=>{scores[p]={k:0,n:0,g:0,m:0};/* keep coins */gifts[p]=[];});
   const payload={type:'start',players,scores,photos,coins,gifts,spinnerIdx,round};
   bcast(payload);initGame(payload);
-  peer.removeAllListeners?.('connection');
-  peer.on('connection',conn=>{
-    conn.on('open',()=>{
-      guestConns[conn.peer]=conn;
-      conn.on('data',d=>handleMsg(d,conn));
-      conn.on('close',()=>{delete guestConns[conn.peer];});
-    });
-  });
+  setupHostConnections();
 }
 
 function initGame(d){
@@ -1752,10 +1973,34 @@ function avHtml(name,size='sm'){
 
 function renderPwList(){
   document.getElementById('pwCount').textContent=`${players.length} / ${MAX_P}`;
-  document.getElementById('pwList').innerHTML=players.map((p,i)=>`<div class="pw-item" onclick="openProfile('${p}')" style="cursor:pointer">${avHtml(p,'sm')}<div style="flex:1;font-size:.88rem">${p}${p===myName?' (ти)':''}</div>${i===0?'<div class="pw-badge">хост</div>':'<div class="pw-dot g"></div>'}</div>`).join('');
+  const list=document.getElementById('pwList');
+  if(players.length===0){
+    list.innerHTML='<div class="empty-players">Поки нікого немає</div>';
+  }else{
+    list.innerHTML=players.map((p,i)=>{
+      const ph=photos[p]||'';
+      const av=ph
+        ? `<img class="pw-av" src="${ph}" onerror="this.outerHTML='<div class=pw-av-ph>${p[0]}</div>'">`
+        : `<div class="pw-av-ph">${p[0]}</div>`;
+      return `<div class="pw-item ${i===0?'host':''}" onclick="openProfile('${p}')">
+        ${av}
+        <div class="pw-info">
+          <div class="pw-name">${p}${p===myName?' · ти':''}</div>
+          ${i===0?'<div class="pw-role">👑 Хост</div>':''}
+        </div>
+        <div class="pw-status"></div>
+      </div>`;
+    }).join('');
+  }
   const startBtn=document.getElementById('btnStartGame');
   const waitHint=document.getElementById('waitingHint');
-  if(startBtn){const show=isHost&&players.length>=2;startBtn.style.display=show?'block':'none';if(waitHint)waitHint.style.display=show?'none':'block';}
+  const delBtn=document.getElementById('btnDeleteRoom');
+  if(startBtn){
+    const show=isHost&&players.length>=2;
+    startBtn.style.display=show?'block':'none';
+    if(waitHint)waitHint.style.display=show?'none':'block';
+  }
+  if(delBtn)delBtn.style.display=isHost?'block':'none';
 }
 
 function buildPRing(){
@@ -2002,7 +2247,7 @@ function closeVote(){
   }
 }
 
-function endGame(){bar('🏁 Гра закінчена!','ok');setTimeout(()=>{resetAll();},2000);}
+function endGame(){bar('🏁 Гра закінчена!','ok');setTimeout(()=>{resetToMenu();},2000);}
 
 let lastTurnKey='';
 function applyNextTurn(d){
@@ -2014,16 +2259,8 @@ function applyNextTurn(d){
 }
 
 async function resetAll(){
-  saveXP();savePowerups();saveLikes();saveAchievements();
-  if(isHost){await roomsUnregister(roomCode);clearInterval(cleanTimer);}
-  peer?.destroy();peer=null;guestConns={};hostConn=null;
-  if(myName&&coins[myName]!==undefined){try{localStorage.setItem('km_coins_'+myTgId,String(coins[myName]));}catch(e){}}
-  const savedName=myName;
-  players=[];scores={};photos={};coins={};gifts={};spinning=false;
-  currentBottleAngle=0;gameStats={};
-  myName=savedName;isBlitz=false;
-  ss('sName');
-  if(savedName)setTimeout(()=>enterGame(),300);
+  // Deprecated - use resetToMenu
+  resetToMenu();
 }
 
 // ══════════════════════════════════════
