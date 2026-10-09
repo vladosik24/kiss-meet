@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v3.6-max-fun -->
+<!DOCTYPE html><!-- v4.0-home -->
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -46,26 +46,27 @@ loadFirebase().then(()=>scanRooms());
 </script>
 <style>
 :root{
-  --r:#FF4D6D;
-  --rg:#FF4D6D;
-  --purple:#FF4D6D;
-  --gold:#E8E8ED;
-  --dark:#0A0A0B;
-  --card:#141416;
-  --card-glass:#141416;
+  --r:#FF3D81;
+  --rg:#FF3D81;
+  --purple:#8B5CF6;
+  --gold:#FFD700;
+  --dark:#080811;
+  --card:#11111F;
+  --card-glass:rgba(17,17,31,.85);
   --border:rgba(255,255,255,.08);
-  --muted:#8A8A93;
+  --muted:#9B9BAD;
   --white:#FFFFFF;
-  --neon-pink:none;
-  --neon-purple:none;
+  --love:#FF5577;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{
-  background:#0A0A0B;
+  background:#080811;
   color:#FFFFFF;
-  font-family:-apple-system,'SF Pro Text','Segoe UI',sans-serif;
-  background-image:none;
+  font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -15%,rgba(255,61,129,.16),transparent),
+    radial-gradient(ellipse 50% 40% at 100% 30%,rgba(139,92,246,.1),transparent);
 }
 .scr{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto;}
 .scr.on{display:flex;animation:screenIn .4s cubic-bezier(.4,0,.2,1);}
@@ -475,58 +476,141 @@ body.theme-aurora .btn.red{background:linear-gradient(135deg,#00ff88,#00d9ff);co
 .icebreaker-chip{display:inline-block;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:8px 14px;font-size:.8rem;color:#fff;margin-top:10px;line-height:1.35;}
 .blind-mask{filter:blur(12px);transform:scale(1.05);}
 
+
+/* ═══════ HOME SCREEN v4 ═══════ */
+.home-header{width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:4px 0 10px;flex-shrink:0;}
+.home-brand{display:flex;align-items:center;gap:10px;}
+.home-brand-icon{font-size:1.6rem;line-height:1;filter:drop-shadow(0 0 10px rgba(255,61,129,.5));}
+.home-brand-title{font-size:1.25rem;font-weight:800;letter-spacing:-.3px;background:linear-gradient(90deg,#fff 40%,#FF3D81);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.home-brand-sub{font-size:.58rem;letter-spacing:2.5px;color:#FF3D81;font-weight:600;margin-top:1px;}
+.home-avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,61,129,.4);box-shadow:0 0 12px rgba(255,61,129,.25);background:#11111F;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--muted);flex-shrink:0;}
+
+.menu-tabs{display:flex;width:100%;max-width:420px;background:rgba(17,17,31,.9);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:4px;gap:2px;margin-bottom:12px;flex-shrink:0;}
+.mtab{flex:1;background:transparent;border:none;border-radius:14px;padding:9px 2px;color:var(--muted);font-size:.62rem;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:500;}
+.mtab span{font-size:1rem;line-height:1;}
+.mtab.active{background:linear-gradient(135deg,#FF3D81,#E91E63);color:#fff;box-shadow:0 4px 16px rgba(255,61,129,.4);font-weight:600;}
+
+.profile-strip{width:100%;background:linear-gradient(135deg,rgba(17,17,31,.95),rgba(30,20,50,.9));border:1px solid rgba(255,61,129,.15);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.profile-strip-av{width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,61,129,.5);flex-shrink:0;background:#11111F;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.profile-strip-info{flex:1;min-width:0;}
+.profile-strip-name{font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.profile-strip-coins{font-size:.72rem;color:#FFD700;margin-top:2px;}
+.profile-strip-xp{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.profile-strip-xp-bar{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.profile-strip-xp-fill{height:100%;background:linear-gradient(90deg,#FF3D81,#8B5CF6);border-radius:10px;transition:width .4s;}
+.profile-strip-xp-txt{font-size:.58rem;color:var(--muted);white-space:nowrap;}
+
+.btn-start{width:100%;border:none;border-radius:50px;padding:18px 24px;font-size:1.15rem;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#FF5A9A,#FF3D81 40%,#E91E63);box-shadow:0 6px 28px rgba(255,61,129,.45),0 0 0 0 rgba(255,61,129,.3);animation:startPulse 2.5s ease infinite;letter-spacing:.2px;display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 4px;}
+.btn-start:active{transform:scale(.97);}
+@keyframes startPulse{0%,100%{box-shadow:0 6px 28px rgba(255,61,129,.45)}50%{box-shadow:0 8px 36px rgba(255,61,129,.65),0 0 0 6px rgba(255,61,129,.08)}}
+
+.blitz-row{width:100%;background:rgba(17,17,31,.8);border:1px solid rgba(139,92,246,.2);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s;margin-bottom:4px;}
+.blitz-row:active{background:rgba(139,92,246,.12);}
+.blitz-ico{width:36px;height:36px;border-radius:12px;background:rgba(139,92,246,.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.blitz-txt{flex:1;}
+.blitz-title{font-size:.88rem;font-weight:600;}
+.blitz-sub{font-size:.65rem;color:var(--muted);margin-top:1px;}
+.blitz-arrow{color:var(--muted);font-size:1rem;}
+
+.section-head{width:100%;display:flex;align-items:center;justify-content:space-between;margin:8px 0 6px;}
+.section-head span{font-size:.72rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:5px;}
+.section-refresh{background:transparent;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:8px;}
+.section-refresh:active{color:var(--rg);}
+
+.rooms-empty{width:100%;background:rgba(17,17,31,.7);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;}
+.rooms-empty-ico{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(255,61,129,.2),rgba(139,92,246,.2));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.rooms-empty-t{font-size:.85rem;font-weight:500;}
+.rooms-empty-s{font-size:.68rem;color:var(--muted);margin-top:2px;}
+
+.code-section{width:100%;margin-top:10px;text-align:center;}
+.code-label{font-size:.62rem;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;}
+.code-label::before,.code-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,61,129,.3),transparent);}
+.code-row{display:flex;gap:8px;width:100%;}
+.code-row .inp{flex:1;background:rgba(17,17,31,.9);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:12px 18px;text-align:left;font-size:.9rem;letter-spacing:1px;}
+.code-go{width:48px;height:48px;border-radius:14px;border:none;background:linear-gradient(135deg,#FF3D81,#E91E63);color:#fff;font-size:1.2rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,61,129,.35);}
+.code-go:active{transform:scale(.95);}
+.code-hint{font-size:.65rem;color:var(--muted);margin-top:8px;padding-bottom:20px;}
+
+.name-mini{width:100%;margin-bottom:4px;}
+.name-mini .inp{border-radius:14px;background:rgba(17,17,31,.9);padding:11px 14px;font-size:.9rem;}
+
+.room-card{background:rgba(17,17,31,.85)!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:16px!important;padding:12px 14px!important;}
+.btn.red{background:linear-gradient(135deg,#FF3D81,#E91E63)!important;box-shadow:0 4px 20px rgba(255,61,129,.4)!important;border-radius:16px!important;animation:none!important;}
+
 </style>
 </head>
 <body>
 <div class="cbar" id="cbar"></div>
-<div class="scr on" id="sName" style="justify-content:flex-start;padding:16px 14px 0;">
-  <div style="width:100%;max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:8px 0 14px;flex-shrink:0">
-    <div>
-      <div style="font-size:1.2rem;font-weight:700;color:#fff;letter-spacing:-.2px">💋 Поцілунок</div>
-      <div style="font-size:.65rem;color:#8A8A93;letter-spacing:1.5px;margin-top:2px">знайомство</div>
+<div class="scr on" id="sName" style="justify-content:flex-start;padding:12px 14px 0;">
+  <div class="home-header">
+    <div class="home-brand">
+      <div class="home-brand-icon">💋</div>
+      <div>
+        <div class="home-brand-title">Поцілунок</div>
+        <div class="home-brand-sub">ЗНАЙОМСТВО</div>
+      </div>
     </div>
-    <div id="menuAv" style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(255,255,255,.12);background:#141416;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#8A8A93">?</div>
+    <div id="menuAv" class="home-avatar">?</div>
   </div>
   <div class="menu-tabs">
     <button class="mtab active" onclick="menuTab('play',this)"><span>🎮</span>Грати</button>
     <button class="mtab" onclick="menuTab('shop',this)"><span>🛍</span>Магазин</button>
     <button class="mtab" onclick="menuTab('leaderboard',this)"><span>🏆</span>Рейтинг</button>
-    <button class="mtab" onclick="menuTab('achievements',this)"><span>🎖</span>Досяг.</button>
+    <button class="mtab" onclick="menuTab('achievements',this)"><span>🏅</span>Досяг.</button>
     <button class="mtab" onclick="menuTab('settings',this)"><span>⚙️</span>Налаш.</button>
   </div>
   <div class="menu-page on" id="mpPlay">
-    <div id="menuTgProfile" style="display:none;flex-direction:column;align-items:center;gap:6px;width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;">
-      <div id="menuTgAv" style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid var(--rg)"></div>
-      <div id="menuTgName" style="font-size:.95rem;font-weight:600"></div>
-      <div id="menuTgStats" style="font-size:.7rem;color:var(--muted)">🪙 0 · 💋 0</div>
-      <div class="xp-bar">
-        <div class="xp-info"><span id="xpLevel">Рівень 1</span><span id="xpText">0 / 100 XP</span></div>
-        <div class="xp-fill" id="xpFill" style="width:0%"></div>
+    <!-- compact profile -->
+    <div class="profile-strip" id="menuTgProfile">
+      <div class="profile-strip-av" id="menuTgAv">?</div>
+      <div class="profile-strip-info">
+        <div class="profile-strip-name" id="menuTgName">Гравець</div>
+        <div class="profile-strip-coins" id="menuTgStats">🪙 0 монет</div>
+        <div class="profile-strip-xp">
+          <span style="font-size:.6rem;color:var(--muted)" id="xpLevel">Рівень 1</span>
+          <div class="profile-strip-xp-bar"><div class="profile-strip-xp-fill" id="xpFill" style="width:0%"></div></div>
+          <span class="profile-strip-xp-txt" id="xpText">0/100</span>
+        </div>
       </div>
     </div>
-    <div class="card" id="nameCard" style="width:100%">
-      <div class="lbl">👤 Твоє ім'я</div>
-      <input class="inp" id="nameInp" placeholder="Введи ім'я..." maxlength="16">
+    <!-- name (hidden when TG name set, still needed for logic) -->
+    <div class="name-mini" id="nameCard">
+      <input class="inp" id="nameInp" placeholder="Твоє ім'я..." maxlength="16">
     </div>
-    <button class="btn red" onclick="enterGame()" style="width:100%">Знайти гру</button>
-    <button class="btn ghost" onclick="enterBlitz()" style="width:100%">⚡ Бліц-гра (швидка)</button>
-    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:4px">
-      <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px">АКТИВНІ КІМНАТИ</div>
-      <button onclick="scanRooms()" style="background:rgba(255,77,126,.1);border:1px solid rgba(255,77,126,.3);border-radius:50px;padding:3px 10px;color:var(--rg);font-size:.65rem;cursor:pointer">🔄</button>
+    <!-- PRIMARY CTA -->
+    <button class="btn-start" onclick="enterGame()">💋 Почати гру →</button>
+    <!-- blitz -->
+    <div class="blitz-row" onclick="enterBlitz()">
+      <div class="blitz-ico">⚡</div>
+      <div class="blitz-txt">
+        <div class="blitz-title">Бліц-гра (швидка)</div>
+        <div class="blitz-sub">Знайди гру за кілька секунд</div>
+      </div>
+      <div class="blitz-arrow">→</div>
     </div>
-    <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:6px;min-height:60px">
-      <div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Натисни 🔄 щоб оновити</div>
+    <!-- rooms -->
+    <div class="section-head">
+      <span>🔥 Активні кімнати</span>
+      <button class="section-refresh" onclick="scanRooms()">↻ Оновити</button>
     </div>
-    <div style="width:100%;display:flex;align-items:center;gap:8px;margin-top:4px">
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:.6rem;color:var(--muted);letter-spacing:2px">ПРИЄДНАТИСЬ ЗА КОДОМ</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
+    <div id="roomsList" style="width:100%;display:flex;flex-direction:column;gap:6px">
+      <div class="rooms-empty">
+        <div class="rooms-empty-ico">👥</div>
+        <div>
+          <div class="rooms-empty-t">Кімнат поки немає</div>
+          <div class="rooms-empty-s">Знайди гру або створи власну кімнату</div>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;gap:8px;width:100%">
-      <input class="inp" id="codeInp" placeholder="Код кімнати..." maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-size:1.1rem;text-align:center;flex:1" oninput="this.value=this.value.toUpperCase()">
-      <button class="btn red" onclick="joinByCode()" style="width:auto;padding:12px 18px;font-size:.9rem">→</button>
+    <!-- code join -->
+    <div class="code-section">
+      <div class="code-label">🔑 ПРИЄДНАТИСЬ ЗА КОДОМ</div>
+      <div class="code-row">
+        <input class="inp" id="codeInp" placeholder="Введи код кімнати" maxlength="4" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+        <button class="code-go" onclick="joinByCode()">→</button>
+      </div>
+      <div class="code-hint">Введи код, який надіслав друг</div>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">Отримай код від друга і впиши його вище</div>
   </div>
   <div class="menu-page" id="mpShop">
     <div class="shop-balance" style="font-size:.9rem">🪙 <span id="menuShopCoins">0</span> монет</div>
@@ -595,7 +679,7 @@ body.theme-aurora .btn.red{background:linear-gradient(135deg,#00ff88,#00d9ff);co
         <button class="sel-btn" id="tInf" onclick="setTimer(0,this)">∞</button>
       </div>
     </div>
-    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v3.6 · 💋 Поцілунок-Знайомство</div>
+    <div style="width:100%;font-size:.65rem;color:var(--muted);text-align:center;padding-bottom:16px">v4.0 · 💋 Поцілунок-Знайомство</div>
   </div>
 </div>
 <div class="overlay center" id="oDaily">
@@ -1423,7 +1507,7 @@ async function scanRooms(){
   if(!db)await loadFirebase();
   const active=await roomsGetActive();
   if(active.length===0){
-    list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.75rem;padding:12px">Активних кімнат немає · Натисни Знайти гру</div>';
+    list.innerHTML='<div class="rooms-empty"><div class="rooms-empty-ico">👥</div><div><div class="rooms-empty-t">Кімнат поки немає</div><div class="rooms-empty-s">Знайди гру або створи власну кімнату</div></div></div>';
   }else{
     list.innerHTML=active.map(r=>`<div class="room-card" onclick="quickJoin('${r.code}')"><div class="room-dot"></div><div style="flex:1"><div class="room-code">${r.code}</div><div class="room-info">Хост: ${r.hostName} · ${r.count} гравців</div></div><div style="font-size:.7rem;color:var(--rg)">Приєднатись →</div></div>`).join('');
   }
